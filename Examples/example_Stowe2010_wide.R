@@ -1,29 +1,6 @@
-library(tidyverse)
-library(netmeta)
-library(metafor)
-library(meta)
-library(PlackettLuce)
+library("mtrank")
 
-
-setwd("./mtrank")
-
-source("./tcc.R")
-
-source("./mtrank.fit.R")
-
-source("./mtrank.internal.R")
-
-source("./paired.pref.R")
-
-source("./viz.abilities.R")
-
-source("./viz.roe.R")
-
-source("./viz.R")
-
-source("./meta_netmeta-internal.R")
-
-data("Stowe2010") ## dataset from netmeta
+data("Stowe2010", package = "netmeta")
 
 data <- Stowe2010
 
@@ -32,57 +9,53 @@ ranks <- tcc(data = data,
              mean = list(y1,y2,y3),
              n = list(n1,n2,n3),
              sd = list(sd1,sd2,sd3),
-             treat = list(t1,t2,t3),
+             treat = list(t1, t2, t3),
              mcid=0.5,
-             #l.roe = -0.5, ## random value
-             #u.roe = 0.5, ## random value
+             #l.roe = -0.5, # random value
+             #u.roe = 0.5, # random value
              sm = "MD",
              small.values = "desirable"
 )
 
-## vizualize the TCC for all study-specific comparisons related to treatment escitalopram
+# vizualize the TCC for all study-specific comparisons related to treatment escitalopram
 
-viz(ranks,treat = "COMTI")
+forest(ranks, treat = "COMTI")
 
-## vizualize the TCC for all study-specific comparisons in the network (this potentially produces several graphs)
+# vizualize the TCC for all study-specific comparisons in the network (this potentially produces several graphs)
 
-#viz(ranks)
+#forest(ranks)
 
-## fit the model
-model <- mtrank(ranks) ## same results with the "example_Stowe2010_long.R"
+# fit the model
+model <- mtrank(ranks) # same results with the "example_Stowe2010_long.R"
 
-## get model summary
+# get model summary
 
 model$estimates
 
-## get probabilities that each treatment has the higher ability
+# get probabilities that each treatment has the higher ability
 
 model$probabilities
 
-## get estimate for the nuisance parameter v (not interpretable value)
+# get estimate for the nuisance parameter v (not interpretable value)
 
 model$v
 
-## calculate the probability that bupropion is better than escitalopram
+# calculate the probability that bupropion is better than escitalopram
 
-paired_pref(x=model,treat1 = "MAOBI",treat2 = "Dopamine Agonist",prob_type = "better")
+paired_pref(model, treat1 = "MAOBI", treat2 = "Dopamine Agonist",prob_type = "better")
 
-## calculate the probability that bupropion is tied with escitalopram
+# calculate the probability that bupropion is tied with escitalopram
 
-paired_pref(x=model,treat1 = "MAOBI",treat2 = "Dopamine Agonist",prob_type = "tie")
+paired_pref(model, treat1 = "MAOBI", treat2 = "Dopamine Agonist",prob_type = "tie")
 
-## calculate the probability that bupropion is worse than escitalopram
+# calculate the probability that bupropion is worse than escitalopram
 
-paired_pref(x=model,treat1 = "MAOBI",treat2 = "Dopamine Agonist",prob_type = "worse")
+paired_pref(model, treat1 = "MAOBI", treat2 = "Dopamine Agonist",prob_type = "worse")
 
-## calculate all probabilities together
+# calculate all probabilities together
 
-paired_pref(x=model,treat1 = "MAOBI",treat2 = "Dopamine Agonist",prob_type = "all")
+paired_pref(model, treat1 = "MAOBI", treat2 = "Dopamine Agonist",prob_type = "all")
 
-## vizualize the results
+# vizualize the results
 
-viz(model)
-
-
-
-
+forest(model)

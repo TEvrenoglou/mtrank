@@ -51,11 +51,14 @@
 #' The tcc function includes treatment choice criteria based on the method by Evrenoglou et al.. This approach uses the range of equivalence (ROE) which through the \code{tcc} function can be defined in two different ways.
 #'
 #' \itemize{
-#' \item by specifying the argument \code{mcid}. Then the limits of the ROE will be defined based on the values (i) \code{mcid}, \code{1/mcid} for ratio measures
-#' and (ii) \code{mcid} and \code{-mcid} for difference measures.
-#' \item by specifying the arguments \code{l.roe} and {u.roe}. These arguments allow the users to define their own limits of the ROE, given the restriction
-#' that the lower limit will always be smaller than the upper limit.
-#'
+#' \item by specifying the argument \code{mcid}. Then the limits of the ROE
+#'   will be defined based on the values (i) \code{mcid}, \code{1/mcid} for
+#'   ratio measures and (ii) \code{mcid} and \code{-mcid} for difference
+#'   measures.
+#' \item by specifying the arguments \code{l.roe} and \code{u.roe}.
+#'   These arguments allow the users to define their own limits of the ROE,
+#'   given the restriction that the lower limit will always be smaller than the
+#'   upper limit.
 #' }
 #' 
 #' Note that when the argument \code{mcid} is specified, the arguments \code{l.roe} and \code{u.roe} are deprecated. 
@@ -79,7 +82,6 @@
 #' For binary outcomes the available effect measures are: (i) Odds ratio (sm="OR"), (ii) Risk ratio (sm="RR") and Risk difference (sm="RD").
 #' For continuous outcomes the available effect measures are: (i) Mean Difference (sm="MD") and Standardized mean difference (sm="SMD").
 #' 
-#' 
 #' @return
 #' \itemize{
 #' \item The initial data in a paired-preference format
@@ -88,25 +90,29 @@
 #' }
 #' 
 #' @references
-#' \itemize{
-#' \item Theodoros Evrenoglou, Adriani Nikolakopoulou, Guido Schwarzer, Gerta Rücker, Anna Chaimani (2024):
-#' Producing treatment hierarchies in network meta-analysis using probabilistic models and treatment-choice criteria.
-#' \emph{https://arxiv.org/abs/2406.10612}
+#' Evrenoglou E, Nikolakopoulou A, Schwarzer G, Rücker G, Chaimani A (2024):
+#' Producing treatment hierarchies in network meta-analysis using probabilistic
+#' models and treatment-choice criteria.
+#' \url{https://arxiv.org/abs/2406.10612}
+#'
+#' @examples
+#'  \dontrun{
+#'  # Add examples
 #' }
-
+#'
+#' @export tcc
 
 
 tcc <- function(treat,
-                event,n,mean,sd,
-                data=NULL,studlab,
-                mcid=NULL,l.roe=NULL,u.roe=NULL,
-                small.values="desirable",
-                relax=F,sm,
-                ...){
+                event, n, mean, sd,
+                data = NULL, studlab,
+                mcid = NULL, l.roe = NULL, u.roe = NULL,
+                small.values = "desirable",
+                relax = FALSE, sm,
+                ...) {
   
-  require(meta)
-  
-  catch <- meta:::catch
+  # Get rid of warning 'no visible binding for global variable'
+  studlab_orig <- id <- treat1 <- treat2 <- TE <- seTE <- NULL
   
   # Read the data from a data frame
   
@@ -116,7 +122,7 @@ tcc <- function(treat,
   
   mc <- match.call()
   
-  if (nulldata){
+  if (nulldata) {
     
     data <- sfsp
     
@@ -138,17 +144,17 @@ tcc <- function(treat,
   
   nam.args <- names(args)
   
-  if(missing(mcid)){
+  if (missing(mcid)) {
     
-    if(missing(l.roe) & missing(u.roe)){
+    if (missing(l.roe) & missing(u.roe)) {
     
     stop("A range of equivalence (ROE) needs to be defined. For a symmetrical ROE you can specify it using the argument 'mcid' or you can explicitly define the ROE lower and upper limits using the arguments 'l.roe' and 'u.roe'.")
     
-    }else if(missing(l.roe) & !missing(u.roe)){
+    }else if (missing(l.roe) & !missing(u.roe)) {
         
       stop("Please, specify a lower limit for the range of equivalence.")
       
-      }else if(!missing(l.roe) & missing(u.roe)){
+      }else if (!missing(l.roe) & missing(u.roe)) {
         
         stop("Please, specify an upper limit for the range of equivalence.")
   
@@ -159,19 +165,19 @@ tcc <- function(treat,
         chknumeric(u.roe)  
         
       }
-  }else if(!missing(mcid)){
+  }else if (!missing(mcid)) {
     
     chknumeric(mcid)  
     
-  if(!missing(l.roe) & !missing(u.roe)){
+  if (!missing(l.roe) & !missing(u.roe)) {
     
   warning("The arguments 'l.roe' and 'u.roe' are deprecated since the argument 'mcid' was provided.")  
   
-  }else if(!missing(l.roe) & missing(u.roe)){
+  }else if (!missing(l.roe) & missing(u.roe)) {
     
     warning("The argument 'l.roe' is deprecated since the argument 'mcid' was provided.")  
     
-  }else if(missing(l.roe) & !missing(u.roe)){
+  }else if (missing(l.roe) & !missing(u.roe)) {
     
     warning("The argument 'u.roe' is deprecated since the argument 'mcid' was provided.")  
     
@@ -179,33 +185,33 @@ tcc <- function(treat,
     
   }
   
-  if(!missing(l.roe) & !missing(u.roe)){
+  if (!missing(l.roe) & !missing(u.roe)) {
     
-  if((l.roe>u.roe) || (l.roe==u.roe)){
+  if ((l.roe>u.roe) || (l.roe==u.roe)) {
     stop("Argument 'l.roe' should always be smaller than 'u.roe.'")
   }
   
   }
   
-  if(missing(small.values)){
+  if (missing(small.values)) {
     
     stop("Argument 'small.values' is missing. Please specify the type of outcome as either 'desirable' or 'undesirable'.")  
     
   }
   
-  if(small.values %!in% c("desirable","undesirable")){
+  if (small.values %!in% c("desirable","undesirable")) {
     
     stop("Unclear type of small values. Please specify as either 'desirable' or 'undesirable'.")
     
   }
   
-  if(is.null(studlab)){
+  if (is.null(studlab)) {
     
     stop("Argument 'studlab' mandatory.")
     
   }
   
-  if (is.null(treat)){
+  if (is.null(treat)) {
     
     stop("Argument 'treat' mandatory.")
   }
@@ -244,12 +250,12 @@ tcc <- function(treat,
 
   ### determine whether the outcome is binary or continuous
   
-  if(!is.null(event) & !is.null(n) &
-     is.null(mean) & is.null(sd)){
+  if (!is.null(event) & !is.null(n) &
+     is.null(mean) & is.null(sd)) {
     
     type <- "binary"
     
-  } else if (!is.null(n) & !is.null(mean) & !is.null(sd)){
+  } else if (!is.null(n) & !is.null(mean) & !is.null(sd)) {
     
     type <- "continuous"
     
@@ -267,11 +273,11 @@ tcc <- function(treat,
   
   data.format <- NA
   
-  if(type=="binary"){
+  if (type=="binary") {
     
-    if(is.list(event) & is.list(n) & is.list(treat)){
+    if (is.list(event) & is.list(n) & is.list(treat)) {
       
-      if((length(event)!=length(n)) || (length(event)!=length(treat)) || (length(treat)!=length(n))){
+      if ((length(event)!=length(n)) || (length(event)!=length(treat)) || (length(treat)!=length(n))) {
         
         stop("List arguments 'treat', 'event' and 'n' must have the same length.") 
       } 
@@ -286,23 +292,23 @@ tcc <- function(treat,
         
         treat <- unlist(treat)
         
-      }else if(length(event) > 1 & length(n) > 1 & length(treat) > 1){
+      }else if (length(event) > 1 & length(n) > 1 & length(treat) > 1) {
         
         data.format <- "wide" ## don't unlist here 
         
       } 
       
-    }else if (is.numeric(event) & is.numeric(n)){
+    }else if (is.numeric(event) & is.numeric(n)) {
       
       data.format <- "long"
       
     }
     
-  } else if (type=="continuous"){
+  } else if (type=="continuous") {
     
-    if(is.list(mean) & is.list(sd) &  is.list(n) & is.list(treat)){
+    if (is.list(mean) & is.list(sd) &  is.list(n) & is.list(treat)) {
       
-      if((length(mean)!=length(n)) || (length(mean)!=length(treat)) || (length(mean)!=length(sd)) || (length(n)!=length(sd)) || (length(n)!=length(treat)) || (length(sd)!=length(treat))  ){
+      if ((length(mean)!=length(n)) || (length(mean)!=length(treat)) || (length(mean)!=length(sd)) || (length(n)!=length(sd)) || (length(n)!=length(treat)) || (length(sd)!=length(treat))  ) {
         
         stop("List arguments 'treat', 'mean', 'sd' and 'n' must have the same length.") 
       } 
@@ -319,13 +325,13 @@ tcc <- function(treat,
         
         treat <- unlist(treat)
         
-      }else if(length(mean) > 1 & length(sd) > 1 & length(n) > 1 & length(treat) > 1){
+      }else if (length(mean) > 1 & length(sd) > 1 & length(n) > 1 & length(treat) > 1) {
         
         data.format <- "wide" ## don't unlist here 
         
       } 
       
-    }else if (is.numeric(mean) & is.numeric(sd) &  is.numeric(n)){
+    }else if (is.numeric(mean) & is.numeric(sd) &  is.numeric(n)) {
       
       data.format <- "long"
       
@@ -334,13 +340,12 @@ tcc <- function(treat,
   }
   
   
-  if(data.format=="long"){
+  if (data.format=="long") {
     
-    if(sm %in% c("RR","OR","RD")){
+    if (sm %in% c("RR","OR","RD")) {
       
-      data_new <- cbind.data.frame("studlab" = studlab,"treat" = treat,"event" = event,"n" = n)
-      
-      data_new <- clean(data = data_new,outcome = type) ### clean for studies with zero events in all arms or missing number of events and sample sizes
+      data_new <- data.frame(studlab, treat, event, n)
+      data_new <- clean(data = data_new, outcome = type) ### clean for studies with zero events in all arms or missing number of events and sample sizes
       
       data_new$studlab_orig <- data_new$studlab
       
@@ -358,9 +363,9 @@ tcc <- function(treat,
       
     }
     
-  }else if (data.format=="wide"){
+  }else if (data.format=="wide") {
     
-    if(sm %in% c("RR","OR","RD")){
+    if (sm %in% c("RR","OR","RD")) {
       
       data_new <- go_long(studlab = studlab,treat = treat,event = event,n=n,type=type)
       
@@ -388,11 +393,12 @@ tcc <- function(treat,
   ## use pairwise to transform the long format data to contrasts using the pairwise() function from netmeta.
   ## this also ensures that a network of multi-arm studies gets an equivalent representation of a network of two-arm studies.
   
-  if(sm %in% c("RR","OR","RD")){
+  if (sm %in% c("RR","OR","RD")) {
     
     dat_new <- pairwise(data = data_new,treat = treat,event = event,n = n,sm = sm,studlab = studlab, ...)
     
-  }else{
+  }
+  else{
     
     dat_new <- pairwise(data = data_new,treat = treat,mean = mean,sd = sd,n = n,sm = sm,studlab = studlab, ...)
     
@@ -418,21 +424,21 @@ tcc <- function(treat,
   #### a symmetrical ROE or (ii) by specifying the bounds of the ROE based on the arguments 'l.roe'
   #### and 'u.roe'.
   
-  if(is.null(mcid)){
+  if (is.null(mcid)) {
   
   roe <- c(l.roe, u.roe)
   
   }else{
-    if(sm %in% c("RR","OR")){
+    if (sm %in% c("RR","OR")) {
 
-  if(mcid==1){
+  if (mcid==1) {
     
   l.roe <- u.roe <- 1
   
   warning("A minimal clinically important difference equal to 1 results in a range of equivalence (ROE) 
           with both bounds equal to 1.") 
      
-  }else if(mcid==0){
+  }else if (mcid==0) {
     
     l.roe <- u.roe <- 0
     
@@ -456,9 +462,7 @@ tcc <- function(treat,
     }
     
     roe <- c(l.roe,u.roe)
-    
-    roe <- round(roe,digits = 2)
-            
+    roe <- roe
   }
   
   
@@ -476,7 +480,7 @@ tcc <- function(treat,
   ## it requires that the relative effect (point estimate) and one bound of the confidence interval will be clinically significant (i.e. outside the ROE) 
   ## and the other bound simply does not indicate a clinically significant effect on the opposite direction.
   
-  if(relax==T){
+  if (relax==T) {
     
     no_effect1 <- l.roe
     
@@ -491,13 +495,13 @@ tcc <- function(treat,
   
   ### Define wins and ties for each study specific pairwise comparison
   
-  for(i in 1:length(u)){
+  for(i in 1:length(u)) {
     
     r[[i]] <- dat_new %>%    ### each "i" in the list r[[]] is a row of the dataset obtained from the pairwise function. 
       filter(id==u[[i]])     ### therefore the list r[[]] contains all the study-specific pairwise comparisons
     
     r1[[i]] <- r[[i]] %>%   ### keep only the elements required for the tcc. These are: (i) the study id, (ii) the treatment labels, (iii) the treatments effects, (iv) the treatment effect uncertainty 
-      dplyr::select(studlab, treat1, treat2, TE, seTE,studlab_orig)
+      select(studlab, treat1, treat2, TE, seTE, studlab_orig)
     
     ## calculate 95% Wald type confidence intervals for each study specific pairwise comparison
     r1[[i]]$L <- r1[[i]]$TE - qnorm(0.975)*r1[[i]]$seTE
@@ -508,7 +512,7 @@ tcc <- function(treat,
     ## here we transform them into the natural scale for both the point estimates and the 95% confidence interval bounds. 
     ## In any other case of effect measures no other transformation takes place.
     
-    if(sm %in% c("RR","OR")){
+    if (sm %in% c("RR","OR")) {
       
       r1[[i]]$es <- exp(r1[[i]]$TE)
       
@@ -533,11 +537,11 @@ tcc <- function(treat,
     
     #### Define tcc for the case where small.values are 'undesirable' and for the case that they are 'desirable'
     
-    if(small.values=="undesirable"){ ## since 'small.values' are undesirable the larger the treatment effect the more likely that for the comparison t1 vs t2, t1 is preferred.
+    if (small.values=="undesirable") { ## since 'small.values' are undesirable the larger the treatment effect the more likely that for the comparison t1 vs t2, t1 is preferred.
       
-      for (j in 1:nrow(r1[[i]])){
+      for (j in 1:nrow(r1[[i]])) {
         
-        if(r1[[i]]$u.es[j] < min(roe)){
+        if (r1[[i]]$u.es[j] < min(roe)) {
           
           r1[[i]]$rank_text[j] <- paste(r1[[i]]$treat2[j]," > ",r1[[i]]$treat1[j],sep = "")
           
@@ -547,7 +551,7 @@ tcc <- function(treat,
           r1[[i]]$r_t2[j] <- 1
         }
         ## for the pairwise comparison between treatments t1 and t2 the treatment 1 is in the first position and the treatment 2 in the second position (i.e. t1>t2)
-        else if(r1[[i]]$l.es[j] > max(roe)){
+        else if (r1[[i]]$l.es[j] > max(roe)) {
           
           r1[[i]]$rank_text[j] <- paste(r1[[i]]$treat1[j]," > ",r1[[i]]$treat2[j],sep = "")
           
@@ -560,7 +564,7 @@ tcc <- function(treat,
         ## here 'no_effect2' can be either the null value (if relax=FALSE (default)) or it can be the upper bound of ROE if relax=T.
         ## the relaxed criterion allows for more "wins" to be identified from the TTC as in this case the statistical significance of the effect does not alter the preference
         
-        else if(r1[[i]]$l.es[j] < min(roe) & (r1[[i]]$es[j] < min(roe)) & (r1[[i]]$u.es[j] < no_effect2)){ ## can be combined with first case
+        else if (r1[[i]]$l.es[j] < min(roe) & (r1[[i]]$es[j] < min(roe)) & (r1[[i]]$u.es[j] < no_effect2)) { ## can be combined with first case
           
           r1[[i]]$rank_text[j] <- paste(r1[[i]]$treat2[j]," > ",r1[[i]]$treat1[j],sep = "")
           
@@ -574,7 +578,7 @@ tcc <- function(treat,
         ## here 'no_effect1' can be either the null value (if relax=FALSE (default)) or it can be the lower bound of ROE if relax=T.
         ## the relaxed criterion allows for more "wins" to be identified from the TTC as in this case the statistical significance of the effect does not alter the preference
         
-        else if(r1[[i]]$u.es[j] > max(roe) & (r1[[i]]$es[j] > max(roe)) & (r1[[i]]$l.es[j] > no_effect1)){ ## can be combined with second case
+        else if (r1[[i]]$u.es[j] > max(roe) & (r1[[i]]$es[j] > max(roe)) & (r1[[i]]$l.es[j] > no_effect1)) { ## can be combined with second case
           
           r1[[i]]$rank_text[j] <- paste(r1[[i]]$treat1[j]," > ",r1[[i]]$treat2[j],sep = "")
           
@@ -598,9 +602,9 @@ tcc <- function(treat,
       
     }else if (small.values=="desirable") { ## since 'small.values' are desirable the smaller the treatment effect the more likely that for the comparison t1 vs t2, t1 is preferred.
       
-      for (j in 1:nrow(r1[[i]])){
+      for (j in 1:nrow(r1[[i]])) {
         ## for the pairwise comparison between treatments t1 and t2 the treatment 1 is in the first position and the treatment 2 in the second position (i.e. t1>t2)
-        if(r1[[i]]$u.es[j] < min(roe)){
+        if (r1[[i]]$u.es[j] < min(roe)) {
           
           r1[[i]]$rank_text[j] <- paste(r1[[i]]$treat1[j]," > ",r1[[i]]$treat2[j],sep = "")
           
@@ -608,7 +612,7 @@ tcc <- function(treat,
           
           r1[[i]]$r_t2[j] <- 2
         }
-        else if(r1[[i]]$l.es[j] > max(roe)){
+        else if (r1[[i]]$l.es[j] > max(roe)) {
           
           ## for the pairwise comparison between treatments t1 and t2 the treatment 1 is in the second position and the treatment 2 in the first position (i.e. t2>t1)
           
@@ -623,7 +627,7 @@ tcc <- function(treat,
         ## here 'no_effect2' can be either the null value (if relax=FALSE (default)) or it can be the upper bound of ROE if relax=T.
         ## the relaxed criterion allows for more "wins" to be identified from the TTC as in this case the statistical significance of the effect does not alter the preference
         
-        else if(r1[[i]]$l.es[j] < min(roe) & (r1[[i]]$es[j] < min(roe)) & (r1[[i]]$u.es[j] < no_effect2)){ ## can be combined with first case
+        else if (r1[[i]]$l.es[j] < min(roe) & (r1[[i]]$es[j] < min(roe)) & (r1[[i]]$u.es[j] < no_effect2)) { ## can be combined with first case
           
           r1[[i]]$rank_text[j] <- paste(r1[[i]]$treat1[j]," > ",r1[[i]]$treat2[j],sep = "")
           
@@ -637,7 +641,7 @@ tcc <- function(treat,
         ## here 'no_effect1' can be either the null value (if relax=FALSE (default)) or it can be the upper bound of ROE if relax=T.
         ## the relaxed criterion allows for more "wins" to be identified from the TTC as in this case the statistical significance of the effect does not alter the preference
         
-        else if((r1[[i]]$u.es[j] > max(roe)) & (r1[[i]]$es[j] > max(roe)) & (r1[[i]]$l.es[j] > no_effect1)){ ## can be combined with second case
+        else if ((r1[[i]]$u.es[j] > max(roe)) & (r1[[i]]$es[j] > max(roe)) & (r1[[i]]$l.es[j] > no_effect1)) { ## can be combined with second case
           
           r1[[i]]$rank_text[j] <- paste(r1[[i]]$treat2[j]," > ",r1[[i]]$treat1[j],sep = "")
           
@@ -684,14 +688,14 @@ tcc <- function(treat,
   }
   
   #### create a data frame in a wide format with the information for all comparisons   
-  data_pairwise <- bind_rows(r1, .id = "column_label")
+  data_wide <- bind_rows(r1, .id = "column_label")
   
-  data_pairwise$column_label <- NULL
+  data_wide$column_label <- NULL
   
   ### check if only ties were identified from tcc and return a warning if so. In this case the model fit from mtrank() will fail to converge.
-  all.ties <- ifelse(unique(data_pairwise$r_t1+data_pairwise$r_t2)==2,TRUE,FALSE)
+  all.ties <- ifelse(unique(data_wide$r_t1+data_wide$r_t2)==2,TRUE,FALSE)
   
-  if(isTRUE(all.ties)){
+  if (isTRUE(all.ties)) {
     
     warning("Only ties were identified through the treatment choice criterion. This can yield into convergence problems when using the mtrank() function.")
     
@@ -710,7 +714,7 @@ tcc <- function(treat,
   
   ## save the order of the studies and use it for the "as.rankings" function to group the preferences
   
-  for(i in 1:length(x)){
+  for(i in 1:length(x)) {
     
     index[[i]] <- unique(x[[i]]$studlab)
     
@@ -726,11 +730,10 @@ tcc <- function(treat,
   ### ungrouped treatment preferences
   ## the number of rows is equal to the number of study-specific pairwise comparisons in the network
   
-  rankings <- PlackettLuce::rankings(data_final,
-                                     id = "column_label",
-                                     item = "treat",
-                                     rank = "rank"
-  )
+  rankings <- rankings(data_final,
+                       id = "column_label",
+                       item = "treat",
+                       rank = "rank")
   
   ### ensure that preferences from multi-arm studies are grouped together using the grouping criterion based on "index"
   ### the number of rows is equal to the number of studies in the network
@@ -738,11 +741,11 @@ tcc <- function(treat,
   ### the output of this function gives the grouped study preferences. The order that the comparisons appear correspond to the
   ### order of rows in the 'index_match' which is created below.
   
-  res <- PlackettLuce::as.rankings(rankings,index = index)
+  data_rank <- as.rankings(rankings, index = index)
   
-  ## save the results (i) preference.data: the data transformed in a preference forma
-  ##                  (ii) index.match: a dataframe which contains the matching in the names of "preference.data" and the actual study names,
-  ##                                    this is helpful to keep track on which study of the original data generates the ith preference of the "preference.data" output.              
+  ## save the results (i) data_pref: the data transformed in a preference format
+  ##                  (ii) index.match: a dataframe which contains the matching in the names of "data_pref" and the actual study names,
+  ##                                    this is helpful to keep track on which study of the original data generates the ith preference of the "data_pref" output.              
   
   
   
@@ -756,24 +759,23 @@ tcc <- function(treat,
   
   row.names(index_match) <- NULL
   
-  ######## Createthe final output and the attributes ####
-  
-  res1 <- list("preference.data"=res,"index.match"=index_match)
-  
-  attr(res1,"data_pairwise") <- data_pairwise
-  
-  attr(res1,"ROE") <- roe
-  
-  attr(res1,"sm") <- sm
-  
-  attr(res1,"ungrouped.preferences") <- rankings
-  
-  attr(res1,"all.ties") <- all.ties
-  
-  attributes(res1) <- c(attributes(res1),attributes(res))
-  
-  class(res1) <- c("mtrank",class(res))
-  
-  return(res1)
-  
+  #
+  # Create output list
+  #
+  res <- list(data_pref = data_rank,
+              index.match = index_match,
+              data_wide = data_wide,
+              roe = roe,
+              sm = sm,
+              ungrouped.preferences = rankings,
+              all.ties = all.ties,
+              #
+              trts = sort(unique(c(data_wide$treat1, data_wide$treat2))),
+              #
+              call = match.call(),
+              version = packageVersion("mtrank"))
+  #
+  class(res) <- c("tcc", class(res))
+  #
+  res
 }

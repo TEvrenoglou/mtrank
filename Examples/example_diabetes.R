@@ -1,32 +1,9 @@
-library(tidyverse)
-library(netmeta)
-library(metafor)
-library(meta)
-library(PlackettLuce)
-
-
-setwd("./mtrank")
-
-source("./tcc.R")
-
-source("./mtrank.fit.R")
-
-source("./mtrank.internal.R")
-
-source("./paired.pref.R")
-
-source("./viz.abilities.R")
-
-source("./viz.roe.R")
-
-source("./viz.R")
-
-source("./meta_netmeta-internal.R")
+library("mtrank")
 
 data <- read.csv("./Data/data_diabetes.csv")
 
 
-#### prepare apply the tcc and transform the long format data into treatment preferences 
+# prepare apply the tcc and transform the long format data into treatment preferences 
 
 ranks <- tcc(data = data,
              studlab = study,
@@ -41,46 +18,45 @@ ranks <- tcc(data = data,
       
 )
 
-## vizualize the tcc for all study-specific comparisons related to treatment escitalopram
+# vizualize the tcc for all study-specific comparisons related to treatment escitalopram
 
-viz(ranks,treat = "ARB")
+forest(ranks, treat = "ARB")
 
-## vizualize the tcc for all study-specific comparisons in the network (this potentially produces several graphs)
+# vizualize the tcc for all study-specific comparisons in the network (this potentially produces several graphs)
 
-viz(ranks)
+forest(ranks)
 
-## fit the model
+# fit the model
 model <- mtrank(ranks)
 
-## get model summary
+# get model summary
 
 model$estimates
 
-## get probabilities that each treatment has the higher ability
+# get probabilities that each treatment has the higher ability
 
 model$probabilities
 
-## get estimate for the nuisance parameter v (not interpretable value)
+# get estimate for the nuisance parameter v (not interpretable value)
 
 model$v
 
-## calculate the probability that bupropion is better than escitalopram
+# calculate the probability that bupropion is better than escitalopram
 
-paired_pref(x=model,treat1 = "ARB",treat2 = "Placebo",prob_type = "better")
+paired_pref(model, treat1 = "ARB", treat2 = "Placebo",prob_type = "better")
 
-## calculate the probability that bupropion is tied with escitalopram
+# calculate the probability that bupropion is tied with escitalopram
 
-paired_pref(x=model,treat1 = "ARB",treat2 = "Placebo",prob_type = "tie")
+paired_pref(model, treat1 = "ARB", treat2 = "Placebo",prob_type = "tie")
 
-## calculate the probability that bupropion is worse than escitalopram
+# calculate the probability that bupropion is worse than escitalopram
 
-paired_pref(x=model,treat1 = "ARB",treat2 = "Placebo",prob_type = "worse")
+paired_pref(model, treat1 = "ARB", treat2 = "Placebo",prob_type = "worse")
 
-## calculate all probabilities together
+# calculate all probabilities together
 
-paired_pref(x=model,treat1 = "ARB",treat2 = "Placebo",prob_type = "all")
+paired_pref(model, treat1 = "ARB", treat2 = "Placebo",prob_type = "all")
 
-## vizualize the results
+# vizualize the results
 
-viz(model)
-
+forest(model)

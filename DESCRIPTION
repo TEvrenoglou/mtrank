@@ -1,0 +1,20 @@
+Package: mtrank
+Title: mtrank
+Version: 0.1-0
+Date: 2024-07-17
+Depends: R (>= 3.0.0), meta (>= 7.0-0), netmeta (>= 2.9-0)
+Imports: PlackettLuce, dplyr, metafor
+Authors@R: c(person("Theodoros", "Evrenoglou",
+                    role = c("aut", "cre"),
+                    email = "theodoros.evrenoglou@uniklinik-freiburg.de",
+                    comment = c(ORCID = "0000-0003-3336-8058")),
+             person("Guido", "Schwarzer",
+                    role = "aut",
+                    comment = c(ORCID = "0000-0001-6214-9087")))
+Maintainer: Theodoros Evrenoglou <theodoros.evrenoglou@uniklinik-freiburg.de>
+URL: https://github.com/TEvrenoglou/mtrank
+Description: mtrank...
+License: GPL (>= 2)
+Encoding: UTF-8
+RoxygenNote: 7.3.1
+NeedsCompilation: no
