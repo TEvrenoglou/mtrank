@@ -23,7 +23,7 @@ source("./viz.R")
 
 source("./meta_netmeta-internal.R")
 
-data <- read.csv("./Examples/Data/data_Stowe2010.csv")
+data <- read.csv("./Data/data_Stowe2010.csv")
 
 
 #### prepare apply the TCC and transform the long format data into treatment preferences 
