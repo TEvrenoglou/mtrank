@@ -66,8 +66,8 @@ mtrank <- function(x, reference.group = NULL) {
   #
   # All estimates and standard errors
   #
-  estimates <- summary(model, reference.group = reference.group)$coef[, 1]
-  se_estimates <- summary(model, reference.group = reference.group)$coef[, 2]
+  estimates <- summary(model, ref = reference.group)$coef[, 1]
+  se_estimates <- summary(model, ref = reference.group)$coef[, 2]
   #
   # Isolate the estimate for the parameter 'v'. 
   #
