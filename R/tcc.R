@@ -117,29 +117,19 @@ tcc <- function(treat,
   # Read the data from a data frame
   
   nulldata <- is.null(data)
-  
   sfsp <- sys.frame(sys.parent())
-  
   mc <- match.call()
-  
-  if (nulldata) {
-    
+  #
+  if (nulldata)
     data <- sfsp
-    
-  }
   
   studlab <- catch("studlab", mc, data, sfsp)
-  
   treat <- catch("treat", mc, data, sfsp)
-  
   event <- catch("event", mc, data, sfsp)
-  
   mean <- catch("mean", mc, data, sfsp)
-  
   sd <- catch("sd", mc, data, sfsp)
-  
   n <- catch("n", mc, data, sfsp)
-  
+  #  
   args <- list(...) 
   
   nam.args <- names(args)

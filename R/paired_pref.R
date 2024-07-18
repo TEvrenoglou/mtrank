@@ -8,7 +8,7 @@
 #' @param x An object of class "mtrank".
 #' @param treat1 The first treatment considered in the treatment comparison.
 #' @param treat2 The second treatment considered in the treatment comparison.
-#' @param prob_type A character string specifying the probability of interest.
+#' @param type A character string specifying the probability of interest.
 #'   Either "better", "tie", "worse", or "all" (can be abbreviated).
 #'
 #' @details  
@@ -25,7 +25,7 @@
 #' Please note that all the arguments of this function are mandatory.
 #' 
 #' @return
-#' The probability (or probabilities) of interest for the comparison \code{treat1} vs \code{treat2} based on the argument \code{prob_type}.
+#' The probability (or probabilities) of interest for the comparison \code{treat1} vs \code{treat2} based on the argument \code{type}.
 #' 
 #' @references
 #' Evrenoglou E, Nikolakopoulou A, Schwarzer G, Rücker G, Chaimani A (2024):
@@ -37,14 +37,14 @@
 
 
 
-paired_pref <- function(x, treat1, treat2, prob_type) {
+paired_pref <- function(x, treat1, treat2, type) {
   
   chkclass(x, "mtrank")
     
   treat1 <- setchar(treat1, x$trts)
   treat2 <- setchar(treat2, x$trts)
   #
-  prob_type <- setchar(prob_type, c("better", "tie", "worse", "all"))
+  type <- setchar(type, c("better", "tie", "worse", "all"))
   
   # To calculate the paired preferences we need access to the results of
   # mtrank() with reference.group = NULL so that we have the ability estimates
@@ -81,7 +81,7 @@ paired_pref <- function(x, treat1, treat2, prob_type) {
   #
   pr_t2.t1 <- 1 - pr_t1.t2 - pr_t1.t2.tie
   #
-  # report the results according to the prob_type of interest
+  # report the results according to the type of interest
   #
   txt1 <- paste0("The probability that ", treat1," is better than ",
                  treat2, " is equal to: ", round(pr_t1.t2, digits = 4))
@@ -92,13 +92,13 @@ paired_pref <- function(x, treat1, treat2, prob_type) {
   txt3 <- paste0("The probability that ", treat1," is worse than ",
                  treat2, " is equal to: ", round(pr_t2.t1,digits = 4))
   #
-  if (prob_type == "better")
+  if (type == "better")
     txt <- txt1
-  else if (prob_type == "tie")
+  else if (type == "tie")
     txt <- txt2 
-  else if (prob_type == "worse")
+  else if (type == "worse")
     txt <- txt3
-  else if (prob_type == "all")
+  else if (type == "all")
     txt <- list(txt1, txt2, txt3) 
   #
   txt

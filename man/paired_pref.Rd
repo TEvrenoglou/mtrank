@@ -4,7 +4,7 @@
 \alias{paired_pref}
 \title{Calculate pairwise probabilities using the output of the \code{\link{mtrank}} function.}
 \usage{
-paired_pref(x, treat1, treat2, prob_type)
+paired_pref(x, treat1, treat2, type)
 }
 \arguments{
 \item{x}{An object of class "mtrank".}
@@ -13,11 +13,11 @@ paired_pref(x, treat1, treat2, prob_type)
 
 \item{treat2}{The second treatment considered in the treatment comparison.}
 
-\item{prob_type}{A character string specifying the probability of interest.
+\item{type}{A character string specifying the probability of interest.
 Either "better", "tie", "worse", or "all" (can be abbreviated).}
 }
 \value{
-The probability (or probabilities) of interest for the comparison \code{treat1} vs \code{treat2} based on the argument \code{prob_type}.
+The probability (or probabilities) of interest for the comparison \code{treat1} vs \code{treat2} based on the argument \code{type}.
 }
 \description{
 This function uses the estimates of the ability and tie prevalence parameters obtained by the \code{\link{mtrank}} function
