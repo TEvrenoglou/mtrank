@@ -17,7 +17,7 @@
 #' from 28 studies comparing an active treatment with placebo and one
 #' three-arm study comparing two active treatments with placebo.
 #' 
-#' @name Stowe2010_long
+#' @name Stowe2010
 #' 
 #' @docType data
 #' 
@@ -25,16 +25,21 @@
 #' \tabular{rl}{
 #' \bold{\emph{study}}\tab study label \cr
 #' \bold{\emph{id}}\tab study id \cr
-#' \bold{\emph{t}}\tab treatment \cr
-#' \bold{\emph{y}}\tab treatment effect \cr
-#' \bold{\emph{sd}}\tab standard deviation \cr
-#' \bold{\emph{n}}\tab sample size \cr
-#' \bold{\emph{rob}}\tab risk of bias assessment \cr
-#' \bold{\emph{indirectness}}\tab indirectness
+#' \bold{\emph{t1}}\tab treatment 1 \cr
+#' \bold{\emph{y1}}\tab treatment effect arm 1 \cr
+#' \bold{\emph{sd1}}\tab Standard deviation arm 1 \cr
+#' \bold{\emph{n1}}\tab Sample size arm 1 \cr
+#' \bold{\emph{t2}}\tab treatment 2 \cr
+#' \bold{\emph{y2}}\tab treatment effect arm 2 \cr
+#' \bold{\emph{sd2}}\tab Standard deviation arm 2 \cr
+#' \bold{\emph{n2}}\tab Sample size arm 2 \cr
+#' \bold{\emph{t3}}\tab treatment 3 \cr
+#' \bold{\emph{y3}}\tab treatment effect arm 3 \cr
+#' \bold{\emph{sd3}}\tab Standard deviation arm 3 \cr
+#' \bold{\emph{n3}}\tab Sample size arm 3
 #' }
 #' 
-#' @seealso \code{\link[netmeta]{Stowe2010}}, \code{\link{mtrank}},
-#'   \code{\link{tcc}}
+#' @seealso  \code{\link{mtrank}}, \code{\link{tcc}}
 #' 
 #' @source
 #' Stowe R, Ives N, Clarke CE, Deane K, Hilten V, Wheatley K, et
@@ -47,11 +52,11 @@
 #' @keywords datasets
 #' 
 #' @examples
-#' data(Stowe2010_long)
+#' data(Stowe2010)
 #' #
-#' ranks <- tcc(treat = t, studlab = study, mean = y, n = n, sd = sd,
-#'   data = Stowe2010_long, sm = "MD", small.values = "desirable",
-#'   mcid = 0.5)
+#' ranks <- tcc(treat = list(t1,t2,t3), studlab = study, 
+#' mean = list(y1,y2,y3), n = list(n1,n2,n3), sd = list(sd1,sd2,sd3), 
+#' data = Stowe2010, sm = "MD", small.values = "desirable",mcid = 0.5)
 #' #
 #' model <- mtrank(ranks)
 #' #
