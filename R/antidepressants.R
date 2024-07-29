@@ -1,7 +1,7 @@
-#' Antidepressants dataset
+#' Network meta-analysis for major depressive disorder
 #' 
 #' @description
-#' Antidepressants dataset
+#' Network meta-analysis comparing antidepressants in patients with major depressive disorder.
 #' 
 #' @name antidepressants
 #' 
@@ -10,18 +10,21 @@
 #' @format A data frame with the following columns:
 #' \tabular{rl}{
 #' \bold{\emph{studyid}}\tab study id \cr
-#' \bold{\emph{armid}}\tab armid \cr
-#' ... \cr
-#' \bold{\emph{t}}\tab treatment
+#' \bold{\emph{drug_name}}\tab antidepressant name \cr
+#' \bold{\emph{ntotal}}\tab number of randomized patients in treatment arm \cr
+#' \bold{\emph{responders}}\tab number of responders  \cr
+#' 
 #' }
 #' 
 #' @seealso \code{\link{mtrank}}, \code{\link{tcc}}
 #' 
 #' @source
-#' Surname A, Surname Z. (year):
-#' Title
-#' \emph{Journal name},
-#' \bold{vol}, p1--p2 
+#' Cipriani A., Furukawa T., Salanti G., Chaimani A., et al. (2018):
+#' Comparative efficacy and acceptability of 21 antidepressant drugs 
+#' for the acute treatment of adults with major depressive 
+#' disorder: a systematic review and network meta-analysis
+#' \emph{Lancet},
+#' \bold{391}, 1357--1366 
 #' 
 #' @keywords datasets
 #' 
