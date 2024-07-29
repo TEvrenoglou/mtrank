@@ -22,7 +22,7 @@ relative abilities of all treatments versus the specified reference treatment.}
 }
 }
 \description{
-This function fits the Bradley-Terry ranking model and produces a treatment hiearachy based
+This function fits the Bradley-Terry ranking model and produces a treatment hierarchy based
 on the method described by Evrenoglou et al. for network meta-analysis.
 }
 \details{
@@ -40,6 +40,19 @@ If the argument \code{ref} is not NULL then a reference treatment group is speci
 that the maximization problem is now identifiable subject to the condition that the ability of this treatment is 0. Then the resulting MLEs
 are the relative abilities of all treatments in the network versus the specified reference treatment group. Note that the estimates of the 
 parameter "v" and the normalized probabilities do not depend on the definition or not of a reference treatment group.
+}
+\examples{
+data(Stowe2010, package = "netmeta")
+#
+ranks <- tcc(treat = list(t1,t2,t3), studlab = study, 
+mean = list(y1,y2,y3), n = list(n1,n2,n3), sd = list(sd1,sd2,sd3), 
+data = Stowe2010, sm = "MD", small.values = "desirable",mcid = 0.5)
+#
+model <- mtrank(ranks)
+#
+paired_pref(model,
+   treat1 = "MAOBI", treat2 = "Dopamine Agonist", type = "better")
+
 }
 \references{
 Evrenoglou E, Nikolakopoulou A, Schwarzer G, Rücker G, Chaimani A (2024):

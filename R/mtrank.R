@@ -1,7 +1,7 @@
 #' Estimate the treatment hierarchy in network meta-analysis using probabilistic ranking models.
 #' 
 #' @description
-#' This function fits the Bradley-Terry ranking model and produces a treatment hiearachy based
+#' This function fits the Bradley-Terry ranking model and produces a treatment hierarchy based
 #' on the method described by Evrenoglou et al. for network meta-analysis. 
 #' 
 #' @param x The output of the function \code{\link{tcc}}.
@@ -38,6 +38,18 @@
 #' Producing treatment hierarchies in network meta-analysis using probabilistic
 #' models and treatment-choice criteria.
 #' \url{https://arxiv.org/abs/2406.10612}
+#' 
+#' @examples
+#' data(Stowe2010, package = "netmeta")
+#' #
+#' ranks <- tcc(treat = list(t1,t2,t3), studlab = study, 
+#' mean = list(y1,y2,y3), n = list(n1,n2,n3), sd = list(sd1,sd2,sd3), 
+#' data = Stowe2010, sm = "MD", small.values = "desirable",mcid = 0.5)
+#' #
+#' model <- mtrank(ranks)
+#' #
+#' paired_pref(model,
+#'    treat1 = "MAOBI", treat2 = "Dopamine Agonist", type = "better")
 #' 
 #' @export mtrank
 
