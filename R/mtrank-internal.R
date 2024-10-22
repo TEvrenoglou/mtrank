@@ -8,110 +8,80 @@
 #
 
 
-# a functions specifying the opposite of %in%
+# A functions specifying the opposite of %in%
 '%!in%' <- function(x,y)!('%in%'(x,y))
 
-# a function that "cleans" long arm level data from:
+# A function that "cleans" long arm level data from:
 # for binary data: (i) all-zero event studies and (ii) studies with missing number of event/sample sizes
 # for continuous data: studies with missing arm level means, sample size and standard deviation
 
-clean <- function(data, outcome) {
+clean <- function(data, type) {
   # Get rid of warning 'no visible binding for global variable'
   studlab <- NULL
-  
-  if (outcome == "binary") {  
-    
+  #
+  if (type == "binary") {  
     # Remove NAs    
     data <- data[complete.cases(data$event), , drop = FALSE]
     data <- data[complete.cases(data$n), , drop = FALSE]
-    
     # Remove 0-0 studies  
     events.study <- tapply(data$event, data$studlab, sum)
-    
-    if (any(events.study == 0)) {
-      
-      zeroevents <- events.study == 0
-      keep <- !(zeroevents)
-      
-      data <- data[data$studlab %in% names(events.study)[keep], , drop = FALSE]
-    }
+    #
+    if (any(events.study == 0))
+      data <- data[data$studlab %in%
+                     names(events.study)[events.study != 0], , drop = FALSE]
   }
-  else if (outcome == "continuous") {
-    
+  else if (type == "continuous") {
     # Remove NAs    
     data <- data[complete.cases(data$mean), , drop = FALSE]
     data <- data[complete.cases(data$sd), , drop = FALSE]
     data <- data[complete.cases(data$n), , drop = FALSE]
   }
-  
   # Remove single arm studies
   count <- as.data.frame(table(data$studlab))
-  
-  sel <- count$Freq == 1
-  #  
-  data <- data %>% filter(studlab %!in% count$Var1[sel])
   #
-  data
+  data %>% filter(studlab %!in% count$Var1[count$Freq == 1])
 }
 
-# a function transforming wide to long format data
 
-go_long <- function(treat,event,mean,sd,n,studlab,type) {
-  
+# A function transforming wide to long format data
+
+go_long <- function(treat, event, mean, sd, n, studlab, type) {
   studyid <- unique(studlab)
-  
-  id <- 1:length(studyid)
-  
-  studyid_long <- rep(studyid,length(treat))
-  
-  id_long <- rep(id,length(treat))
-  
+  studyid_long <- rep(studyid, length(treat))
+  #
+  id <- seq_len(length(studyid))
+  id_long <- rep(id, length(treat))
+  #
   treat <- unlist(treat)
   
-  if (type=="binary") {
-    
+  if (type == "binary") {
     event <- unlist(event)
-    
     n <- unlist(n)
-    
-    data_new <- data.frame("studlab" = studyid_long,
-                           "id" = id_long,
-                           "treat" = treat,
-                           "event" = event,
-                           "n" = n
-    )
-    
-  }else if (type=="continuous") {
-    
-    mean <- unlist(mean)  
-    
-    sd <- unlist(sd)
-    
-    n <- unlist(n)
-    
-    data_new <- data.frame("studlab"=studyid_long,
-                           "id" = id_long,
-                           "treat" = treat,
-                           "mean" = mean,
-                           "sd" = sd,
-                           "n" = n
-    )
-    
+    #
+    dat <- data.frame(studlab = studyid_long, id = id_long, treat, event, n)
   }
-  
-  data_f <- data_new[order(data_new$id),]
-  
-  data_f$id <- NULL
-  
-  return(data_f)
+  else if (type == "continuous") {
+    mean <- unlist(mean)  
+    sd <- unlist(sd)
+    n <- unlist(n)
+    #
+    dat <- data.frame("studlab" = studyid_long, "id" = id_long,
+                      treat, mean, sd, n)
+  }
+  #
+  dat <- dat %>% arrange(id) %>% select(-id)
+  #
+  dat
 }
 
 
 allNA <- function(x)
   all(is.na(x))
 
+
 catch <- function(argname, matchcall, data, encl)
   eval(matchcall[[match(argname, names(matchcall))]], data, enclos = encl)
+
 
 int2num <- function(x) {
   #
@@ -125,6 +95,7 @@ int2num <- function(x) {
   res
 }
 
+
 npn <- function(x) {
   #
   # Check for non-positive values in vector
@@ -137,11 +108,13 @@ npn <- function(x) {
   res
 }
 
+
 replaceNULL <- function(x, replace = NA) {
   if (is.null(x))
     return(replace)
   x
 }
+
 
 replaceNA <- function(x, replace = NA) {
   if (is.null(x))
@@ -151,6 +124,7 @@ replaceNA <- function(x, replace = NA) {
   x
 }
 
+
 replaceVal <- function(x, old, new) {
   if (is.null(x))
     return(x)
@@ -159,11 +133,14 @@ replaceVal <- function(x, old, new) {
   x
 }
 
+
 extrVar <- function(x, name)
   x[[name]]
 
+
 calcPercent <- function(x)
   100 * x / sum(x, na.rm = TRUE)
+
 
 list2vec <- function(x) {
   if (is.list(x))
@@ -171,6 +148,7 @@ list2vec <- function(x) {
   else
     return(x)
 }
+
 
 setsv <- function(x) {
   if (is.null(x))

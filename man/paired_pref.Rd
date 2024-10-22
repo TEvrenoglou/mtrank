@@ -7,7 +7,7 @@
 paired_pref(x, treat1, treat2, type)
 }
 \arguments{
-\item{x}{An object of class "mtrank".}
+\item{x}{An object of class \code{\link{mtrank}}.}
 
 \item{treat1}{The first treatment considered in the treatment comparison.}
 

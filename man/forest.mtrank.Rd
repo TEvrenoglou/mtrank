@@ -2,17 +2,55 @@
 % Please edit documentation in R/forest.mtrank.R
 \name{forest.mtrank}
 \alias{forest.mtrank}
-\title{Vizualize ability estimates produced from the function \code{\link{mtrank}}.}
+\title{Visualize ability estimates produced from the function \code{\link{mtrank}}}
 \usage{
-\method{forest}{mtrank}(x, sorting = "ability", backtransf = FALSE, ...)
+\method{forest}{mtrank}(
+  x,
+  sorting = "ability",
+  backtransf = FALSE,
+  xlab = "",
+  leftcols = "studlab",
+  leftlabs = "Treatment",
+  rightcols = c("effect", "ci"),
+  rightlabs = c(paste0(if (!backtransf) "log-", "Abilities"), NA),
+  label.left = "Favors average treatment",
+  label.right = "Favors treatment",
+  header.line = TRUE,
+  ...
+)
 }
 \arguments{
-\item{x}{An object of class "mtrank.fit" generated as the output of the \code{\link{mtrank}} function.}
+\item{x}{An object of class \code{\link{mtrank}}.}
 
-\item{sorting}{An argument specifying the criterion for sorting the ability estimates in the forest plot (see Details).}
+\item{sorting}{An argument specifying the criterion for sorting the ability
+estimates in the forest plot (see Details).}
 
-\item{backtransf}{An argument specifying the scale of the ability estimates. If FALSE (default) the forest plot vizualizes 
-the log-ability estimates. If TRUE the scale is transformed to the natural scale of ability estimates.}
+\item{backtransf}{An argument specifying the scale of the ability estimates.
+If FALSE (default) the forest plot visualizes the log-ability estimates.
+If TRUE the scale is transformed to the natural scale of ability estimates.}
+
+\item{xlab}{A label for the x-axis.}
+
+\item{leftcols}{A character vector specifying columns
+to be printed on the left side of the forest plot
+(see \code{\link[meta]{forest.meta}}).}
+
+\item{leftlabs}{A character vector specifying labels for
+columns on left side of the forest plot.}
+
+\item{rightcols}{A character vector specifying columns
+to be printed on the right side of the forest plot
+(see \code{\link[meta]{forest.meta}}).}
+
+\item{rightlabs}{A character vector specifying labels for
+columns on right side of the forest plot.}
+
+\item{label.left}{Graph label on left side of null effect.}
+
+\item{label.right}{Graph label on right side of null effect.}
+
+\item{header.line}{A logical value indicating whether to print a
+header line or a character string ("both", "below", "").}
 
 \item{\dots}{Additional arguments.}
 }
@@ -20,10 +58,11 @@ the log-ability estimates. If TRUE the scale is transformed to the natural scale
 A forest plot that shows the ability estimates produced from the function \code{\link{mtrank}}.
 }
 \description{
-This function produces a forest plot that vizualizes the ability estimates produced from the output of the R function \code{\link{mtrank}}.
+This function produces a forest plot that visualizes the ability estimates
+produced from the output of the R function \code{\link{mtrank}}.
 }
 \details{
-The function produces a forest plot and vizualizes the ability estimates obtained from the function \code{\link{mtrank}}. The order of the
+The function produces a forest plot and visualizes the ability estimates obtained from the function \code{\link{mtrank}}. The order of the
 estimates in the resulting forest plot can be one of the following:
 \itemize{
 \item "ability": This is the default option and sorts the estimates in a descending order accoring to the ability estimates.

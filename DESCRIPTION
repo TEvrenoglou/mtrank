@@ -1,9 +1,9 @@
 Package: mtrank
 Title: mtrank: Treatment Hierarchies in Network Meta-Analysis using Probabilistic Models and Treatment-Choice Criteria
 Version: 0.1-0
-Date: 2024-07-29
-Depends: R (>= 3.5.0), meta (>= 7.0-0), netmeta (>= 2.9-0)
-Imports: PlackettLuce, dplyr, metafor
+Date: 2024-10-22
+Depends: R (>= 3.5.0), meta (>= 8.0-0), netmeta (>= 3.0-0)
+Imports: PlackettLuce, dplyr, magrittr
 Authors@R: c(person("Theodoros", "Evrenoglou",
                     role = c("aut", "cre"),
                     email = "theodoros.evrenoglou@uniklinik-freiburg.de",
@@ -16,5 +16,5 @@ URL: https://github.com/TEvrenoglou/mtrank
 Description: R package mtrank can be used to ...
 License: GPL (>= 2)
 Encoding: UTF-8
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 NeedsCompilation: no

@@ -14,10 +14,11 @@ tcc(
   data = NULL,
   studlab,
   mcid = NULL,
-  l.roe = NULL,
-  u.roe = NULL,
+  lower.equi = NULL,
+  upper.equi = NULL,
   small.values = "desirable",
   relax = FALSE,
+  level = 0.95,
   sm,
   ...
 )
@@ -42,11 +43,14 @@ deviation for individual treatment arms (see Details).}
 
 \item{studlab}{A vector with study labels.}
 
-\item{mcid}{A numeric vector specifying the minimal clinically important value (see Details).}
+\item{mcid}{A numeric vector specifying the minimal clinically important
+value (see Details).}
 
-\item{l.roe}{A numeric value specifying the lower limit of the range of equivalence (see Details).}
+\item{lower.equi}{A numeric value specifying the lower limit of the range of
+equivalence (see Details).}
 
-\item{u.roe}{A numeric value specifying the upper limit of the range of equivalence (see Details).}
+\item{upper.equi}{A numeric value specifying the upper limit of the range of
+equivalence (see Details).}
 
 \item{small.values}{A character string specifying whether small 
 treatment effects indicate a beneficial (\code{"desirable"}) or
@@ -54,8 +58,12 @@ harmful (\code{"undesirable"}) effect.}
 
 \item{relax}{A logical optional argument. If TRUE it 'relaxes' the tcc 
 to only consider the bounds of ROE when specifying 'wins' and ties. 
-The default FALSE uses the criterion described by Evrenoglou et al. and considers
-also the statistical significance on top of the ROE bounds (see Details).}
+The default FALSE uses the criterion described by Evrenoglou et al. and
+considers also the statistical significance on top of the ROE bounds
+(see Details).}
+
+\item{level}{The level used to calculate confidence intervals for
+log-abilities.}
 
 \item{sm}{The effect measure of interest (see Details).}
 
@@ -63,9 +71,10 @@ also the statistical significance on top of the ROE bounds (see Details).}
 }
 \value{
 \itemize{
-\item The initial data in a paired-preference format
-\item The correspondence between the initial study names (passed in the argument studlab)
-and the index name of the paired-preference format data
+\item The initial data in a paired-preference format.
+\item The correspondence between the initial study names
+  (passed in the argument studlab) and the index name of the
+  paired-preference format data.
 }
 }
 \description{
@@ -77,40 +86,57 @@ continuous arm-based to preference-based format.
 }
 \details{
 R function \code{\link{mtrank}} expects data in a
-\bold{paired-preference format}, where for each study-specific pairwise comparison in the network
-a treatment preference or a treatment tie is indicated. For example, for the study-specific comparison
-between treatments \emph{A} and \emph{B} the potential outcomes are: (i) \emph{A}>\emph{B}
-(ii) \emph{B}>\emph{A} or (iii) \emph{A}=\emph{B}. 
+\bold{paired-preference} format, where for each study-specific pairwise
+comparison in the network a treatment preference or a treatment tie is
+indicated. For example, for the study-specific comparison between treatments
+\emph{A} and \emph{B} the potential outcomes are:
+\itemize{
+\item \emph{A} > \emph{B}
+\item \emph{A} < \emph{B}
+\item \emph{A} = \emph{B}
+}
 
-The data transformation takes place based on 
-the study-specific treatment effects and the treatment choice criterion. To calculate the study-specific
-treatment effect estimates and standard errors the tcc function uses the \code{\link{pairwise}} function which is available from the
-R package netmeta. This ensures that data given in either 'long' or 'wide' arm-based format
-will be suitably used to calculate the study-specific treatment effect estimates and standard errors while
-ensuring that a network of multi-arm studies gets and equivalent representation as a network of two-arm studies.
+The data transformation takes place based on the study-specific treatment
+effects and the treatment choice criterion. To calculate the study-specific
+treatment effect estimates and standard errors the tcc function uses the
+\code{\link{pairwise}} function which is available from R package
+\bold{netmeta}. This ensures that data given in either 'long' or 'wide'
+arm-based format will be suitably used to calculate the study-specific
+treatment effect estimates and standard errors while ensuring that a network
+of multi-arm studies gets and equivalent representation as a network of
+two-arm studies.
 
-The tcc function includes treatment choice criteria based on the method by Evrenoglou et al.. This approach uses the range of equivalence (ROE) which through the \code{tcc} function can be defined in two different ways.
+The tcc function includes treatment choice criteria based on the method
+by Evrenoglou et al.. This approach uses the range of equivalence (ROE)
+which through the \code{tcc} function can be defined in two different ways.
 
 \itemize{
 \item by specifying the argument \code{mcid}. Then the limits of the ROE
   will be defined based on the values (i) \code{mcid}, \code{1/mcid} for
   ratio measures and (ii) \code{mcid} and \code{-mcid} for difference
   measures.
-\item by specifying the arguments \code{l.roe} and \code{u.roe}.
+\item by specifying the arguments \code{lower.equi} and \code{upper.equi}.
   These arguments allow the users to define their own limits of the ROE,
   given the restriction that the lower limit will always be smaller than the
   upper limit.
 }
 
-Note that when the argument \code{mcid} is specified, the arguments \code{l.roe} and \code{u.roe} are deprecated. 
-Either only the \code{mcid} or both of the \code{l.roe} and \code{u.roe} should be specified mandatorily specified for the proper
+Note that when the argument \code{mcid} is specified, the arguments
+\code{lower.equi} and \code{upper.equi} are deprecated. 
+Either only the \code{mcid} or both of the \code{lower.equi} and
+\code{upper.equi} should be specified mandatorily specified for the proper
 definition of the ROE.
 
-After setting the ROE the tcc function uses it to specify whether each of the study-specific treatment effects refers to a 
-treatment preference or a tie. The argument \code{relax} controls the amount of conservatism of the treatment choice criterion
-If set as FALSE (default) then the treatment choice criterion is equivalent to the one described by Evrenoglou et al., 2024. 
-In this case the study-specific treatment effect need to be both statistically and clinically significant to indicate a treatment preference. If set to TRUE
-the criterion is relaxed and the study-specific treatment effects need to be only clinically significant to indicate a treatment preference. 
+After setting the ROE the tcc function uses it to specify whether each of
+the study-specific treatment effects refers to a treatment preference or a
+tie. The argument \code{relax} controls the amount of conservatism of the
+treatment choice criterion. If set as FALSE (default) then the treatment
+choice criterion is equivalent to the one described by Evrenoglou et al.,
+2024. In this case the study-specific treatment effect need to be both
+statistically and clinically significant to indicate a treatment preference.
+If set to TRUE the criterion is relaxed and the study-specific treatment
+effects need to be only clinically significant to indicate a treatment
+preference. 
 
 The tcc function can transform data with binary and continuous outcomes.
 'Depending on the outcome, the following arguments are mandatory:
@@ -119,9 +145,15 @@ The tcc function can transform data with binary and continuous outcomes.
 \item treat, n, mean, sd (for continuous outcomes);
 }
 
-Finally, the argument \code{sm} is used to define the effect measure of interest for transforming the data into paired-preference format.
-For binary outcomes the available effect measures are: (i) Odds ratio (sm="OR"), (ii) Risk ratio (sm="RR") and Risk difference (sm="RD").
-For continuous outcomes the available effect measures are: (i) Mean Difference (sm="MD") and Standardized mean difference (sm="SMD").
+Finally, the argument \code{sm} is used to define the effect measure of
+interest for transforming the data into paired-preference format.
+For binary outcomes the available effect measures are:
+(i) Odds ratio (sm = "OR"),
+(ii) Risk ratio (sm = "RR") and
+(iii) Risk difference (sm = "RD").
+For continuous outcomes the available effect measures are:
+(i) Mean Difference (sm = "MD") and
+(ii) Standardized mean difference (sm = "SMD").
 }
 \examples{
  \dontrun{

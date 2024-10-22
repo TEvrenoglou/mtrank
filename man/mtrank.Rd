@@ -4,42 +4,60 @@
 \alias{mtrank}
 \title{Estimate the treatment hierarchy in network meta-analysis using probabilistic ranking models.}
 \usage{
-mtrank(x, reference.group = NULL)
+mtrank(x, reference.group = NULL, level = x$level)
 }
 \arguments{
-\item{x}{The output of the function \code{\link{tcc}}.}
+\item{x}{An object of class \code{\link{tcc}}.}
 
-\item{reference.group}{An argument specifying the reference group. If set to NULL (default)
-the output of the mtrank function will contain the ability estimates of all treatments. If 
-some treatment is set a the reference group then the output of the mtrank function will contain the 
-relative abilities of all treatments versus the specified reference treatment.}
+\item{reference.group}{An argument specifying the reference group. If set to
+NULL (default) the output of the mtrank function will contain the ability
+estimates of all treatments. If some treatment is set a the reference group
+then the output of the mtrank function will contain the relative abilities
+of all treatments versus the specified reference treatment.}
+
+\item{level}{The level used to calculate confidence intervals for ability
+estimates.}
 }
 \value{
 \itemize{
-\item A data frame containing the resulting log-ability estimates, their standard errors and their confidence intervals.
+\item A data frame containing the resulting log-ability estimates, their
+  standard errors and their confidence intervals.
 \item The estimate of the parameter tie prevalence parameter v.
 \item The normalized ability estimates for each treatment. 
 }
 }
 \description{
-This function fits the Bradley-Terry ranking model and produces a treatment hierarchy based
-on the method described by Evrenoglou et al. for network meta-analysis.
+This function fits the Bradley-Terry ranking model and produces a treatment
+hierarchy based on the method described by Evrenoglou et al. (2024) for
+network meta-analysis.
 }
 \details{
-This function is used to fit a Bradley-Terry model to the paired-preference data generated from the treatment choice criterion 
-constructed by the \code{\link{tcc}} function. The mtrank() function estimates the ability of each treatment in the network and the respective
-standard errors and confidence intervals using the maximum likelihood approach. To retain identifiability the maximization of the log-likelihood
-takes place subject to the constrain that the ability estimates sum to 1. Then, based on iterative processes the maximum likelihood estimates (MLEs)
-are calculated. Note that the final estimates of the ability parameters are not necessarily needed to sum to 1 as after the first iteration of the algorithm
-the ability estimates are not normalized. However, by normalizing the final ability estimates to sum up to 1 these can be interpreted as "the probability that
-each treatment is having the highest ability". Finally, a parameter "v" controlling the prevalence of ties in the network is also estimated through
-the mtrank() function. Although the estimated values of this parameter does not have a direct interpretation it is useful for estimating pairwise 
+This function is used to fit a Bradley-Terry model to the paired-preference
+data generated from the treatment choice criterion constructed by the
+\code{\link{tcc}} function. This function estimates the ability of
+each treatment in the network and the respective standard errors and
+confidence intervals using the maximum likelihood approach. To retain
+identifiability the maximization of the log-likelihood takes place subject
+to the constrain that the ability estimates sum to 1. Then, based on
+iterative processes the maximum likelihood estimates (MLEs) are calculated.
+Note that the final estimates of the ability parameters are not necessarily
+needed to sum to 1 as after the first iteration of the algorithm the ability
+estimates are not normalized. However, by normalizing the final ability
+estimates to sum up to 1 these can be interpreted as "the probability that
+each treatment is having the highest ability". Finally, a parameter "v"
+controlling the prevalence of ties in the network is also estimated through
+the mtrank() function. Although the estimated values of this parameter does
+not have a direct interpretation it is useful for estimating pairwise 
 probabilities using the \code{\link{paired_pref}} function. 
 
-If the argument \code{ref} is not NULL then a reference treatment group is specified according to this treatment. Mathematically, this means
-that the maximization problem is now identifiable subject to the condition that the ability of this treatment is 0. Then the resulting MLEs
-are the relative abilities of all treatments in the network versus the specified reference treatment group. Note that the estimates of the 
-parameter "v" and the normalized probabilities do not depend on the definition or not of a reference treatment group.
+If argument \code{reference.group} is not NULL then a reference treatment
+group is specified according to this treatment. Mathematically, this means
+that the maximization problem is now identifiable subject to the condition
+that the ability of this treatment is 0. Then the resulting MLEs are the
+relative abilities of all treatments in the network versus the specified
+reference treatment group. Note that the estimates of the parameter "v" and
+the normalized probabilities do not depend on the definition or not of a
+reference treatment group.
 }
 \examples{
 data(Stowe2010, package = "netmeta")

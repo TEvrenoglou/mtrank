@@ -31,11 +31,11 @@
 #'
 #' @keywords package
 #'
-#' @importFrom meta ci gs forest
-#' @importFrom metafor rma
-#' @importFrom netmeta pairwise netmeta netconnection invmat
+#' @importFrom meta metagen ci gs forest pairwise
+#' @importFrom netmeta netmeta netconnection invmat
 #' @importFrom PlackettLuce PlackettLuce itempar rankings as.rankings
-#' @importFrom dplyr %>% arrange bind_rows filter select
+#' @importFrom dplyr %>% arrange bind_rows filter select mutate if_else
+#' @importFrom magrittr %<>%
 #' @importFrom utils packageVersion
 #' @importFrom graphics legend segments text par
 #' @importFrom stats complete.cases qnorm quantile

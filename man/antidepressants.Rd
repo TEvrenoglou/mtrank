@@ -36,6 +36,8 @@ model <- mtrank(ranks)
 #
 paired_pref(model, type = "better",
   treat1 = "bupropion", treat2 = "escitalopram")
+
+forest(model, treat = "escitalopram")
 }
 \seealso{
 \code{\link{mtrank}}, \code{\link{tcc}}

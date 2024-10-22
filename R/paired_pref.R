@@ -5,7 +5,7 @@
 #' and calculates pairwise probabilities about the preference or the tie between two treatments based on Equations 7 and 8 
 #' from the manuscript by Evrenoglou et al.
 #
-#' @param x An object of class "mtrank".
+#' @param x An object of class \code{\link{mtrank}}.
 #' @param treat1 The first treatment considered in the treatment comparison.
 #' @param treat2 The second treatment considered in the treatment comparison.
 #' @param type A character string specifying the probability of interest.
