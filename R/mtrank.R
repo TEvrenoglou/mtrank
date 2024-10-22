@@ -140,7 +140,7 @@ mtrank <- function(x, reference.group = NULL) {
               call = match.call(),
               version = packageVersion("mtrank"))
   #
-  class(res) <- c("mtrank")
+  class(res) <- "mtrank"
   #
   res
 }
