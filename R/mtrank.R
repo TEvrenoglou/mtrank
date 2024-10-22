@@ -136,6 +136,7 @@ mtrank <- function(x, reference.group = NULL) {
               reference.group = reference.group,
               #
               x = x,
+              model = model,
               #
               call = match.call(),
               version = packageVersion("mtrank"))
