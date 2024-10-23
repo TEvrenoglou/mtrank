@@ -2,9 +2,12 @@
 % Please edit documentation in R/paired_pref.R
 \name{paired_pref}
 \alias{paired_pref}
-\title{Calculate pairwise probabilities using the output of the \code{\link{mtrank}} function.}
+\alias{print.paired_pref}
+\title{Calculate pairwise probabilities for \code{\link{mtrank}} object}
 \usage{
 paired_pref(x, treat1, treat2, type)
+
+\method{print}{paired_pref}(x, type = attr(x, "type"), digits = 4, ...)
 }
 \arguments{
 \item{x}{An object of class \code{\link{mtrank}}.}
@@ -15,30 +18,59 @@ paired_pref(x, treat1, treat2, type)
 
 \item{type}{A character string specifying the probability of interest.
 Either "better", "tie", "worse", or "all" (can be abbreviated).}
+
+\item{digits}{Minimal number of significant digits for proportions,
+see \code{print.default}.}
+
+\item{\dots}{Additional arguments (passed on to \code{\link{prmatrix}}).}
 }
 \value{
-The probability (or probabilities) of interest for the comparison \code{treat1} vs \code{treat2} based on the argument \code{type}.
+The probability (or probabilities) of interest for the comparison
+\code{treat1} vs \code{treat2} based on the argument \code{type}.
 }
 \description{
-This function uses the estimates of the ability and tie prevalence parameters obtained by the \code{\link{mtrank}} function
-and calculates pairwise probabilities about the preference or the tie between two treatments based on Equations 7 and 8 
-from the manuscript by Evrenoglou et al.
+This function uses the estimates of ability and tie prevalence parameters
+from a \code{\link{mtrank}} object and calculates pairwise probabilities
+about the preference or the tie between two treatments based on equations (7)
+and (8) in Evrenoglou et al. (2024).
 }
 \details{
-Pairwise probabilities between any two treatments in the network can be calculated using the ability estimates
-obtained from the \code{\link{mtrank}} function and the Equations 7 and 8 from Evrenoglou et al. The probabilities
-are calculated in the direction \code{treat1} vs \code{treat2}. The available probability types are
+Pairwise probabilities between any two treatments in the network can be
+calculated using the ability estimates obtained from \code{\link{mtrank}}
+and equations (7) and (8) in Evrenoglou et al. (2024). The probabilities
+are calculated in the direction \code{treat1} vs \code{treat2}. The available
+probability types are
 \itemize{
-\item "better": Calculates the probability that \code{treat1} is better than \code{treat2}.
-\item "tie": Calculates the probability that \code{treat1} is equal to \code{treat2}.
-\item "worse": Calculates the probability that \code{treat1} is worse than \code{treat2}.
-\item "all": Calculates all the previous probabilities simultaneously.
+\item "better": probability that \code{treat1} is better than \code{treat2},
+\item "tie": probability that \code{treat1} is equal to \code{treat2},
+\item "worse": probability that \code{treat1} is worse than \code{treat2},
+\item "all": all three probabilities.
 }
 
 Please note that all the arguments of this function are mandatory.
 }
+\examples{
+data(antidepressants)
+#
+ranks <- tcc(treat = drug_name, studlab = studyid,
+  event = responders, n = ntotal, data = antidepressants,
+  mcid = 1.25, sm = "OR", small.values = "undesirable")
+#
+fit <- mtrank(ranks)
+#
+paired_pref(fit, type = "all",
+  treat1 = "bupropion", treat2 = "escitalopram")
+#
+paired_pref(fit, type = "all",
+  treat1 = "escitalopram", treat2 = "bupropion")
+#
+paired_pref(fit, type = "all",
+  treat1 = c("bupropion", "escitalopram"),
+  treat2 = c("escitalopram", "bupropion"))
+
+}
 \references{
-Evrenoglou E, Nikolakopoulou A, Schwarzer G, Rücker G, Chaimani A (2024):
+Evrenoglou T, Nikolakopoulou A, Schwarzer G, Rücker G, Chaimani A (2024):
 Producing treatment hierarchies in network meta-analysis using probabilistic
 models and treatment-choice criteria.
 \url{https://arxiv.org/abs/2406.10612}

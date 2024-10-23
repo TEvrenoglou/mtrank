@@ -2,21 +2,47 @@
 % Please edit documentation in R/mtrank.R
 \name{mtrank}
 \alias{mtrank}
-\title{Estimate the treatment hierarchy in network meta-analysis using probabilistic ranking models.}
+\alias{print.mtrank}
+\title{Estimate the treatment hierarchy in network meta-analysis using
+probabilistic ranking model}
 \usage{
 mtrank(x, reference.group = NULL, level = x$level)
+
+\method{print}{mtrank}(
+  x,
+  sorting = "ability",
+  backtransf = FALSE,
+  digits = gs("digits"),
+  digits.prop = gs("digits.prop"),
+  ...
+)
 }
 \arguments{
-\item{x}{An object of class \code{\link{tcc}}.}
+\item{x}{An object of class \code{\link{tcc}} or \code{\link{mtrank}}
+(print function).}
 
 \item{reference.group}{An argument specifying the reference group. If set to
-NULL (default) the output of the mtrank function will contain the ability
-estimates of all treatments. If some treatment is set a the reference group
-then the output of the mtrank function will contain the relative abilities
-of all treatments versus the specified reference treatment.}
+NULL (default), ability estimates of all treatments will be calculated.
+If some treatment is set as the reference group, relative
+abilities of all treatments versus the specified reference treatment will
+be calculated.}
 
 \item{level}{The level used to calculate confidence intervals for ability
 estimates.}
+
+\item{sorting}{An argument specifying the criterion to sort the ability
+estimates in the printout (see Details).}
+
+\item{backtransf}{A logical argument specifying whether to show log-ability
+estimates (\code{FALSE}, default) or on the natural scale (\code{TRUE}).}
+
+\item{digits}{Minimal number of significant digits for ability estimates,
+see \code{print.default}.}
+
+\item{digits.prop}{Minimal number of significant digits for proportions,
+see \code{print.default}.}
+
+\item{\dots}{Additional arguments.}
 }
 \value{
 \itemize{
@@ -37,16 +63,17 @@ data generated from the treatment choice criterion constructed by the
 \code{\link{tcc}} function. This function estimates the ability of
 each treatment in the network and the respective standard errors and
 confidence intervals using the maximum likelihood approach. To retain
-identifiability the maximization of the log-likelihood takes place subject
-to the constrain that the ability estimates sum to 1. Then, based on
-iterative processes the maximum likelihood estimates (MLEs) are calculated.
+identifiability, the maximization of the log-likelihood takes place subject
+to the constrain that the ability estimates sum to 1. Then, the maximum
+likelihood estimates (MLEs) are calculated iteratively.
 Note that the final estimates of the ability parameters are not necessarily
 needed to sum to 1 as after the first iteration of the algorithm the ability
 estimates are not normalized. However, by normalizing the final ability
 estimates to sum up to 1 these can be interpreted as "the probability that
-each treatment is having the highest ability". Finally, a parameter "v"
-controlling the prevalence of ties in the network is also estimated through
-the mtrank() function. Although the estimated values of this parameter does
+each treatment is having the highest ability".
+
+Finally, a parameter "v" controlling the prevalence of ties in the network
+is also estimated. Although the estimated values of this parameter does
 not have a direct interpretation it is useful for estimating pairwise 
 probabilities using the \code{\link{paired_pref}} function. 
 
@@ -62,18 +89,19 @@ reference treatment group.
 \examples{
 data(Stowe2010, package = "netmeta")
 #
-ranks <- tcc(treat = list(t1,t2,t3), studlab = study, 
-mean = list(y1,y2,y3), n = list(n1,n2,n3), sd = list(sd1,sd2,sd3), 
-data = Stowe2010, sm = "MD", small.values = "desirable",mcid = 0.5)
+ranks <- tcc(treat = list(t1, t2, t3), studlab = study, 
+  mean = list(y1, y2, y3), n = list(n1, n2, n3), sd = list(sd1, sd2, sd3), 
+  data = Stowe2010, sm = "MD", small.values = "desirable", mcid = 0.5)
 #
 model <- mtrank(ranks)
-#
-paired_pref(model,
-   treat1 = "MAOBI", treat2 = "Dopamine Agonist", type = "better")
+# Print log-ability estimates
+model
+# Print ability estimates
+print(model, backtransf = TRUE)
 
 }
 \references{
-Evrenoglou E, Nikolakopoulou A, Schwarzer G, Rücker G, Chaimani A (2024):
+Evrenoglou T, Nikolakopoulou A, Schwarzer G, Rücker G, Chaimani A (2024):
 Producing treatment hierarchies in network meta-analysis using probabilistic
 models and treatment-choice criteria.
 \url{https://arxiv.org/abs/2406.10612}

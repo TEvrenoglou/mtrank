@@ -10,12 +10,11 @@ A data frame with the following columns:
 \bold{\emph{studyid}}\tab study id \cr
 \bold{\emph{drug_name}}\tab antidepressant name \cr
 \bold{\emph{ntotal}}\tab number of randomized patients in treatment arm \cr
-\bold{\emph{responders}}\tab number of responders  \cr
-
+\bold{\emph{responders}}\tab number of responders
 }
 }
 \source{
-Cipriani A., Furukawa T., Salanti G., Chaimani A., et al. (2018):
+Cipriani A, Furukawa T, Salanti G, Chaimani A, et al. (2018):
 Comparative efficacy and acceptability of 21 antidepressant drugs 
 for the acute treatment of adults with major depressive 
 disorder: a systematic review and network meta-analysis
@@ -23,7 +22,8 @@ disorder: a systematic review and network meta-analysis
 \bold{391}, 1357--1366
 }
 \description{
-Network meta-analysis comparing antidepressants in patients with major depressive disorder.
+Network meta-analysis comparing antidepressants in patients with major
+depressive disorder.
 }
 \examples{
 data(antidepressants)

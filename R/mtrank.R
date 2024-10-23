@@ -1,18 +1,29 @@
-#' Estimate the treatment hierarchy in network meta-analysis using probabilistic ranking models.
+#' Estimate the treatment hierarchy in network meta-analysis using
+#' probabilistic ranking model
 #' 
 #' @description
 #' This function fits the Bradley-Terry ranking model and produces a treatment
 #' hierarchy based on the method described by Evrenoglou et al. (2024) for
-#' network meta-analysis. 
+#' network meta-analysis.
 #' 
-#' @param x An object of class \code{\link{tcc}}.
+#' @param x An object of class \code{\link{tcc}} or \code{\link{mtrank}}
+#'   (print function).
 #' @param reference.group An argument specifying the reference group. If set to
-#'   NULL (default) the output of the mtrank function will contain the ability
-#'   estimates of all treatments. If some treatment is set a the reference group
-#'   then the output of the mtrank function will contain the relative abilities
-#'   of all treatments versus the specified reference treatment.
+#'   NULL (default), ability estimates of all treatments will be calculated.
+#'   If some treatment is set as the reference group, relative
+#'   abilities of all treatments versus the specified reference treatment will
+#'   be calculated.
 #' @param level The level used to calculate confidence intervals for ability
-#'    estimates.
+#'   estimates.
+#' @param backtransf A logical argument specifying whether to show log-ability
+#'   estimates (\code{FALSE}, default) or on the natural scale (\code{TRUE}).
+#' @param digits Minimal number of significant digits for ability estimates,
+#'   see \code{print.default}.
+#' @param sorting An argument specifying the criterion to sort the ability
+#' estimates in the printout (see Details).
+#' @param digits.prop Minimal number of significant digits for proportions,
+#'   see \code{print.default}.
+#' @param \dots Additional arguments.
 #'
 #' @details
 #' This function is used to fit a Bradley-Terry model to the paired-preference
@@ -20,16 +31,17 @@
 #' \code{\link{tcc}} function. This function estimates the ability of
 #' each treatment in the network and the respective standard errors and
 #' confidence intervals using the maximum likelihood approach. To retain
-#' identifiability the maximization of the log-likelihood takes place subject
-#' to the constrain that the ability estimates sum to 1. Then, based on
-#' iterative processes the maximum likelihood estimates (MLEs) are calculated.
+#' identifiability, the maximization of the log-likelihood takes place subject
+#' to the constrain that the ability estimates sum to 1. Then, the maximum
+#' likelihood estimates (MLEs) are calculated iteratively.
 #' Note that the final estimates of the ability parameters are not necessarily
 #' needed to sum to 1 as after the first iteration of the algorithm the ability
 #' estimates are not normalized. However, by normalizing the final ability
 #' estimates to sum up to 1 these can be interpreted as "the probability that
-#' each treatment is having the highest ability". Finally, a parameter "v"
-#' controlling the prevalence of ties in the network is also estimated through
-#' the mtrank() function. Although the estimated values of this parameter does
+#' each treatment is having the highest ability".
+#' 
+#' Finally, a parameter "v" controlling the prevalence of ties in the network
+#' is also estimated. Although the estimated values of this parameter does
 #' not have a direct interpretation it is useful for estimating pairwise 
 #' probabilities using the \code{\link{paired_pref}} function. 
 #' 
@@ -51,7 +63,7 @@
 #' }
 #' 
 #' @references
-#' Evrenoglou E, Nikolakopoulou A, Schwarzer G, Rücker G, Chaimani A (2024):
+#' Evrenoglou T, Nikolakopoulou A, Schwarzer G, Rücker G, Chaimani A (2024):
 #' Producing treatment hierarchies in network meta-analysis using probabilistic
 #' models and treatment-choice criteria.
 #' \url{https://arxiv.org/abs/2406.10612}
@@ -59,17 +71,17 @@
 #' @examples
 #' data(Stowe2010, package = "netmeta")
 #' #
-#' ranks <- tcc(treat = list(t1,t2,t3), studlab = study, 
-#' mean = list(y1,y2,y3), n = list(n1,n2,n3), sd = list(sd1,sd2,sd3), 
-#' data = Stowe2010, sm = "MD", small.values = "desirable",mcid = 0.5)
+#' ranks <- tcc(treat = list(t1, t2, t3), studlab = study, 
+#'   mean = list(y1, y2, y3), n = list(n1, n2, n3), sd = list(sd1, sd2, sd3), 
+#'   data = Stowe2010, sm = "MD", small.values = "desirable", mcid = 0.5)
 #' #
 #' model <- mtrank(ranks)
-#' #
-#' paired_pref(model,
-#'    treat1 = "MAOBI", treat2 = "Dopamine Agonist", type = "better")
+#' # Print log-ability estimates
+#' model
+#' # Print ability estimates
+#' print(model, backtransf = TRUE)
 #' 
 #' @export mtrank
-
 
 mtrank <- function(x, reference.group = NULL, level = x$level) {
   
@@ -88,12 +100,12 @@ mtrank <- function(x, reference.group = NULL, level = x$level) {
   #
   # Fit the model 
   #
-  model <- PlackettLuce(x$grouped.preferences)
+  fit <- PlackettLuce(x$grouped.preferences)
   #
   # All estimates and standard errors
   #
-  estimates <- summary(model, ref = reference.group)$coef[, 1]
-  se_estimates <- summary(model, ref = reference.group)$coef[, 2]
+  estimates <- summary(fit, ref = reference.group)$coef[, 1]
+  se_estimates <- summary(fit, ref = reference.group)$coef[, 2]
   #
   # Isolate the estimate for the parameter 'v'. 
   #
@@ -133,7 +145,7 @@ mtrank <- function(x, reference.group = NULL, level = x$level) {
   #
   # Calculate the probability that each treatment is the best. 
   #
-  probability <- itempar(model, log = FALSE)
+  probability <- itempar(fit, log = FALSE)
   #
   dat_prob <- data.frame(treatment = names(probability),
                          probability = as.numeric(probability))
@@ -147,15 +159,9 @@ mtrank <- function(x, reference.group = NULL, level = x$level) {
   
   res <- list(estimates = dat,
               v = v,
-              #
               probabilities = dat_prob,
-              data = x$grouped.preferences,
-              #
-              trts = x$trts,
+              fit = fit,
               reference.group = reference.group,
-              small.values = x$small.values,
-              #
-              model = model,
               #
               x = x,
               #
@@ -165,4 +171,57 @@ mtrank <- function(x, reference.group = NULL, level = x$level) {
   class(res) <- "mtrank"
   #
   res
+}
+
+#' @rdname mtrank
+#' @method print mtrank
+#' @export
+
+print.mtrank <- function(x,
+                         sorting = "ability",
+                         backtransf = FALSE,
+                         digits = gs("digits"),
+                         digits.prop = gs("digits.prop"),
+                         ...) {
+  chkclass(x, "mtrank")
+  #
+  sorting <- setchar(sorting, c("ability", "se", "none"))
+  chklogical(backtransf)
+  chknumeric(digits, min = 0, length = 1)
+  chknumeric(digits.prop, min = 0, length = 1)
+  
+  dat <- x$estimates
+  dat$se <- NULL
+  #
+  props <- x$probabilities
+  props$probability <- round(props$probability, digits.prop)
+  #
+  dat <- merge(dat, props, by = "treatment")
+  #
+  if (backtransf) {
+    dat$log_ability <- exp(dat$log_ability)
+    dat$lower <- exp(dat$lower)
+    dat$upper <- exp(dat$upper)
+  }
+  #
+  if (sorting == "ability")
+    o <- order(-dat$log_ability)
+  else if (sorting == "se")
+    o <- order(dat$se)
+  else if (sorting == "none")
+    o <- seq_len(nrow(dat))
+  #
+  dat <- dat[o, , drop = FALSE]
+  #
+  dat$log_ability <- round(dat$log_ability, digits)
+  dat$lower <- round(dat$lower, digits)
+  dat$upper <- round(dat$upper, digits)
+  #
+  if (backtransf)
+    names(dat)[names(dat) == "log_ability"] <- "ability"
+  #
+  prmatrix(dat, quote = FALSE, right = TRUE,
+           rowlab = rep("", nrow(dat)), ...)
+  #
+  invisible(NULL)
 }

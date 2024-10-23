@@ -1,18 +1,19 @@
-#' Visualize the study-specific preferences or ties generated from the treatment choice criterion defined by the function \code{\link{tcc}}.
+#' Forest plot of study-specific preferences or ties for treatment choice
+#' criterion
 #' 
 #' @description
 #' This function produces a forest plot for all (or some specific) study
 #' specific comparisons and visualizes the treatment preference or ties
-#' which are defined from the treatment choice criterion which is constructed
-#' from the function \code{\link{tcc}}.
+#' which are defined from the treatment choice criterion in \code{\link{tcc}}.
 #' 
 #' @param x An object of class \code{\link{tcc}}.
 #' @param treat A treatment of interest. If specified it returns a forest plot
 #' for all study specific effects related to \code{treat}. If NULL (default)
 #' it generates a forest plot for all study-specific effects in the network. 
-#' @param backtransf An argument specifying the scale of the ability estimates.
-#' If FALSE (default) the forest plot visualizes the log-ability estimates.
-#' If TRUE the scale is transformed to the natural scale of ability estimates. 
+#' @param backtransf A logical indicating whether results should be
+#'   back transformed. If \code{backtransf =
+#'   TRUE} (default), results for \code{sm = "OR"} are printed as odds
+#'   ratios rather than log odds ratios, for example.
 #' @param leftcols A character vector specifying columns
 #'   to be printed on the left side of the forest plot
 #'   (see \code{\link[meta]{forest.meta}}).
@@ -37,8 +38,9 @@
 #'   header line or a character string ("both", "below", "").
 #' @param col.subgroup The colour to print information on subgroups, i.e.,
 #'   pairwise comparisons.
-#' @param \dots Additional arguments.
-#'   
+#' @param \dots Additional arguments (passed on to
+#'   \code{\link[meta]{forest.meta}}).
+#' 
 #' @details  
 #' This function produces forest plots for the study specific treatment effects
 #' in the network. The legend of these graphs specifies which treatment effects
@@ -60,19 +62,22 @@
 #' black those treatment effects producing a treatment tie.
 #' 
 #' @references
-#' Evrenoglou E, Nikolakopoulou A, Schwarzer G, Rücker G, Chaimani A (2024):
+#' Evrenoglou T, Nikolakopoulou A, Schwarzer G, Rücker G, Chaimani A (2024):
 #' Producing treatment hierarchies in network meta-analysis using probabilistic
 #' models and treatment-choice criteria.
 #' \url{https://arxiv.org/abs/2406.10612}
 #'
 #' @examples
-#'  \dontrun{
-#'  # Add examples
-#' }
+#' data(diabetes)
+#' #
+#' ranks <- tcc(treat = t, studlab = study, event = r, n = n, data = diabetes,
+#'   mcid = 1.20, sm = "OR", small.values = "desirable")
+#' #
+#' forest(ranks)
+#' forest(ranks, treat = "ARB")
 #' 
 #' @method forest tcc
 #' @export
-
 
 forest.tcc <- function(x, treat = NULL, backtransf = FALSE,
                        #

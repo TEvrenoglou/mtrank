@@ -2,7 +2,7 @@
 % Please edit documentation in R/forest.mtrank.R
 \name{forest.mtrank}
 \alias{forest.mtrank}
-\title{Visualize ability estimates produced from the function \code{\link{mtrank}}}
+\title{Forest plot of ability estimates produced with \code{\link{mtrank}}}
 \usage{
 \method{forest}{mtrank}(
   x,
@@ -22,12 +22,11 @@
 \arguments{
 \item{x}{An object of class \code{\link{mtrank}}.}
 
-\item{sorting}{An argument specifying the criterion for sorting the ability
+\item{sorting}{An argument specifying the criterion to sort the ability
 estimates in the forest plot (see Details).}
 
-\item{backtransf}{An argument specifying the scale of the ability estimates.
-If FALSE (default) the forest plot visualizes the log-ability estimates.
-If TRUE the scale is transformed to the natural scale of ability estimates.}
+\item{backtransf}{A logical argument specifying whether to show log-ability
+estimates (\code{FALSE}, default) or on the natural scale (\code{TRUE}).}
 
 \item{xlab}{A label for the x-axis.}
 
@@ -55,30 +54,39 @@ header line or a character string ("both", "below", "").}
 \item{\dots}{Additional arguments.}
 }
 \value{
-A forest plot that shows the ability estimates produced from the function \code{\link{mtrank}}.
+A forest plot that shows the ability estimates produced with
+\code{\link{mtrank}}.
 }
 \description{
 This function produces a forest plot that visualizes the ability estimates
-produced from the output of the R function \code{\link{mtrank}}.
+calculated with \code{\link{mtrank}}.
 }
 \details{
-The function produces a forest plot and visualizes the ability estimates obtained from the function \code{\link{mtrank}}. The order of the
-estimates in the resulting forest plot can be one of the following:
+The function produces a forest plot and visualizes the ability estimates
+obtained from \code{\link{mtrank}}. The order of the estimates in the
+forest plot can be one of the following:
 \itemize{
-\item "ability": This is the default option and sorts the estimates in a descending order accoring to the ability estimates.
-\item "se": Sorts the ability estimates from depending on their uncertainty. The estimats with the lower standard errors appear first.
-\item "none": Sorts the estmates in a random order.
+\item "ability": sort by descending ability estimates (default),
+\item "se": sort by descending precision, i.e., increasing standard errors,
+\item "none": use order from data set.
 }
 }
 \examples{
- \dontrun{
- # Add examples
-}
+data(antidepressants)
+#
+ranks <- tcc(treat = drug_name, studlab = studyid,
+  event = responders, n = ntotal, data = antidepressants,
+  mcid = 1.25, sm = "OR", small.values = "undesirable")
+#
+model <- mtrank(ranks)
+
+forest(model, treat = "escitalopram")
 
 }
 \references{
-Evrenoglou E, Nikolakopoulou A, Schwarzer G, Rücker G, Chaimani A (2024):
+Evrenoglou T, Nikolakopoulou A, Schwarzer G, Rücker G, Chaimani A (2024):
 Producing treatment hierarchies in network meta-analysis using probabilistic
 models and treatment-choice criteria.
 \url{https://arxiv.org/abs/2406.10612}
 }
+\keyword{hplot}

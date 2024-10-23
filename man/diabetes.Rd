@@ -12,17 +12,19 @@ A data frame with the following columns:
 \bold{\emph{t}}\tab treatment label \cr
 \bold{\emph{r}}\tab number of events \cr
 \bold{\emph{n}}\tab group sample size \cr
-\bold{\emph{rob}}\tab risk of bias assessment \cr
+\bold{\emph{rob}}\tab risk of bias assessment
 }
 }
 \source{
-Elliott W., Meyer P. (2007):
-Incident diabetes in clinical trials of antihypertensive drugs: a network meta-analysis
+Elliott W, Meyer P (2007):
+Incident diabetes in clinical trials of antihypertensive drugs:
+a network meta-analysis
 \emph{Lancet},
 \bold{369}
 }
 \description{
-Network meta-analysis comparing six antihypertensive drugs against the incidence of diabetes.
+Network meta-analysis comparing six antihypertensive drugs against the
+incidence of diabetes.
 }
 \examples{
 data(diabetes)

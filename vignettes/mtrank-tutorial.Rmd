@@ -1,0 +1,198 @@
+---
+title: "Tutorial on R package **mtrank**"
+author: "Thodoris Evrenoglou, Guido Schwarzer"
+output:
+  rmarkdown::pdf_document:
+   number_sections: false
+  rmarkdown::html_vignette:
+   toc: false
+   number_sections: false
+bibliography: references.bib 
+vignette: >
+  %\VignetteIndexEntry{mtrank: Tutorial on mtrank}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "##",
+  message = TRUE,
+  warning = FALSE
+  )
+options(knitr.kable.NA = ".")
+```
+
+
+This vignette serves as a tutorial for R package **mtrank**. This package
+allows R users to produce treatment hierarchies in network meta-analysis using
+the ranking method proposed by @Evre:Niko:Schw:prod:2024.
+
+You could either install R package **mtrank** from CRAN (not yet available)
+
+```{r, eval = FALSE}
+install.packages("mtrank")
+```
+
+or the development version from GitHub
+
+```{r, eval = FALSE}
+remotes::install_github("TEvrenoglou/mtrank")
+```
+
+Next, we make the package available.
+
+```{r}
+library("mtrank")
+```
+
+We see that loading **mtrank** will automatically load the R packages **meta**,
+**metadat** and **netmeta**.
+
+Next, we load the 'antidepressants' dataset which is part of R package
+**mtrank**. You can get information about this dataset using the command *help(antidepressants)*.
+
+```{r}
+data("antidepressants")
+```
+
+
+### Define treatment-choice criterion
+
+In the next step, we set the treatment-choice criterion and transform the data using the function tcc(). More details about this function can be obtained using the command *help(tcc)*.
+
+The treatment-choice criterion is determined by the minimal clinically important difference (MCID), which represents the smallest relative effect between two treatments that can influence the selection of the preferable treatment. Users can set this value using argument 'mcid' in tcc(), which then defines the range of equivalence (ROE) based on the MCID and its reciprocal. For binary outcomes, the MCID must be specified on its natural scale. The ROE constructed using the MCID is always symmetrical, but for users who require a non-symmetrical ROE, the arguments 'lower.equi' and 'upper.equi' allow for explicit specification of preferred bounds. However, if argument 'mcid' is specified, arguments 'lower.equi' and 'upper.equi' are ignored.
+
+```{r}
+ranks <- tcc(treat = drug_name, event = responders, n = ntotal,
+  studlab = studyid, data = antidepressants,
+  mcid = 1.25,
+  sm = "OR", small.values = "undesirable")
+```
+
+We could print the preferences with the following command (result not shown).
+
+```{r, eval = FALSE}
+ranks$grouped.preferences
+```
+
+As argument 'mcid = 1.25' the ROE is defined as [1 / mcid, mcid] = [0.8, 1.25]. The ROE is stored as the lower and upper bound.
+
+```{r}
+c(ranks$lower.equi, ranks$upper.equi)
+```
+
+
+Alternatively, we could define a ROE by specifying its lower and upper bound.
+
+```{r, eval = FALSE}
+ranks <- tcc(treat = drug_name, event = responders, n = ntotal,
+  studlab = studyid, data = antidepressants,
+  lower.equi = 0.80, upper.equi = 1.25,
+  sm = "OR", small.values = "undesirable")
+```
+
+Note, an asymmetric ROE could be defined in this way.
+
+
+### Forest plot showing impact of treatment choice criterion
+
+R function forest.tcc() can be used to create a forest plot. This function gets as first argument the object created from tcc() and as second the argument 'treat' which specifies the treatment for which the treatment choice criterion needs to be inspected. If users do not specify the argument treat then forest plots are generated for every direct comparison in the network.
+
+```{r, eval = FALSE}
+forest(ranks, treat = "bupropion", xlim = c(-1, 2),
+  label.left = "Favors second treatment",
+  label.right = "Favors first treatment",
+  fill.equi = "lightblue", spacing = 1.5)
+```
+
+```{r, echo = FALSE, out.width = "70%"}
+forest(ranks, treat = "bupropion", xlim = c(-1, 2),
+  label.left = "Favors second treatment",
+  label.right = "Favors first treatment",
+  fill.equi = "lightblue", spacing = 1.5,
+  file = "forest1.pdf")
+knitr::include_graphics("forest1.pdf")
+```
+
+
+### Probabilistic ranking model
+
+The probabilistic ranking model can be fitted using mtrank() from R package **mtrank**. The ability estimates obtained from mtrank() can then be visualised in a forest plot.
+
+```{r}
+fit <- mtrank(ranks)
+```
+
+We can print the ability estimates and the probabilities of each treatment to rank first.
+
+```{r}
+fit
+```
+
+
+### Forest plot of log-ability estimates 
+
+R function forest.mtrank() can be used to create a forest plot of ability estimates.
+
+By default, log-ability estimates are shown in the forest plot.
+
+```{r, eval = FALSE}
+forest(fit, spacing = 1.5)
+```
+
+```{r, echo = FALSE, out.width = "70%"}
+forest(fit, spacing = 1.5,
+  file = "forest2.pdf")
+knitr::include_graphics("forest2.pdf")
+```
+
+Alternatively, we could plot the abilities using argument 'backtransf' (figure not shown).
+
+```{r, eval = FALSE}
+forest(fit, spacing = 1.5, backtransf = TRUE)
+```
+
+
+### Pairwise preferences
+
+Finally, R package **mtrank** allows the calculation of pairwise preferences through the function paired_pref(). This function expects the following arguments:
+
+- x: an mtrank object
+- treat1: the first treatment considered in the treatment comparison,
+- treat2: the second treatment considered in the treatment comparison,
+- type: the probability of interest.
+
+For more details about this function please use *help(paired_pref)*.
+
+```{r}
+# Get probability that bupropion is better than trazodone
+paired_pref(fit, treat1 = "bupropion", treat2 = "trazodone",
+  type = "better")
+
+# Get probability that bupropion is tied with trazodone
+paired_pref(fit, treat1 = "bupropion", treat2 = "trazodone",
+  type = "tie")
+
+# Get probability that bupropion is worse than trazodone
+paired_pref(fit, treat1 = "bupropion", treat2 = "trazodone",
+  type = "worse")
+
+# Get all three probabilities
+paired_pref(fit, treat1 = "bupropion", treat2 = "trazodone",
+  type = "all")
+```
+
+It is also possible to contrast one drug with several others (and to provide abbreviated but unambiguous drug names).
+
+```{r}
+# Get probability that bupropion is better than other drugs
+paired_pref(fit, treat1 = "bupr",
+  treat2 = c("fluo", "paro", "sert", "traz", "venl"),
+  type = "better")
+```
+
+
+# References
+
