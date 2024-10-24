@@ -1,6 +1,6 @@
 ---
 title: "Tutorial on R package **mtrank**"
-author: "Thodoris Evrenoglou, Guido Schwarzer"
+author: "Theodoros Evrenoglou, Guido Schwarzer"
 output:
   rmarkdown::pdf_document:
    number_sections: false
@@ -98,7 +98,7 @@ Note, an asymmetric ROE could be defined in this way.
 
 ### Forest plot showing impact of treatment choice criterion
 
-R function forest.tcc() can be used to create a forest plot. This function gets as first argument the object created from tcc() and as second the argument 'treat' which specifies the treatment for which the treatment choice criterion needs to be inspected. If users do not specify the argument treat then forest plots are generated for every direct comparison in the network.
+R function forest.tcc() can be used to create a forest plot. This function gets as first argument the object created from tcc() and as second the argument 'treat' which specifies the treatment for which the treatment choice criterion needs to be inspected. If users do not specify the argument 'treat' then forest plots are generated for every direct comparison in the network.
 
 ```{r, eval = FALSE}
 forest(ranks, treat = "bupropion", xlim = c(-1, 2),
