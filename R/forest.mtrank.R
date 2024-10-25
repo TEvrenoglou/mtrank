@@ -8,7 +8,8 @@
 #' @param sorting An argument specifying the criterion to sort the ability
 #' estimates in the forest plot (see Details).
 #' @param backtransf A logical argument specifying whether to show log-ability
-#'   estimates (\code{FALSE}, default) or on the natural scale (\code{TRUE}).
+#'   estimates (\code{FALSE}, default) or ability estimates on the natural
+#'   scale (\code{TRUE}).
 #' @param xlab A label for the x-axis.
 #' @param leftcols A character vector specifying columns
 #'   to be printed on the left side of the forest plot
@@ -24,21 +25,18 @@
 #' @param label.right Graph label on right side of null effect.
 #' @param header.line A logical value indicating whether to print a
 #'   header line or a character string ("both", "below", "").
-#' @param \dots Additional arguments.
+#' @param \dots Additional arguments (passed on to
+#'   \code{\link[meta]{forest.meta}}).
 #' 
 #' @details  
 #' The function produces a forest plot and visualizes the ability estimates
 #' obtained from \code{\link{mtrank}}. The order of the estimates in the
-#' forest plot can be one of the following:
+#' forest plot (argument \code{sorting}) can be one of the following:
 #' \itemize{
 #' \item "ability": sort by descending ability estimates (default),
 #' \item "se": sort by descending precision, i.e., increasing standard errors,
 #' \item "none": use order from data set.
 #' }
-#' 
-#' @return
-#' A forest plot that shows the ability estimates produced with
-#' \code{\link{mtrank}}.
 #' 
 #' @references
 #' Evrenoglou T, Nikolakopoulou A, Schwarzer G, Rücker G, Chaimani A (2024):
@@ -55,9 +53,9 @@
 #'   event = responders, n = ntotal, data = antidepressants,
 #'   mcid = 1.25, sm = "OR", small.values = "undesirable")
 #' #
-#' model <- mtrank(ranks)
+#' fit <- mtrank(ranks)
 #' 
-#' forest(model, treat = "escitalopram")
+#' forest(fit, treat = "escitalopram")
 #' 
 #' @method forest mtrank
 #' @export

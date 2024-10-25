@@ -32,12 +32,12 @@ ranks <- tcc(treat = drug_name, studlab = studyid,
   event = responders, n = ntotal, data = antidepressants,
   mcid = 1.25, sm = "OR", small.values = "undesirable")
 #
-model <- mtrank(ranks)
+fit <- mtrank(ranks)
 #
-paired_pref(model, type = "better",
+paired_pref(fit, type = "better",
   treat1 = "bupropion", treat2 = "escitalopram")
 
-forest(model, treat = "escitalopram")
+forest(fit, treat = "escitalopram")
 }
 \seealso{
 \code{\link{mtrank}}, \code{\link{tcc}}

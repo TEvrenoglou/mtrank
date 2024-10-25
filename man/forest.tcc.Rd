@@ -2,8 +2,8 @@
 % Please edit documentation in R/forest.tcc.R
 \name{forest.tcc}
 \alias{forest.tcc}
-\title{Forest plot of study-specific preferences or ties for treatment choice
-criterion}
+\title{Forest plot showing study-specific preferences or ties according to
+treatment choice criterion}
 \usage{
 \method{forest}{tcc}(
   x,
@@ -26,13 +26,13 @@ criterion}
 \item{x}{An object of class \code{\link{tcc}}.}
 
 \item{treat}{A treatment of interest. If specified it returns a forest plot
-for all study specific effects related to \code{treat}. If NULL (default)
+for all study specific effects related to \code{treat}. If NULL (default),
 it generates a forest plot for all study-specific effects in the network.}
 
 \item{backtransf}{A logical indicating whether results should be
-back transformed. If \code{backtransf =
-TRUE} (default), results for \code{sm = "OR"} are printed as odds
-ratios rather than log odds ratios, for example.}
+back transformed. If \code{backtransf = TRUE} (default), results for
+\code{sm = "OR"} are printed as odds ratios rather than log odds ratios,
+for example.}
 
 \item{leftcols}{A character vector specifying columns
 to be printed on the left side of the forest plot
@@ -71,30 +71,21 @@ pairwise comparisons.}
 \item{\dots}{Additional arguments (passed on to
 \code{\link[meta]{forest.meta}}).}
 }
-\value{
-A forest plot that shows the study-specific treatment effects and the range
-of equivalence defined from the function \code{\link{tcc}}. Coloured
-with red are the treatment effects which according to the \code{\link{tcc}}
-function were producing a treatment preference and coloured with
-black those treatment effects producing a treatment tie.
-}
 \description{
-This function produces a forest plot for all (or some specific) study
+This function produces a forest plot for all (or selected) study
 specific comparisons and visualizes the treatment preference or ties
 which are defined from the treatment choice criterion in \code{\link{tcc}}.
 }
 \details{
 This function produces forest plots for the study specific treatment effects
-in the network. The legend of these graphs specifies which treatment effects
-were identified as treatment preferences and which as treatment ties.
-Additionally, the respective range of equivalence defined at the function
-\code{\link{tcc}} is also visualized for each forest plot. The argument
-\code{treat} is optional. If specified it returns only the forest plots in
-terms of the study-specific treatment effects related to the specified
-\code{treat}. If NULL it will return the forest plots in terms of all
-study-specific treatment effects in the network. We recommend that the
-specification of the argument \code{treat} especially for busy networks
-which contain many direct comparisons.
+in the network. The color indicates whether treatment effects show
+a preference (red color) or tie (black color). Additionally, the respective range of equivalence defined at the function
+\code{\link{tcc}} is visualized for the forest plot.
+
+Argument \code{treat} is optional. By default ( \code{treat = NULL}),
+all study-specific treatment effects in the network are shown. If specified,
+only study-specific treatment effects related to the specified \code{treat}
+are shown which is useful in busy networks with many direct comparisons.
 }
 \examples{
 data(diabetes)
@@ -112,3 +103,4 @@ Producing treatment hierarchies in network meta-analysis using probabilistic
 models and treatment-choice criteria.
 \url{https://arxiv.org/abs/2406.10612}
 }
+\keyword{hplot}

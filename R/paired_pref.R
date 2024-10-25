@@ -128,6 +128,7 @@ paired_pref <- function(x, treat1, treat2, type) {
   res
 }
 
+
 #' @rdname paired_pref
 #' @method print paired_pref
 #' @export

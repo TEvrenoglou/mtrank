@@ -4,7 +4,7 @@
 \alias{tcc}
 \alias{print.tcc}
 \title{Transform meta-analysis data from long or wide arm-based format into
-paired preference format}
+paired-preference format}
 \usage{
 tcc(
   treat,
@@ -21,6 +21,7 @@ tcc(
   relax = FALSE,
   level = 0.95,
   sm,
+  keepdata = gs("keepdata"),
   ...
 )
 
@@ -70,7 +71,11 @@ log-abilities.}
 
 \item{sm}{The effect measure of interest (see Details).}
 
-\item{\dots}{Additional arguments.}
+\item{keepdata}{A logical indicating whether original data should be kept in
+tcc object.}
+
+\item{\dots}{Additional arguments (passed on to
+\code{\link[meta]{pairwise}}).}
 
 \item{x}{An object of class \code{\link{tcc}}.}
 }
@@ -85,16 +90,16 @@ log-abilities.}
 \description{
 This function transforms data that are given in wide or long
 arm-based format (e.g. input format for WinBUGS or JAGS) to a
-paired-preference format that is needed as input to R function
-\code{\link{mtrank}}. The function can transform data with binary and
-continuous arm-based to preference-based format.
+paired-preference format needed as input to \code{\link{mtrank}}.
+The function can transform data with binary and continuous arm-based to
+preference-based format.
 }
 \details{
-R function \code{\link{mtrank}} expects data in a
-\bold{paired-preference} format, where for each study-specific pairwise
-comparison in the network a treatment preference or a treatment tie is
-indicated. For example, for the study-specific comparison between treatments
-\emph{A} and \emph{B} the potential outcomes are:
+R function \code{\link{mtrank}} expects data in a \bold{paired-preference}
+format, where for each study-specific pairwise comparison in the network a
+treatment preference or tie is indicated. For example, for the
+study-specific comparison between treatments \emph{A} and \emph{B} the
+potential outcomes are:
 \itemize{
 \item \emph{A} > \emph{B}
 \item \emph{A} < \emph{B}
@@ -102,45 +107,43 @@ indicated. For example, for the study-specific comparison between treatments
 }
 
 The data transformation takes place based on the study-specific treatment
-effects and the treatment choice criterion. To calculate the study-specific
-treatment effect estimates and standard errors the tcc function uses the
-\code{\link{pairwise}} function which is available from R package
-\bold{netmeta}. This ensures that data given in either 'long' or 'wide'
-arm-based format will be suitably used to calculate the study-specific
-treatment effect estimates and standard errors while ensuring that a network
-of multi-arm studies gets and equivalent representation as a network of
-two-arm studies.
+effects and the treatment choice criterion. R function
+\code{\link[meta]{pairwise}} is called internally to calculate the
+study-specific treatment effect estimates and standard errors. This ensures
+that data given in either 'long' or 'wide' arm-based format will be suitably
+used to calculate the study-specific treatment effect estimates and standard
+errors while ensuring that a network of multi-arm studies gets an
+equivalent representation as a network of two-arm studies.
 
-The tcc function includes treatment choice criteria based on the method
-by Evrenoglou et al. (2024). This approach uses the range of equivalence
-(ROE) which through the \code{tcc} function can be defined in two different
-ways:
+This function implements treatment choice criteria based on the method
+by Evrenoglou et al. (2024). Namely, a range of equivalence (ROE) can be
+specified by
 \itemize{
-\item by specifying the argument \code{mcid}. Then the limits of the ROE
+\item argument \code{mcid}. Then the limits of the ROE
   will be defined based on the values (i) \code{mcid}, \code{1/mcid} for
   ratio measures and (ii) \code{mcid} and \code{-mcid} for difference
   measures.
-\item by specifying the arguments \code{lower.equi} and \code{upper.equi}.
+\item arguments \code{lower.equi} and \code{upper.equi}.
   These arguments allow the users to define their own limits of the ROE,
   given the restriction that the lower limit will always be smaller than the
   upper limit.
 }
 
 Note that when the argument \code{mcid} is specified, the arguments
-\code{lower.equi} and \code{upper.equi} are deprecated. 
+\code{lower.equi} and \code{upper.equi} are ignored.
 Either only the \code{mcid} or both of the \code{lower.equi} and
-\code{upper.equi} should be specified mandatorily specified for the proper
+\code{upper.equi} must be specified for the proper
 definition of the ROE.
 
 After setting the ROE, each study-specific treatment effect will be
 categorised as a treatment preference or a tie. The argument \code{relax}
 controls the amount of conservatism of the treatment choice criterion.
-If set as FALSE (default), the treatment choice criterion is equivalent to
-the one described by Evrenoglou et al. (2024). In this case, study-specific
-treatment effects need to be both statistically and clinically significant
-to indicate a treatment preference. If set to TRUE, the criterion is relaxed
-and the study-specific treatment effects need to be only clinically
-significant to indicate a treatment preference. 
+If set to \code{FALSE} (default), the treatment choice criterion is
+equivalent to the one described by Evrenoglou et al. (2024). In this case,
+study-specific treatment effects need to be both statistically and clinically
+significant to indicate a treatment preference. If set to \code{TRUE}, the
+criterion is relaxed and the study-specific treatment effects need to be only
+clinically significant to indicate a treatment preference. 
 
 This function can transform data with binary and continuous outcomes.
 Depending on the outcome, the following arguments are mandatory:

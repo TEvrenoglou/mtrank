@@ -35,6 +35,7 @@
 #' @importFrom netmeta netmeta netconnection invmat
 #' @importFrom PlackettLuce PlackettLuce itempar rankings as.rankings
 #' @importFrom dplyr %>% arrange bind_rows filter select mutate if_else
+#'   relocate last_col
 #' @importFrom magrittr %<>%
 #' @importFrom utils packageVersion
 #' @importFrom graphics legend segments text par

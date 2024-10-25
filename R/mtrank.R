@@ -1,4 +1,4 @@
-#' Estimate the treatment hierarchy in network meta-analysis using
+#' Estimate the treatment hierarchy in network meta-analysis using a
 #' probabilistic ranking model
 #' 
 #' @description
@@ -10,9 +10,8 @@
 #'   (print function).
 #' @param reference.group An argument specifying the reference group. If set to
 #'   NULL (default), ability estimates of all treatments will be calculated.
-#'   If some treatment is set as the reference group, relative
-#'   abilities of all treatments versus the specified reference treatment will
-#'   be calculated.
+#'   If some treatment is set as the reference group, relative abilities of all
+#'   treatments versus the specified reference treatment will be calculated.
 #' @param level The level used to calculate confidence intervals for ability
 #'   estimates.
 #' @param backtransf A logical argument specifying whether to show log-ability
@@ -23,7 +22,7 @@
 #' estimates in the printout (see Details).
 #' @param digits.prop Minimal number of significant digits for proportions,
 #'   see \code{print.default}.
-#' @param \dots Additional arguments.
+#' @param \dots Additional arguments (passed on to \code{\link{prmatrix}}).
 #'
 #' @details
 #' This function is used to fit a Bradley-Terry model to the paired-preference
@@ -41,24 +40,23 @@
 #' each treatment is having the highest ability".
 #' 
 #' Finally, a parameter "v" controlling the prevalence of ties in the network
-#' is also estimated. Although the estimated values of this parameter does
-#' not have a direct interpretation it is useful for estimating pairwise 
-#' probabilities using the \code{\link{paired_pref}} function. 
+#' is also estimated. Although the estimated values of this parameter do
+#' not have a direct interpretation they are useful for estimating pairwise 
+#' probabilities (see \code{\link{paired_pref}}).
 #' 
-#' If argument \code{reference.group} is not NULL then a reference treatment
-#' group is specified according to this treatment. Mathematically, this means
-#' that the maximization problem is now identifiable subject to the condition
-#' that the ability of this treatment is 0. Then the resulting MLEs are the
-#' relative abilities of all treatments in the network versus the specified
-#' reference treatment group. Note that the estimates of the parameter "v" and
-#' the normalized probabilities do not depend on the definition or not of a
-#' reference treatment group. 
+#' If argument \code{reference.group} is not NULL, a reference treatment
+#' group is specified. Mathematically, this means that the maximization problem
+#' is now identifiable, subject to the condition that the ability of this
+#' treatment is 0. Then, the resulting MLEs are the relative abilities of all
+#' treatments in the network versus the specified reference treatment group.
+#' Note that the estimates of the parameter "v" and the normalized probabilities
+#' do not depend on the value for argument \code{reference.group}.
 #' 
 #' @return
 #' \itemize{
 #' \item A data frame containing the resulting log-ability estimates, their
 #'   standard errors and their confidence intervals.
-#' \item The estimate of the parameter tie prevalence parameter v.
+#' \item The estimate of the tie prevalence parameter v.
 #' \item The normalized ability estimates for each treatment. 
 #' }
 #' 
@@ -75,11 +73,11 @@
 #'   mean = list(y1, y2, y3), n = list(n1, n2, n3), sd = list(sd1, sd2, sd3), 
 #'   data = Stowe2010, sm = "MD", small.values = "desirable", mcid = 0.5)
 #' #
-#' model <- mtrank(ranks)
+#' fit <- mtrank(ranks)
 #' # Print log-ability estimates
-#' model
+#' fit
 #' # Print ability estimates
-#' print(model, backtransf = TRUE)
+#' print(fit, backtransf = TRUE)
 #' 
 #' @export mtrank
 
@@ -93,7 +91,7 @@ mtrank <- function(x, reference.group = NULL, level = x$level) {
   #
   chklevel(level)
   
-  dat <- x$data
+  dat <- x$ppdata
   #dat$comparison <- paste(dat$treat1, dat$treat2, sep = " vs ")
   #
   reference.group <- setchar(reference.group, x$trts)
@@ -172,6 +170,7 @@ mtrank <- function(x, reference.group = NULL, level = x$level) {
   #
   res
 }
+
 
 #' @rdname mtrank
 #' @method print mtrank
