@@ -134,24 +134,21 @@ fit
 
 ### Forest plot of log-ability estimates 
 
-R function forest.mtrank() can be used to create a forest plot of ability estimates.
-
-By default, log-ability estimates are shown in the forest plot.
+R function forest.mtrank() can be used to create a forest plot of ability estimates. By default, log-ability estimates are shown in the forest plot.
 
 ```{r, eval = FALSE}
-forest(fit, spacing = 1.5)
+forest(fit)
 ```
 
 ```{r, echo = FALSE, out.width = "70%"}
-forest(fit, spacing = 1.5,
-  file = "forest2.pdf")
+forest(fit, file = "forest2.pdf")
 knitr::include_graphics("forest2.pdf")
 ```
 
 Alternatively, we could plot the abilities using argument 'backtransf' (figure not shown).
 
 ```{r, eval = FALSE}
-forest(fit, spacing = 1.5, backtransf = TRUE)
+forest(fit, backtransf = TRUE)
 ```
 
 
@@ -167,17 +164,13 @@ Finally, R package **mtrank** allows the calculation of pairwise preferences thr
 For more details about this function please use *help(paired_pref)*.
 
 ```{r}
-# Get probability that bupropion is better than trazodone
+# Get probability that bupropion is better or worse than trazodone
 paired_pref(fit, treat1 = "bupropion", treat2 = "trazodone",
-  type = "better")
+  type = c("better", "worse"))
 
 # Get probability that bupropion is tied with trazodone
 paired_pref(fit, treat1 = "bupropion", treat2 = "trazodone",
   type = "tie")
-
-# Get probability that bupropion is worse than trazodone
-paired_pref(fit, treat1 = "bupropion", treat2 = "trazodone",
-  type = "worse")
 
 # Get all three probabilities
 paired_pref(fit, treat1 = "bupropion", treat2 = "trazodone",
@@ -189,8 +182,7 @@ It is also possible to contrast one drug with several others (and to provide abb
 ```{r}
 # Get probability that bupropion is better than other drugs
 paired_pref(fit, treat1 = "bupr",
-  treat2 = c("fluo", "paro", "sert", "traz", "venl"),
-  type = "better")
+  treat2 = c("fluo", "paro", "sert", "traz", "venl"), type = "better")
 ```
 
 

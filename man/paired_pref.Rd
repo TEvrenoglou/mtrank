@@ -16,7 +16,7 @@ paired_pref(x, treat1, treat2, type)
 
 \item{treat2}{The second treatment considered in the treatment comparison.}
 
-\item{type}{A character string specifying the probability of interest.
+\item{type}{A character vector specifying the probability of interest.
 Either "better", "tie", "worse", or "all" (can be abbreviated).}
 
 \item{digits}{Minimal number of significant digits for proportions,
@@ -58,10 +58,10 @@ ranks <- tcc(treat = drug_name, studlab = studyid,
 #
 fit <- mtrank(ranks)
 #
-paired_pref(fit, type = "all",
+paired_pref(fit, type = c("better", "worse"),
   treat1 = "bupropion", treat2 = "escitalopram")
 #
-paired_pref(fit, type = "all",
+paired_pref(fit, type = c("better", "worse"),
   treat1 = "escitalopram", treat2 = "bupropion")
 #
 paired_pref(fit, type = "all",

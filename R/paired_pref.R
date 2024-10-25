@@ -9,7 +9,7 @@
 #' @param x An object of class \code{\link{mtrank}}.
 #' @param treat1 The first treatment considered in the treatment comparison.
 #' @param treat2 The second treatment considered in the treatment comparison.
-#' @param type A character string specifying the probability of interest.
+#' @param type A character vector specifying the probability of interest.
 #'   Either "better", "tie", "worse", or "all" (can be abbreviated).
 #' @param digits Minimal number of significant digits for proportions,
 #'   see \code{print.default}.
@@ -49,10 +49,10 @@
 #' #
 #' fit <- mtrank(ranks)
 #' #
-#' paired_pref(fit, type = "all",
+#' paired_pref(fit, type = c("better", "worse"),
 #'   treat1 = "bupropion", treat2 = "escitalopram")
 #' #
-#' paired_pref(fit, type = "all",
+#' paired_pref(fit, type = c("better", "worse"),
 #'   treat1 = "escitalopram", treat2 = "bupropion")
 #' #
 #' paired_pref(fit, type = "all",
@@ -69,6 +69,9 @@ paired_pref <- function(x, treat1, treat2, type) {
   treat2 <- setchar(treat2, x$x$trts)
   #
   type <- setchar(type, c("better", "tie", "worse", "all"))
+  type <- unique(type)
+  if ("all" %in% type)
+    type <- "all"
   #
   if (length(treat1) == 1 & length(treat2) > 1)
     treat1 <- rep(treat1, length(treat2))
@@ -77,10 +80,6 @@ paired_pref <- function(x, treat1, treat2, type) {
   #
   if (length(treat1) != length(treat2))
     stop("Arguments 'treat1' and 'treat2' must be of same length.",
-         call. = FALSE)
-  #
-  if (length(type) != 1)
-    stop("Argument 'type' must be of length 1.",
          call. = FALSE)
   
   # To calculate the paired preferences we need the results of mtrank()
@@ -137,6 +136,26 @@ print.paired_pref <- function(x, type = attr(x, "type"), digits = 4, ...) {
   
   chkclass(x, "paired_pref")
   #
+  type <- setchar(type, c("better", "tie", "worse", "all"))
+  type <- unique(type)
+  if ("all" %in% type)
+    type <- "all"
+  #
+  if (length(type) == 1 && type == "all") {
+    print_better <- TRUE
+    print_tie <- TRUE
+    print_worse <- TRUE
+  }
+  else {
+    print_better <- print_tie <- print_worse <- FALSE
+    #
+    if ("better" %in% type)
+      print_better <- TRUE
+    if ("tie" %in% type)
+      print_tie <- TRUE
+    if ("worse" %in% type)
+      print_worse <- TRUE
+  }
   
   if (nrow(x) == 1) {
     # Report results according to type of interest (for single comparison)
@@ -163,14 +182,13 @@ print.paired_pref <- function(x, type = attr(x, "type"), digits = 4, ...) {
                    round(p_worse, digits = digits),
                    "\n")
     #
-    if (type == "better")
+    txt <- ""
+    if (print_better)
       txt <- txt1
-    else if (type == "tie")
-      txt <- txt2 
-    else if (type == "worse")
-      txt <- txt3
-    else if (type == "all")
-      txt <- paste0(txt1, txt2, txt3) 
+    if (print_tie)
+      txt <- paste0(txt, txt2)
+    if (print_worse)
+      txt <- paste0(txt, txt3)
     #
     cat(txt)
   }
@@ -178,12 +196,12 @@ print.paired_pref <- function(x, type = attr(x, "type"), digits = 4, ...) {
     treats <- x %>% select(treat1, treat2)
     res_p <- x %>% select(p_better, p_tie, p_worse) %>% round(digits = digits)
     #
-    if (type == "better")
-      res_p %<>% select(p_better)
-    else if (type == "tie")
-      res_p %<>% select(p_tie)
-    else if (type == "worse")
-      res_p %<>% select(p_worse)
+    if (!print_better)
+      res_p %<>% select(-p_better)
+    if (!print_tie)
+      res_p %<>% select(-p_tie)
+    if (!print_worse)
+      res_p %<>% select(-p_worse)
     #
     prmatrix(cbind(treats, res_p), quote = FALSE, right = TRUE,
              rowlab = rep("", nrow(res_p)), ...)
