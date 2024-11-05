@@ -1,11 +1,16 @@
 #' mtrank: Brief overview
 #'
 #' @description
-#' R package \bold{mtrank} provides ...
+#' The R package \bold{mtrank} provides a frequentist method that produces treatment hierarchies in network meta-analysis (NMA) using predefined treatment choice criteria (TCC) and probabilistic ranking models. The methodology is based on the manuscript by Evrenoglou et al. (2024).
 #'
 #' @details
-#' R package \bold{mtrank} provides ...
-#'
+#' The R package \bold{mtrank} provides the following functions:
+#' \itemize{
+#' \item Function \code{\link{tcc}} defines the TCC and transforms the study-specific relative treatment effects into a preference format.
+#' \item Function \code{\link{mtrank}} synthesizes the output of the \code{\link{tcc}} function and estimates the final treatment ability.
+#' \item Function \code{\link{forest}} visualizes either the results of the TCC (forest.tcc) or the final ability estimates (forest.mtrank).
+#' \item Function \code{\link{paired_pref}} uses the ability estimates obtained from \code{\link{mtrank}} to calculate pairwise probabilities that any treatment 'A' can be better, equal, or worse than any other treatment 'B' in the network.
+}
 #' Type \code{help(package = "mtrank")} for a listing of R functions
 #' available in \bold{mtrank}.
 #'
