@@ -6,11 +6,18 @@
 #' @details
 #' The R package \bold{mtrank} provides the following functions:
 #' \itemize{
-#' \item Function \code{\link{tcc}} defines the TCC and transforms the study-specific relative treatment effects into a preference format.
-#' \item Function \code{\link{mtrank}} synthesizes the output of the \code{\link{tcc}} function and estimates the final treatment ability.
-#' \item Function \code{\link{forest}} visualizes either the results of the TCC (forest.tcc) or the final ability estimates (forest.mtrank).
-#' \item Function \code{\link{paired_pref}} uses the ability estimates obtained from \code{\link{mtrank}} to calculate pairwise probabilities that any treatment 'A' can be better, equal, or worse than any other treatment 'B' in the network.
-}
+#' \item Function \code{\link{tcc}} defines the TCC and transforms the
+#'   study-specific relative treatment effects into a preference format.
+#' \item Function \code{\link{mtrank}} synthesizes the output of the
+#'   \code{\link{tcc}} function and estimates the final treatment ability.
+#' \item Function \code{\link{forest}} visualizes either the results of the
+#'   TCC (forest.tcc) or the final ability estimates (forest.mtrank).
+#' \item Function \code{\link{paired_pref}} uses the ability estimates
+#'   obtained from \code{\link{mtrank}} to calculate pairwise probabilities
+#'   that any treatment 'A' can be better, equal, or worse than any other
+#'   treatment 'B' in the network.
+#' }
+#' 
 #' Type \code{help(package = "mtrank")} for a listing of R functions
 #' available in \bold{mtrank}.
 #'
