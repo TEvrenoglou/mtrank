@@ -42,3 +42,13 @@ is_prop <- function(x)
 
 is_rate <- function(x)
   x %in% gs("sm4rate")
+
+ignore_input <- function(x, cond = TRUE, text = "") {
+  if (cond)
+    warning("Argument '", deparse(substitute(x)), "' ignored",
+            if (text != "") " ", text, ".",
+            call. = FALSE)
+  #
+  invisible(NULL)
+}
+

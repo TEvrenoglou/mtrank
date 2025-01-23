@@ -8,8 +8,9 @@
 #' The function can transform data with binary and continuous arm-based to
 #' preference-based format.
 #' 
-#' @param treat A list or vector with treatment information for
-#'   individual treatment arms (see Details).
+#' @param treat Either a \code{\link[meta]{pairwise}} object, or a list or
+#'   vector with treatment information for individual treatment arms
+#'   (see Details).
 #' @param event A list or vector with information on number of events
 #'   for individual treatment arms (see Details).
 #' @param n A list or vector with information on number of
@@ -134,37 +135,22 @@ tcc <- function(treat,
                 event, n, mean, sd,
                 data = NULL, studlab,
                 mcid = NULL, lower.equi = NULL, upper.equi = NULL,
-                small.values = "desirable",
+                small.values = gs("small.values"),
                 relax = FALSE, level = 0.95, sm,
                 keepdata = gs("keepdata"),
                 ...) {
   
-  # Get rid of warning 'no visible binding for global variable'
-  #
-  grp <- id <- outcome <- rank1 <- rank2 <- treat1 <- treat2 <-
-    .order <- NULL
+  missing.event <- missing(event)
+  missing.n <- missing(n)
+  missing.mean <- missing(mean)
+  missing.sd <- missing(sd)
+  missing.studlab <- missing(studlab)
+  missing.sm <- missing(sm)
+  missing.keepdata <- missing(keepdata)
   
-  #
-  # Read the data from a data frame
-  #
   
-  nulldata <- is.null(data)
-  sfsp <- sys.frame(sys.parent())
-  mc <- match.call()
+  # Check additional arguments
   #
-  if (nulldata)
-    data <- sfsp
-  #
-  studlab <- catch("studlab", mc, data, sfsp)
-  treat <- catch("treat", mc, data, sfsp)
-  event <- catch("event", mc, data, sfsp)
-  mean <- catch("mean", mc, data, sfsp)
-  sd <- catch("sd", mc, data, sfsp)
-  n <- catch("n", mc, data, sfsp)
-  #  
-  args <- list(...)
-  nam.args <- names(args)
-  
   if (missing(mcid)) {
     if (missing(lower.equi) | missing(upper.equi))
       stop("A range of equivalence (ROE) needs to be defined. ",
@@ -193,36 +179,6 @@ tcc <- function(treat,
   #
   small.values <- setchar(small.values, c("desirable", "undesirable"))
   #
-  chknull(studlab)
-  chknull(treat)
-  #
-  if (is.list(treat))
-    chklist(treat)
-  #
-  if (!is.null(event))
-    if (is.list(event))
-      chklist(event)
-  else
-    chknumeric(event)
-  #
-  if (!is.null(n))
-    if (is.list(n))
-      chklist(n)
-  else
-    chknumeric(n)
-  #
-  if (!is.null(mean))
-    if (is.list(mean))
-      chklist(mean)
-  else
-    chknumeric(mean)
-  #
-  if (!is.null(sd))
-    if (is.list(sd))
-      chklist(sd)
-  else
-    chknumeric(sd)
-  #
   chklogical(relax)
   #
   chklevel(level)
@@ -230,108 +186,208 @@ tcc <- function(treat,
   chklogical(keepdata)
   
   
+  # Get rid of warning 'no visible binding for global variable'
   #
-  #
-  # Determine whether the outcome is binary or continuous
-  #
-  #
-  
-  if (!is.null(event) & !is.null(n) & is.null(mean) & is.null(sd))
-    type <- "binary"
-  else if (!is.null(n) & !is.null(mean) & !is.null(sd))
-    type <- "continuous"
-  else
-    stop("Type of outcome unclear. Please provide the necessary ",
-         "information:\n  - event, n (binary outcome)\n  - n, ",
-         "mean, sd (continuous outcome).")
-  #
-  if (type == "binary")
-    sm <- setchar(sm, gs("sm4bin"))
-  else
-    sm <- setchar(sm, gs("sm4cont"))
-  
+  grp <- id <- outcome <- rank1 <- rank2 <- treat1 <- treat2 <-
+    .order <- NULL
   
   #
-  #
-  # Determine the format of the data
-  #
+  # Read the data from a data frame
   #
   
-  data.format <- NA
+  nulldata <- is.null(data)
+  sfsp <- sys.frame(sys.parent())
+  mc <- match.call()
   #
-  if (type == "binary") {
-    if (is.list(event) & is.list(n) & is.list(treat)) {
-      if ((length(event) != length(n)) ||
-          (length(event) != length(treat)) ||
-          (length(treat) != length(n)))
-        stop("List arguments 'treat', 'event' and 'n' must have ",
-             "the same length.")
-      #
-      if (length(event) == 1 & length(n) == 1 & length(treat) == 1) {
-        data.format <- "long"
-        #
-        event <- unlist(event)
-        n <- unlist(n)
-        treat <- unlist(treat)
-      }
-      else if (length(event) > 1 & length(n) > 1 & length(treat) > 1)
-        data.format <- "wide" ## don't unlist here
-    }
-    else if (is.numeric(event) & is.numeric(n))
-      data.format <- "long"
+  if (nulldata)
+    data <- sfsp
+  #
+  treat <- catch("treat", mc, data, sfsp)
+  #
+  if (inherits(treat, "pairwise")) {
+   pdat <- treat
+   #
+   txt.ignore <- "as first argument is a pairwise object"
+   #
+   ignore_input(event, !missing.event, txt.ignore)
+   ignore_input(n, !missing.n, txt.ignore)
+   ignore_input(mean, !missing.mean, txt.ignore)
+   ignore_input(sd, !missing.sd, txt.ignore)
+   ignore_input(data, !nulldata, txt.ignore)   
+   ignore_input(studlab, !missing.studlab, txt.ignore)
+   ignore_input(sm, !missing.sm, txt.ignore)
+   ignore_input(keepdata, !missing.keepdata, txt.ignore)
+   #
+   sm <- attr(treat, "sm")
+   keepdata <- FALSE
   }
   else {
-    if (is.list(mean) & is.list(sd) &  is.list(n) & is.list(treat)) {
-      if ((length(mean) != length(n)) ||
-          (length(mean) != length(treat)) ||
-          (length(mean) != length(sd)) ||
-          (length(n) != length(sd)) ||
-          (length(n) != length(treat)) ||
-          (length(sd) != length(treat)))
-        stop("List arguments 'treat', 'mean', 'sd' and 'n' must have the ",
-             "same length.")
-      #
-      if (length(mean) == 1 & length(sd) == 1 & length(n) == 1 &
-          length(treat) == 1) {
-        data.format <- "long"
+    event <- catch("event", mc, data, sfsp)
+    mean <- catch("mean", mc, data, sfsp)
+    sd <- catch("sd", mc, data, sfsp)
+    n <- catch("n", mc, data, sfsp)
+    studlab <- catch("studlab", mc, data, sfsp)
+    #
+    chknull(studlab)
+    chknull(treat)
+    #
+    if (is.list(treat))
+      chklist(treat)
+    #
+    if (!is.null(event))
+      if (is.list(event))
+        chklist(event)
+    else
+      chknumeric(event)
+    #
+    if (!is.null(n))
+      if (is.list(n))
+        chklist(n)
+    else
+      chknumeric(n)
+    #
+    if (!is.null(mean))
+      if (is.list(mean))
+        chklist(mean)
+    else
+      chknumeric(mean)
+    #
+    if (!is.null(sd))
+      if (is.list(sd))
+        chklist(sd)
+    else
+      chknumeric(sd)
+        
+    
+    #
+    #
+    # Determine whether the outcome is binary or continuous
+    #
+    #
+    
+    if (!is.null(event) & !is.null(n) & is.null(mean) & is.null(sd))
+      type <- "binary"
+    else if (!is.null(n) & !is.null(mean) & !is.null(sd))
+      type <- "continuous"
+    else
+      stop("Type of outcome unclear. Please provide the necessary ",
+           "information:\n  - event, n (binary outcome)\n  - n, ",
+           "mean, sd (continuous outcome).")
+    #
+    if (type == "binary")
+      sm <- setchar(sm, gs("sm4bin"))
+    else
+      sm <- setchar(sm, gs("sm4cont"))
+    
+    
+    #
+    #
+    # Determine the format of the data
+    #
+    #
+    
+    data.format <- NA
+    #
+    if (type == "binary") {
+      if (is.list(event) & is.list(n) & is.list(treat)) {
+        if ((length(event) != length(n)) ||
+            (length(event) != length(treat)) ||
+            (length(treat) != length(n)))
+          stop("List arguments 'treat', 'event' and 'n' must have ",
+               "the same length.")
         #
-        mean <- unlist(mean)
-        n <- unlist(n)
-        sd <- unlist(sd)
-        treat <- unlist(treat)
+        if (length(event) == 1 & length(n) == 1 & length(treat) == 1) {
+          data.format <- "long"
+          #
+          event <- unlist(event)
+          n <- unlist(n)
+          treat <- unlist(treat)
+        }
+        else if (length(event) > 1 & length(n) > 1 & length(treat) > 1)
+          data.format <- "wide" ## don't unlist here
       }
-      else if (length(mean) > 1 & length(sd) > 1 & length(n) > 1 &
-               length(treat) > 1)
-        data.format <- "wide" ## don't unlist here 
+      else if (is.numeric(event) & is.numeric(n))
+        data.format <- "long"
     }
-    else if (is.numeric(mean) & is.numeric(sd) &  is.numeric(n))
-      data.format <- "long"
-  }
-  
-  
-  if (data.format == "long") {
+    else {
+      if (is.list(mean) & is.list(sd) &  is.list(n) & is.list(treat)) {
+        if ((length(mean) != length(n)) ||
+            (length(mean) != length(treat)) ||
+            (length(mean) != length(sd)) ||
+            (length(n) != length(sd)) ||
+            (length(n) != length(treat)) ||
+            (length(sd) != length(treat)))
+          stop("List arguments 'treat', 'mean', 'sd' and 'n' must have the ",
+               "same length.")
+        #
+        if (length(mean) == 1 & length(sd) == 1 & length(n) == 1 &
+            length(treat) == 1) {
+          data.format <- "long"
+          #
+          mean <- unlist(mean)
+          n <- unlist(n)
+          sd <- unlist(sd)
+          treat <- unlist(treat)
+        }
+        else if (length(mean) > 1 & length(sd) > 1 & length(n) > 1 &
+                 length(treat) > 1)
+          data.format <- "wide" ## don't unlist here 
+      }
+      else if (is.numeric(mean) & is.numeric(sd) &  is.numeric(n))
+        data.format <- "long"
+    }
+    
+    
+    if (data.format == "long") {
+      if (type == "binary")
+        dat <- data.frame(studlab, treat, event, n)
+      else
+        dat <- data.frame(studlab, treat, mean, sd, n)
+    }
+    else if (data.format == "wide") {
+      if (type == "binary")
+        dat <- go_long(studlab = studlab, treat = treat, event = event,
+                       n = n, type = type)
+      else
+        dat <- go_long(studlab = studlab, treat = treat,
+                       mean = mean, sd = sd, n = n, type = type)
+    }
+    
+    #
+    # Clean studies with
+    # (i) zero events in all arms or missing number of events
+    #     and sample sizes (binary outcome) or
+    # (ii) missing information on means or sample sizes (continuous outcome)
+    #
+    
+    dat <- clean(dat, type)
+        
+    
+    # Use pairwise to transform the long format data to contrasts using
+    # pairwise() from netmeta.
+    # This also ensures that a network of multi-arm studies gets an equivalent
+    # representation of a network of two-arm studies.
+    
     if (type == "binary")
-      dat <- data.frame(studlab, treat, event, n)
+      pdat <- pairwise(data = dat, treat = treat, event = event,
+                       n = n, sm = sm, studlab = studlab,
+                       append = FALSE, ...)
     else
-      dat <- data.frame(studlab, treat, mean, sd, n)
+      pdat <- pairwise(data = dat, treat = treat, mean = mean,
+                       sd = sd, n = n, sm = sm, studlab = studlab,
+                       append = FALSE, ...)
   }
-  else if (data.format == "wide") {
-    if (type == "binary")
-      dat <- go_long(studlab = studlab, treat = treat, event = event,
-                     n = n, type = type)
-    else
-      dat <- go_long(studlab = studlab, treat = treat,
-                     mean = mean, sd = sd, n = n, type = type)
-  }
-  
   #
-  # Clean studies with
-  # (i) zero events in all arms or missing number of events
-  #     and sample sizes (binary outcome) or
-  # (ii) missing information on means or sample sizes (continuous outcome)
+  # Keep original order
   #
-  
-  dat <- clean(dat, type)
+  pdat$.order <- seq_len(nrow(pdat))
+  #
+  # Add confidence limits
+  #
+  ci.p <- ci(pdat$TE, pdat$seTE, level = level)
+  #
+  pdat$lower <- ci.p$lower
+  pdat$upper <- ci.p$upper
   
   
   #
@@ -373,11 +429,11 @@ tcc <- function(treat,
   # (ii) how the ROE of equivalence will be treated
   #
   
-  ## the argument relax defines how the ROE should be treated. The default is FALSE. If TRUE, it relaxes the TTC shown in the main manuscript.
+  # the argument relax defines how the ROE should be treated. The default is FALSE. If TRUE, it relaxes the TTC shown in the main manuscript.
   
-  ## The modified tcc does not account for the statistical significance of the effect. Now for a relative effect to indicate a "win" 
-  ## it requires that the relative effect (point estimate) and one bound of the confidence interval will be clinically significant (i.e. outside the ROE) 
-  ## and the other bound simply does not indicate a clinically significant effect on the opposite direction.
+  # The modified tcc does not account for the statistical significance of the effect. Now for a relative effect to indicate a "win" 
+  # it requires that the relative effect (point estimate) and one bound of the confidence interval will be clinically significant (i.e. outside the ROE) 
+  # and the other bound simply does not indicate a clinically significant effect on the opposite direction.
   
   if (relax) {
     no_effect1 <- lower.equi
@@ -386,32 +442,6 @@ tcc <- function(treat,
   else {
     no_effect1 <- no_effect2 <- 0
   }
-  
-  
-  # Use pairwise to transform the long format data to contrasts using
-  # pairwise() from netmeta.
-  # This also ensures that a network of multi-arm studies gets an equivalent
-  # representation of a network of two-arm studies.
-  
-  if (type == "binary")
-    pdat <- pairwise(data = dat, treat = treat, event = event,
-                     n = n, sm = sm, studlab = studlab,
-                     append = FALSE, ...)
-  else
-    pdat <- pairwise(data = dat, treat = treat, mean = mean,
-                     sd = sd, n = n, sm = sm, studlab = studlab,
-                     append = FALSE, ...)
-  #
-  # Keep original order
-  #
-  pdat$.order <- seq_len(nrow(pdat))
-  #
-  # Add confidence limits
-  #
-  ci.p <- ci(pdat$TE, pdat$seTE, level = level)
-  #
-  pdat$lower <- ci.p$lower
-  pdat$upper <- ci.p$upper
   
   
   #

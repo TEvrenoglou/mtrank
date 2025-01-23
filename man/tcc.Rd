@@ -17,7 +17,7 @@ tcc(
   mcid = NULL,
   lower.equi = NULL,
   upper.equi = NULL,
-  small.values = "desirable",
+  small.values = gs("small.values"),
   relax = FALSE,
   level = 0.95,
   sm,
@@ -28,8 +28,9 @@ tcc(
 \method{print}{tcc}(x, ...)
 }
 \arguments{
-\item{treat}{A list or vector with treatment information for
-individual treatment arms (see Details).}
+\item{treat}{Either a \code{\link[meta]{pairwise}} object, or a list or
+vector with treatment information for individual treatment arms
+(see Details).}
 
 \item{event}{A list or vector with information on number of events
 for individual treatment arms (see Details).}

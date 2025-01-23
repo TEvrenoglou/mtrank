@@ -38,6 +38,24 @@ paired_pref(fit, type = "better",
   treat1 = "bupropion", treat2 = "escitalopram")
 
 forest(fit, treat = "escitalopram")
+
+\dontrun{
+# Same results using pairwise object as input to tcc()
+# (and running a network meta-analysis)
+#
+pw <- pairwise(treat = drug_name, studlab = studyid,
+  event = responders, n = ntotal, data = antidepressants,
+  sm = "OR")
+#
+netmeta(pw)
+#
+ranks2 <- tcc(pw, mcid = 1.25, small.values = "undesirable")
+#
+fit2 <- mtrank(ranks2)
+#
+paired_pref(fit2, type = "better",
+  treat1 = "bupropion", treat2 = "escitalopram")
+}
 }
 \seealso{
 \code{\link{mtrank}}, \code{\link{tcc}}

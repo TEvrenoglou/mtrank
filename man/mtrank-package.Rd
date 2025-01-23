@@ -14,8 +14,9 @@ The R package \bold{mtrank} provides the following functions:
   study-specific relative treatment effects into a preference format.
 \item Function \code{\link{mtrank}} synthesizes the output of the
   \code{\link{tcc}} function and estimates the final treatment ability.
-\item Function \code{\link{forest}} visualizes either the results of the
-  TCC (forest.tcc) or the final ability estimates (forest.mtrank).
+\item Forest plots are created either for the results of the
+  TCC (\code{\link{forest.tcc}}) or the final ability estimates
+  (\code{\link{forest.mtrank}}).
 \item Function \code{\link{paired_pref}} uses the ability estimates
   obtained from \code{\link{mtrank}} to calculate pairwise probabilities
   that any treatment 'A' can be better, equal, or worse than any other

@@ -1,8 +1,8 @@
 Package: mtrank
 Title: mtrank: Treatment Hierarchies in Network Meta-Analysis using Probabilistic Models and Treatment-Choice Criteria
 Version: 0.1-0
-Date: 2025-01-21
-Depends: R (>= 3.5.0), meta (>= 8.0-0), netmeta (>= 3.0-0)
+Date: 2025-01-23
+Depends: R (>= 4.0.0), meta (>= 8.0-2), netmeta (>= 3.0-2)
 Imports: PlackettLuce, dplyr, magrittr
 Suggests: rmarkdown, knitr
 Authors@R: c(person("Theodoros", "Evrenoglou",
