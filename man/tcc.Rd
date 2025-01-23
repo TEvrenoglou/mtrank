@@ -114,7 +114,10 @@ study-specific treatment effect estimates and standard errors. This ensures
 that data given in either 'long' or 'wide' arm-based format will be suitably
 used to calculate the study-specific treatment effect estimates and standard
 errors while ensuring that a network of multi-arm studies gets an
-equivalent representation as a network of two-arm studies.
+equivalent representation as a network of two-arm studies. It is also
+possible to provide a \code{\link[meta]{pairwise}} as the main input.
+In this case, inputs for the arguments \code{event}, \code{n}, \code{mean},
+\code{sd}, \code{data}, \code{studlab}, or \code{keepdata} are ignored.
 
 This function implements treatment choice criteria based on the method
 by Evrenoglou et al. (2024). Namely, a range of equivalence (ROE) can be
@@ -155,8 +158,8 @@ Depending on the outcome, the following arguments are mandatory:
 
 Finally, the argument \code{sm} is used to define the effect measure of
 interest for transforming the data into paired-preference format;
-see \code{\link{metabin}} and \code{\link{metacont}} for a list of available
-effect measures.
+see \code{\link[meta]{metabin}} and \code{\link[meta]{metacont}} for a
+list of available effect measures.
 }
 \examples{
 data(diabetes)

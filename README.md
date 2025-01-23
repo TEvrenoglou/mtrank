@@ -4,6 +4,7 @@ Official Git repository of R package **mtrank**
 
 [![License: GPL (>=2)](https://img.shields.io/badge/license-GPL-blue)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
 [![CRAN Version](https://www.r-pkg.org/badges/version/mtrank)](https://cran.r-project.org/package=mtrank)
+[![GitHub develop](https://img.shields.io/badge/develop-0.1--1-purple)](https://img.shields.io/badge/develop-0.1--1-purple)
 [![Monthly Downloads](https://cranlogs.r-pkg.org/badges/mtrank)](https://cranlogs.r-pkg.org/badges/mtrank)
 [![Total Downloads](https://cranlogs.r-pkg.org/badges/grand-total/mtrank)](https://cranlogs.r-pkg.org/badges/grand-total/mtrank)
 
@@ -28,13 +29,13 @@ install.packages("mtrank")
 ```
 -->
 
-### Current GitHub release:
+### Current [![GitHub develop](https://img.shields.io/badge/develop-0.1--1-purple)](https://img.shields.io/badge/develop-0.1--1-purple) release on GitHub:
 
 Installation using R package
 [**remotes**](https://cran.r-project.org/package=remotes):
 ```r
 install.packages("remotes")
-remotes::install_github("TEvrenoglou/mtrank")
+remotes::install_github("TEvrenoglou/mtrank", ref = "develop")
 ```
 
 ### Bug Reports:

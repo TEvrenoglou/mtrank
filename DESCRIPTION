@@ -1,5 +1,5 @@
 Package: mtrank
-Title: mtrank: Treatment Hierarchies in Network Meta-Analysis using Probabilistic Models and Treatment-Choice Criteria
+Title: Treatment Hierarchies in Network Meta-Analysis using Probabilistic Models and Treatment-Choice Criteria
 Version: 0.1-0
 Date: 2025-01-23
 Depends: R (>= 4.0.0), meta (>= 8.0-2), netmeta (>= 3.0-2)
@@ -14,7 +14,7 @@ Authors@R: c(person("Theodoros", "Evrenoglou",
                     comment = c(ORCID = "0000-0001-6214-9087")))
 Maintainer: Theodoros Evrenoglou <theodoros.evrenoglou@uniklinik-freiburg.de>
 URL: https://github.com/TEvrenoglou/mtrank
-Description: R package mtrank implements the approach by Evrenoglou et al. (2024) <DOI:10.48550/arXiv.2406.10612> to construct a treatment hierarchy in network meta-analysis using probabilistic models and treatment-choice criteria.
+Description: Implementation of the approach by Evrenoglou et al. (2024) <DOI:10.48550/arXiv.2406.10612> to construct a treatment hierarchy in network meta-analysis using probabilistic models and treatment-choice criteria.
 License: GPL (>= 2)
 Encoding: UTF-8
 RoxygenNote: 7.3.2
