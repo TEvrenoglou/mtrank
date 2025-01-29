@@ -25,7 +25,7 @@
 #' #
 #' ldat <- pp2long(pdat)
 #' head(ldat)
-#' \dontrun{
+#' 
 #' library("PlackettLuce")
 #' ungrouped.preferences <-
 #'   rankings(ldat, id = "id", item = "treat", rank = "rank")
@@ -38,7 +38,6 @@
 #' coef(summary(fit, ref = ranks$reference.group))[, 1]
 #' # Results stored in mtrank()
 #' mtrank(ranks)$estimates$log_ability
-#' }
 #' 
 #' @export pp2long
 

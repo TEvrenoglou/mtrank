@@ -71,6 +71,9 @@ pairwise comparisons.}
 \item{\dots}{Additional arguments (passed on to
 \code{\link[meta]{forest.meta}}).}
 }
+\value{
+A forest plot is plotted in the active graphics device.
+}
 \description{
 This function produces a forest plot for all (or selected) study
 specific comparisons and visualizes the treatment preference or ties
@@ -79,7 +82,8 @@ which are defined from the treatment choice criterion in \code{\link{tcc}}.
 \details{
 This function produces forest plots for the study specific treatment effects
 in the network. The color indicates whether treatment effects show
-a preference (red color) or tie (black color). Additionally, the respective range of equivalence defined at the function
+a preference (red color) or tie (black color). Additionally, the respective
+range of equivalence defined at the function
 \code{\link{tcc}} is visualized for the forest plot.
 
 Argument \code{treat} is optional. By default ( \code{treat = NULL}),

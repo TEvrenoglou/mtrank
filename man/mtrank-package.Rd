@@ -5,7 +5,20 @@
 \alias{mtrank-package}
 \title{mtrank: Brief overview}
 \description{
-The R package \bold{mtrank} provides a frequentist method that produces treatment hierarchies in network meta-analysis (NMA) using predefined treatment choice criteria (TCC) and probabilistic ranking models. The methodology is based on the manuscript by Evrenoglou et al. (2024).
+R package \bold{mtrank} enables the production of clinically relevant
+treatment hierarchies in network meta-analysis using a novel frequentist
+approach based on treatment choice criteria (TCC) and probabilistic
+ranking models, as described by Evrenoglou et al. (2024). The TCC are defined
+using a rule based on the minimal clinically important difference. Using the
+defined TCC, the study-level data (i.e., treatment effects and standard
+errors) are first transformed into a preference format, indicating either a
+treatment preference (e.g., treatment A > treatment B) or a tie (treatment A
+= treatment B). The preference data are then synthesized using a
+probabilistic ranking model, which estimates the latent ability parameter
+of each treatment and produces the final treatment hierarchy. This parameter
+represents each treatment’s ability to outperform all the other competing
+treatments in the network. Consequently, larger ability estimates indicate
+higher positions in the ranking list.
 }
 \details{
 The R package \bold{mtrank} provides the following functions:
