@@ -41,16 +41,20 @@
 #' @param \dots Additional arguments (passed on to
 #'   \code{\link[meta]{forest.meta}}).
 #' 
-#' @details  
+#' @details
 #' This function produces forest plots for the study specific treatment effects
 #' in the network. The color indicates whether treatment effects show
-#' a preference (red color) or tie (black color). Additionally, the respective range of equivalence defined at the function
+#' a preference (red color) or tie (black color). Additionally, the respective
+#' range of equivalence defined at the function
 #' \code{\link{tcc}} is visualized for the forest plot.
 #' 
 #' Argument \code{treat} is optional. By default ( \code{treat = NULL}),
 #' all study-specific treatment effects in the network are shown. If specified,
 #' only study-specific treatment effects related to the specified \code{treat}
 #' are shown which is useful in busy networks with many direct comparisons.
+#' 
+#' @return
+#' A forest plot is plotted in the active graphics device.
 #' 
 #' @references
 #' Evrenoglou T, Nikolakopoulou A, Schwarzer G, Rücker G, Chaimani A (2024):

@@ -39,7 +39,7 @@ paired_pref(fit, type = "better",
 
 forest(fit, treat = "escitalopram")
 
-\dontrun{
+\donttest{
 # Same results using pairwise object as input to tcc()
 # (and running a network meta-analysis)
 #

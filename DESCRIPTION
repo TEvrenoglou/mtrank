@@ -1,7 +1,7 @@
 Package: mtrank
-Title: Treatment Hierarchies in Network Meta-Analysis using Probabilistic Models and Treatment-Choice Criteria
+Title: Ranking using Probabilistic Models and Treatment Choice Criteria
 Version: 0.1-0
-Date: 2025-01-23
+Date: 2025-01-29
 Depends: R (>= 4.0.0), meta (>= 8.0-2), netmeta (>= 3.0-2)
 Imports: PlackettLuce, dplyr, magrittr
 Suggests: rmarkdown, knitr
@@ -14,7 +14,7 @@ Authors@R: c(person("Theodoros", "Evrenoglou",
                     comment = c(ORCID = "0000-0001-6214-9087")))
 Maintainer: Theodoros Evrenoglou <theodoros.evrenoglou@uniklinik-freiburg.de>
 URL: https://github.com/TEvrenoglou/mtrank
-Description: Implementation of the approach by Evrenoglou et al. (2024) <DOI:10.48550/arXiv.2406.10612> to construct a treatment hierarchy in network meta-analysis using probabilistic models and treatment-choice criteria.
+Description: R package mtrank enables the production of clinically relevant treatment hierarchies in network meta-analysis using a novel frequentist approach based on treatment choice criteria (TCC) and probabilistic ranking models, as described by Evrenoglou et al. (2024) <DOI:10.48550/arXiv.2406.10612>. The TCC are defined using a rule based on the minimal clinically important difference. Using the defined TCC, the study-level data (i.e., treatment effects and standard errors) are first transformed into a preference format, indicating either a treatment preference (e.g., treatment A > treatment B) or a tie (treatment A = treatment B). The preference data are then synthesized using a probabilistic ranking model, which estimates the latent ability parameter of each treatment and produces the final treatment hierarchy. This parameter represents each treatment’s ability to outperform all the other competing treatments in the network. Consequently, larger ability estimates indicate higher positions in the ranking list.
 License: GPL (>= 2)
 Encoding: UTF-8
 RoxygenNote: 7.3.2
