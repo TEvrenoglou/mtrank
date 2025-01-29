@@ -28,7 +28,7 @@
 #' @param \dots Additional arguments (passed on to
 #'   \code{\link[meta]{forest.meta}}).
 #' 
-#' @details  
+#' @details
 #' The function produces a forest plot and visualizes the ability estimates
 #' obtained from \code{\link{mtrank}}. The order of the estimates in the
 #' forest plot (argument \code{sorting}) can be one of the following:
@@ -37,6 +37,9 @@
 #' \item "se": sort by descending precision, i.e., increasing standard errors,
 #' \item "none": use order from data set.
 #' }
+#' 
+#' @return
+#' A forest plot is plotted in the active graphics device.
 #' 
 #' @references
 #' Evrenoglou T, Nikolakopoulou A, Schwarzer G, Rücker G, Chaimani A (2024):

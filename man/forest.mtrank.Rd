@@ -55,6 +55,9 @@ header line or a character string ("both", "below", "").}
 \item{\dots}{Additional arguments (passed on to
 \code{\link[meta]{forest.meta}}).}
 }
+\value{
+A forest plot is plotted in the active graphics device.
+}
 \description{
 This function produces a forest plot that visualizes the ability estimates
 calculated with \code{\link{mtrank}}.
