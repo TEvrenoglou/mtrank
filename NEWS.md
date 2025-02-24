@@ -1,4 +1,4 @@
-## mtrank, version 0.1-1 (2025-mm-dd)
+## mtrank, version 0.1-1 (2025-02-24)
 
 ### Bug fixes
 
