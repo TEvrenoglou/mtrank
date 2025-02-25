@@ -1,7 +1,7 @@
 Package: mtrank
 Title: Ranking using Probabilistic Models and Treatment Choice Criteria
 Version: 0.1-1
-Date: 2025-02-24
+Date: 2025-02-25
 Depends: R (>= 4.0.0), meta (>= 8.0-2), netmeta (>= 3.0-2)
 Imports: PlackettLuce, dplyr, magrittr
 Suggests: rmarkdown, knitr
