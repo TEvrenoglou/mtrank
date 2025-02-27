@@ -4,7 +4,7 @@ Official Git repository of R package **mtrank**
 
 [![License: GPL (>=2)](https://img.shields.io/badge/license-GPL-blue)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
 [![CRAN Version](https://www.r-pkg.org/badges/version/mtrank)](https://cran.r-project.org/package=mtrank)
-[![GitHub develop](https://img.shields.io/badge/develop-0.1--1-purple)](https://img.shields.io/badge/develop-0.1--1-purple)
+[![GitHub develop](https://img.shields.io/badge/develop-0.1--2-purple)](https://img.shields.io/badge/develop-0.1--2-purple)
 [![Monthly Downloads](https://cranlogs.r-pkg.org/badges/mtrank)](https://cranlogs.r-pkg.org/badges/mtrank)
 [![Total Downloads](https://cranlogs.r-pkg.org/badges/grand-total/mtrank)](https://cranlogs.r-pkg.org/badges/grand-total/mtrank)
 
@@ -29,7 +29,7 @@ install.packages("mtrank")
 ```
 -->
 
-### Current [![GitHub develop](https://img.shields.io/badge/develop-0.1--1-purple)](https://img.shields.io/badge/develop-0.1--1-purple) release on GitHub:
+### Current [![GitHub develop](https://img.shields.io/badge/develop-0.1--2-purple)](https://img.shields.io/badge/develop-0.1--2-purple) release on GitHub:
 
 Installation using R package
 [**remotes**](https://cran.r-project.org/package=remotes):

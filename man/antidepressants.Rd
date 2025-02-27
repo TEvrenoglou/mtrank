@@ -31,13 +31,16 @@ data(antidepressants)
 ranks <- tcc(treat = drug_name, studlab = studyid,
   event = responders, n = ntotal, data = antidepressants,
   mcid = 1.25, sm = "OR", small.values = "undesirable")
-#
+# Visualize treatment choice criteron for treatment "escitalopram"  
+forest(ranks, treat = "escitalopram")
+# Fit the model
 fit <- mtrank(ranks)
-#
+# Visualize the results
+forest(fit)
+# Calculate pairwise probabilities
 paired_pref(fit, type = "better",
   treat1 = "bupropion", treat2 = "escitalopram")
 
-forest(fit, treat = "escitalopram")
 
 \donttest{
 # Same results using pairwise object as input to tcc()
