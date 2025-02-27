@@ -85,18 +85,38 @@ Note that the estimates of the parameter "v" and the normalized probabilities
 do not depend on the value for argument \code{reference.group}.
 }
 \examples{
-data(Stowe2010, package = "netmeta")
-#
-ranks <- tcc(treat = list(t1, t2, t3), studlab = study, 
-  mean = list(y1, y2, y3), n = list(n1, n2, n3), sd = list(sd1, sd2, sd3), 
-  data = Stowe2010, sm = "MD", small.values = "desirable", mcid = 0.5)
-#
-fit <- mtrank(ranks)
-# Print log-ability estimates
-fit
-# Print ability estimates
-print(fit, backtransf = TRUE)
+data(antidepressants)
 
+ranks <- tcc(treat = drug_name, studlab = studyid,
+  event = responders, n = ntotal, data = antidepressants,
+  mcid = 1.25, sm = "OR", small.values = "undesirable")
+#
+fit1 <- mtrank(ranks)
+#
+# Print log-ability estimates
+fit1
+#
+# Print ability estimates
+print(fit1, backtransf = TRUE)
+# Visualize results 
+ forest(fit1)
+
+# Repeat using a 'pairwise' object
+pw <- pairwise(treat = drug_name, studlab = studyid,
+  event = responders, n = ntotal, data = antidepressants,
+  sm = "OR")
+  
+ranks2 <- tcc(pw, mcid = 1.25, small.values = "undesirable")
+#
+fit2 <- mtrank(ranks2) 
+  
+# Print log-ability estimates
+fit2
+# Print ability estimates
+print(fit2, backtransf = TRUE)
+# Visualize results 
+ forest(fit2)
+ 
 }
 \references{
 Evrenoglou T, Nikolakopoulou A, Schwarzer G, Rücker G, Chaimani A (2024):

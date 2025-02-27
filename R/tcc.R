@@ -438,6 +438,11 @@ tcc <- function(treat,
   # it requires that the relative effect (point estimate) and one bound of the confidence interval will be clinically significant (i.e. outside the ROE) 
   # and the other bound simply does not indicate a clinically significant effect on the opposite direction.
   
+  if (is_relative_effect(sm)) {
+    lower.equi <- log(lower.equi)
+    upper.equi <- log(upper.equi)
+  }
+  #
   if (relax) {
     no_effect1 <- lower.equi
     no_effect2 <- upper.equi
@@ -452,12 +457,7 @@ tcc <- function(treat,
   # Define wins and ties for each study specific pairwise comparison
   #
   #
-  
-  if (is_relative_effect(sm)) {
-    lower.equi <- log(lower.equi)
-    upper.equi <- log(upper.equi)
-  }
-  #
+    
   pdat$rank_text <- ""
   pdat$rank1 <- NA
   pdat$rank2 <- NA
