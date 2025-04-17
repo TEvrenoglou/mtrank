@@ -576,7 +576,7 @@ tcc <- function(treat,
   res <- list(ppdata = pdat,
               #
               grouped.preferences = grouped.preferences,
-              ungrouped.preferences = ungrouped.preferences,
+              preferences = ungrouped.preferences,
               #
               small.values = small.values,
               mcid = mcid,

@@ -118,7 +118,7 @@ mtrank <- function(x, reference.group = NULL, level = x$level,...) {
   #
   # Fit the model 
   #
-  fit <- PlackettLuce(x$grouped.preferences,...)
+  fit <- PlackettLuce(x$preferences,...)
   #
   # All estimates and standard errors
   #

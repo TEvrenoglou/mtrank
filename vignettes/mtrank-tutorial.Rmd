@@ -154,26 +154,26 @@ forest(fit, backtransf = TRUE)
 
 ### Pairwise preferences
 
-Finally, R package **mtrank** allows the calculation of pairwise preferences through the function paired_pref(). This function expects the following arguments:
+Finally, R package **mtrank** allows the calculation of pairwise preferences through the function fitted(). This function expects the following arguments:
 
 - x: an mtrank object
 - treat1: the first treatment considered in the treatment comparison,
 - treat2: the second treatment considered in the treatment comparison,
 - type: the probability of interest.
 
-For more details about this function please use *help(paired_pref)*.
+For more details about this function please use *help(fitted.mtrank)*.
 
 ```{r}
 # Get probability that bupropion is better or worse than trazodone
-paired_pref(fit, treat1 = "bupropion", treat2 = "trazodone",
+fitted(fit, treat1 = "bupropion", treat2 = "trazodone",
   type = c("better", "worse"))
 
 # Get probability that bupropion is tied with trazodone
-paired_pref(fit, treat1 = "bupropion", treat2 = "trazodone",
+fitted(fit, treat1 = "bupropion", treat2 = "trazodone",
   type = "tie")
 
 # Get all three probabilities
-paired_pref(fit, treat1 = "bupropion", treat2 = "trazodone",
+fitted(fit, treat1 = "bupropion", treat2 = "trazodone",
   type = "all")
 ```
 
@@ -181,7 +181,7 @@ It is also possible to contrast one drug with several others (and to provide abb
 
 ```{r}
 # Get probability that bupropion is better than other drugs
-paired_pref(fit, treat1 = "bupr",
+fitted(fit, treat1 = "bupr",
   treat2 = c("fluo", "paro", "sert", "traz", "venl"), type = "better")
 ```
 

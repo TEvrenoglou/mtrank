@@ -30,13 +30,11 @@ ldat <- pp2long(pdat)
 head(ldat)
 
 library("PlackettLuce")
-ungrouped.preferences <-
+preferences <-
   rankings(ldat, id = "id", item = "treat", rank = "rank")
-grouped.preferences <-
-  as.rankings(ungrouped.preferences,
-              index = as.numeric(as.factor(pdat$studlab)))
+
 #
-fit <- PlackettLuce(grouped.preferences)
+fit <- PlackettLuce(preferences)
 #
 coef(summary(fit, ref = ranks$reference.group))[, 1]
 # Results stored in mtrank()

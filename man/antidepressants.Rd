@@ -38,7 +38,7 @@ fit <- mtrank(ranks)
 # Visualize the results
 forest(fit)
 # Calculate pairwise probabilities
-paired_pref(fit, type = "better",
+fitted(fit, type = "better",
   treat1 = "bupropion", treat2 = "escitalopram")
 
 
@@ -56,7 +56,7 @@ ranks2 <- tcc(pw, mcid = 1.25, small.values = "undesirable")
 #
 fit2 <- mtrank(ranks2)
 #
-paired_pref(fit2, type = "better",
+fitted(fit2, type = "better",
   treat1 = "bupropion", treat2 = "escitalopram")
 }
 }

@@ -6,7 +6,7 @@
 \title{Estimate the treatment hierarchy in network meta-analysis using a
 probabilistic ranking model}
 \usage{
-mtrank(x, reference.group = NULL, level = x$level)
+mtrank(x, reference.group = NULL, level = x$level, ...)
 
 \method{print}{mtrank}(
   x,
@@ -29,6 +29,8 @@ treatments versus the specified reference treatment will be calculated.}
 \item{level}{The level used to calculate confidence intervals for ability
 estimates.}
 
+\item{\dots}{Additional arguments (passed on \code{\link[PlackettLuce]{PlackettLuce}} or to \code{\link{prmatrix}}).}
+
 \item{sorting}{An argument specifying the criterion to sort the ability
 estimates in the printout (see Details).}
 
@@ -40,8 +42,6 @@ see \code{print.default}.}
 
 \item{digits.prop}{Minimal number of significant digits for proportions,
 see \code{print.default}.}
-
-\item{\dots}{Additional arguments (passed on to \code{\link{prmatrix}}).}
 }
 \value{
 \itemize{
@@ -74,7 +74,7 @@ each treatment is having the highest ability".
 Finally, a parameter "v" controlling the prevalence of ties in the network
 is also estimated. Although the estimated values of this parameter do
 not have a direct interpretation they are useful for estimating pairwise 
-probabilities (see \code{\link{paired_pref}}).
+probabilities (see \code{\link{fitted.mtrank}}).
 
 If argument \code{reference.group} is not NULL, a reference treatment
 group is specified. Mathematically, this means that the maximization problem
