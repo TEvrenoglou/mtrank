@@ -22,7 +22,7 @@
 #' estimates in the printout (see Details).
 #' @param digits.prop Minimal number of significant digits for proportions,
 #'   see \code{print.default}.
-#' @param \dots Additional arguments (passed on to \code{\link{prmatrix}}).
+#' @param \dots Additional arguments (passed on \code{\link[PlackettLuce]{PlackettLuce}} or to \code{\link{prmatrix}}).
 #'
 #' @details
 #' This function is used to fit a Bradley-Terry model to the paired-preference
@@ -42,7 +42,7 @@
 #' Finally, a parameter "v" controlling the prevalence of ties in the network
 #' is also estimated. Although the estimated values of this parameter do
 #' not have a direct interpretation they are useful for estimating pairwise 
-#' probabilities (see \code{\link{paired_pref}}).
+#' probabilities (see \code{\link{fitted.mtrank}}).
 #' 
 #' If argument \code{reference.group} is not NULL, a reference treatment
 #' group is specified. Mathematically, this means that the maximization problem
@@ -101,7 +101,7 @@
 #'  
 #' @export mtrank
 
-mtrank <- function(x, reference.group = NULL, level = x$level) {
+mtrank <- function(x, reference.group = NULL, level = x$level,...) {
   
   chkclass(x, "tcc")
   #
@@ -118,7 +118,7 @@ mtrank <- function(x, reference.group = NULL, level = x$level) {
   #
   # Fit the model 
   #
-  fit <- PlackettLuce(x$grouped.preferences)
+  fit <- PlackettLuce(x$grouped.preferences,...)
   #
   # All estimates and standard errors
   #

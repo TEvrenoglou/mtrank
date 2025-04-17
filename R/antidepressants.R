@@ -41,7 +41,7 @@
 #' # Visualize the results
 #' forest(fit)
 #' # Calculate pairwise probabilities
-#' paired_pref(fit, type = "better",
+#' fitted(fit, type = "better",
 #'   treat1 = "bupropion", treat2 = "escitalopram")
 #' 
 #' 
@@ -59,7 +59,7 @@
 #' #
 #' fit2 <- mtrank(ranks2)
 #' #
-#' paired_pref(fit2, type = "better",
+#' fitted(fit2, type = "better",
 #'   treat1 = "bupropion", treat2 = "escitalopram")
 #' }
 

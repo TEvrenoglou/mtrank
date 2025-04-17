@@ -26,7 +26,7 @@
 #' \item Forest plots are created either for the results of the
 #'   TCC (\code{\link{forest.tcc}}) or the final ability estimates
 #'   (\code{\link{forest.mtrank}}).
-#' \item Function \code{\link{paired_pref}} uses the ability estimates
+#' \item Function \code{\link{fitted.mtrank}} uses the ability estimates
 #'   obtained from \code{\link{mtrank}} to calculate pairwise probabilities
 #'   that any treatment 'A' can be better, equal, or worse than any other
 #'   treatment 'B' in the network.
