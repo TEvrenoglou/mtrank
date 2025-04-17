@@ -1,4 +1,4 @@
-#' Calculate pairwise probabilities for \code{\link{mtrank}} object
+#' Calculate pairwise fitted probabilities for \code{\link{mtrank}} object
 #' 
 #' @description
 #' This function uses the estimates of ability and tie prevalence parameters
@@ -16,7 +16,7 @@
 #' @param \dots Additional arguments (passed on to \code{\link{prmatrix}}).
 #'
 #' @details  
-#' Pairwise probabilities between any two treatments in the network can be
+#' Pairwise fitted probabilities between any two treatments in the network can be
 #' calculated using the ability estimates obtained from \code{\link{mtrank}}
 #' and equations (7) and (8) in Evrenoglou et al. (2024). The probabilities
 #' are calculated in the direction \code{treat1} vs \code{treat2}. The available
@@ -49,19 +49,20 @@
 #' #
 #' fit <- mtrank(ranks)
 #' #
-#' paired_pref(fit, type = c("better", "worse"),
+#' fitted(fit, type = c("better", "worse"),
 #'   treat1 = "bupropion", treat2 = "escitalopram")
 #' #
-#' paired_pref(fit, type = c("better", "worse"),
+#' fitted(fit, type = c("better", "worse"),
 #'   treat1 = "escitalopram", treat2 = "bupropion")
 #' #
-#' paired_pref(fit, type = "all",
+#' fitted(fit, type = "all",
 #'   treat1 = c("bupropion", "escitalopram"),
 #'   treat2 = c("escitalopram", "bupropion"))
 #'
-#' @export paired_pref
+#' @method fitted mtrank
+#' @export 
 
-paired_pref <- function(x, treat1, treat2, type) {
+fitted.mtrank <- function(x, treat1, treat2, type) {
   
   chkclass(x, "mtrank")
   
@@ -103,9 +104,9 @@ paired_pref <- function(x, treat1, treat2, type) {
       exp(fit$estimates[fit$estimates$treatment == treat2[i], ]$log_ability)
   }
   #
-  # extract 'v' parameter estimate
+  # extract 'v' parameter estimate and bring it in the natural scale
   #
-  v <- fit$v
+  v <- unname(exp(fit$v))
   #
   # Use equation (7) to get probability that 'treat1' is better than 'treat2'
   #
@@ -121,6 +122,7 @@ paired_pref <- function(x, treat1, treat2, type) {
   p_worse <- 1 - p_better - p_tie
   #
   res <- data.frame(treat1, treat2, p_better, p_tie, p_worse)
+  
   class(res) <- c("paired_pref", class(res))
   attr(res, "type") <- type
   #
@@ -128,13 +130,13 @@ paired_pref <- function(x, treat1, treat2, type) {
 }
 
 
-#' @rdname paired_pref
-#' @method print paired_pref
+#' @rdname fitted.mtrank
+#' @method print fitted.mtrank
 #' @export
 
-print.paired_pref <- function(x, type = attr(x, "type"), digits = 4, ...) {
+print.fitted.mtrank <- function(x, type = attr(x, "type"), digits = 4, ...) {
   
-  chkclass(x, "paired_pref")
+  chkclass(x, "fitted.mtrank")
   #
   type <- setchar(type, c("better", "tie", "worse", "all"))
   type <- unique(type)
