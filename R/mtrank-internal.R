@@ -165,7 +165,7 @@ setsv <- function(x) {
   setchar(res, c("desirable", "undesirable"))
 }
 
-tri2dat <- function(x, upper = TRUE) {
+tri2dat <- function(x, upper = FALSE) {
   varname <- deparse(substitute(x))
   #
   if (upper) {
@@ -183,7 +183,10 @@ tri2dat <- function(x, upper = TRUE) {
     x <- x[lower.tri(x)]
   }
   #
-  res <- data.frame(treat1 = cn, treat2 = rn, x = x)
+  #res <- data.frame(treat1 = cn, treat2 = rn, x = x)
+  
+  res <- data.frame(treat1 = rn, treat2 = cn, x = x)
+  
   names(res)[names(res) == "x"] <- varname
   #
   res

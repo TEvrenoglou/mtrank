@@ -7,7 +7,7 @@ treatment choice criterion}
 \usage{
 \method{forest}{tcc}(
   x,
-  reference.group = x$trts,
+  reference.group = x$reference.group,
   baseline.reference = x$baseline.reference,
   backtransf = FALSE,
   leftcols = "studlab",

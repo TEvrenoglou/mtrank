@@ -64,7 +64,7 @@
 #' @export
 
 forest.tcc <- function(x,
-                       reference.group = x$trts,
+                       reference.group = x$reference.group,
                        baseline.reference = x$baseline.reference,
                        backtransf = FALSE,
                        #
