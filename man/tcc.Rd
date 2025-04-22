@@ -103,32 +103,48 @@ a treatment preference.
 \examples{
 data("antidepressants")
 #
-pw <- pairwise(studlab = studyid, treat = drug_name,
+pw1 <- pairwise(studlab = studyid, treat = drug_name,
   n = ntotal, event = responders,
   data = antidepressants, sm = "OR")
 # Use subset to reduce runtime
-pw <- subset(pw, studyid < 60)
+pw0 <- subset(pw1, studyid < 60)
 #
-net <- netmeta(pw,reference.group = "tra")
+net0 <- netmeta(pw0, reference.group = "tra")
 
-ranks <- tcc(net, mcid = 1.25, small.values = "undesirable")
-
+ranks0 <- tcc(net0, mcid = 1.20, small.values = "undesirable")
 
 # Comparison other drugs vs trazodone
-forest(ranks,
-  label.left = "Favours other drug",
-  label.right = "Favours trazodone")
+forest(ranks0,
+  label.left = "Favours trazodone",
+  label.right = "Favours other drug")
 
 # Comparison escitalopram vs other drugs
-forest(ranks, reference.group = "esc", baseline = FALSE,
-  label.left = "Favours escitalopram",
-  label.right = "Favours other drug")
-  
-\dontrun{
+forest(ranks0, reference.group = "esc", baseline = FALSE,
+  label.left = "Favours other drug",
+  label.right = "Favours escitalopram")
+
+\donttest{
 # Store a PDF file in the current working directory showing all results
 # (this is the default, i.e., if argument 'reference.group' is missing)
-forest(ranks, baseline = FALSE,reference.group = trts,
+forest(ranks0, baseline = FALSE, reference.group = trts,
   file = "forest_tcc_antidepressants.pdf")
+}
+
+\dontrun{
+# Run analysis with full data set
+net1 <- netmeta(pw1, reference.group = "tra")
+
+ranks1 <- tcc(net1, mcid = 1.20, small.values = "undesirable")
+
+# Comparison other drugs vs trazodone
+forest(ranks1,
+  label.left = "Favours trazodone",
+  label.right = "Favours other drug")
+
+# Comparison escitalopram vs other drugs
+forest(ranks1, reference.group = "esc", baseline = FALSE,
+  label.left = "Favours other drug",
+  label.right = "Favours escitalopram")
 }
 
 }

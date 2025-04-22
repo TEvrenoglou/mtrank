@@ -44,27 +44,46 @@
 #' @examples
 #' data(antidepressants)
 #' #
-#' pw <- pairwise(studlab = studyid, treat = drug_name,
+#' pw1 <- pairwise(studlab = studyid, treat = drug_name,
 #'   n = ntotal, event = responders,
 #'   data = antidepressants, sm = "OR")
 #' # Use subset to reduce runtime
-#' pw <- subset(pw, studyid < 60)
+#' pw0 <- subset(pw1, studyid < 60)
 #' #
-#' net <- netmeta(pw, reference.group = "tra")
+#' net0 <- netmeta(pw0, reference.group = "tra")
 #' #
-#' ranks <- tcc(net, mcid = 1.20, small.values = "undesirable")
+#' ranks0 <- tcc(net0, mcid = 1.20, small.values = "undesirable")
 #' #
-#' fit <- mtrank(ranks)
+#' fit0 <- mtrank(ranks0)
 #' #
-#' fitted(fit, type = c("better", "worse"),
+#' fitted(fit0, type = c("better", "worse"),
 #'   treat1 = "bupropion", treat2 = "escitalopram")
 #' #
-#' fitted(fit, type = c("better", "worse"),
+#' fitted(fit0, type = c("better", "worse"),
 #'   treat1 = "escitalopram", treat2 = "bupropion")
 #' #
-#' fitted(fit, type = "all",
+#' fitted(fit0, type = "all",
 #'   treat1 = c("bupropion", "escitalopram"),
 #'   treat2 = c("escitalopram", "bupropion"))
+#' 
+#' \dontrun{
+#' # Run analysis with full data set
+#' net1 <- netmeta(pw1, reference.group = "tra")
+#' #
+#' ranks1 <- tcc(net1, mcid = 1.20, small.values = "undesirable")
+#' #
+#' fit1 <- mtrank(ranks1)
+#' #
+#' fitted(fit1, type = c("better", "worse"),
+#'   treat1 = "bupropion", treat2 = "escitalopram")
+#' #
+#' fitted(fit1, type = c("better", "worse"),
+#'   treat1 = "escitalopram", treat2 = "bupropion")
+#' #
+#' fitted(fit1, type = "all",
+#'   treat1 = c("bupropion", "escitalopram"),
+#'   treat2 = c("escitalopram", "bupropion"))
+#' }
 #'
 #' @method fitted mtrank
 #' @export 

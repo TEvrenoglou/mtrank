@@ -170,33 +170,27 @@ tri2dat <- function(x, upper = FALSE) {
   #
   if (upper) {
     idx <- as.data.frame(which(upper.tri(x), arr.ind = TRUE))
-    rn <- rownames(x)[idx$row]
-    cn <- colnames(x)[idx$col]
-    #
-    x <- x[upper.tri(x)]
+    x.tri <- x[upper.tri(x)]
   }
   else {
     idx <- as.data.frame(which(lower.tri(x), arr.ind = TRUE))
-    rn <- rownames(x)[idx$row]
-    cn <- colnames(x)[idx$col]
-    #
-    x <- x[lower.tri(x)]
+    x.tri <- x[lower.tri(x)]
   }
   #
-  #res <- data.frame(treat1 = cn, treat2 = rn, x = x)
-  
-  res <- data.frame(treat1 = rn, treat2 = cn, x = x)
-  
-  names(res)[names(res) == "x"] <- varname
+  res <- data.frame(treat1 = rownames(x)[idx$row],
+                    treat2 = colnames(x)[idx$col],
+                    x.tri)
+  names(res)[names(res) == "x.tri"] <- varname
   #
   res
 }
 
-net2dat <- function(x, pooled) {
+net2dat <- function(x, pooled, upper = FALSE) {
   TE <- x[[paste0("TE.", pooled)]]
   seTE <- x[[paste0("seTE.", pooled)]]
   #
-  res <- merge(tri2dat(TE), tri2dat(seTE), by = c("treat1", "treat2"))
+  res <- merge(tri2dat(TE, upper), tri2dat(seTE, upper),
+               by = c("treat1", "treat2"))
   res$id <- seq_len(nrow(res))
   #
   res

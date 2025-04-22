@@ -17,7 +17,7 @@ treatment choice criterion}
   col.tie = "black",
   lty.equi = gs("lty.cid"),
   col.equi = gs("col.cid"),
-  fill.equi = gs("fill.equi"),
+  fill.equi = "lightblue",
   fill.mcid.below.null = "transparent",
   fill.mcid.above.null = "transparent",
   header.line = TRUE,
@@ -89,7 +89,51 @@ Argument \code{reference.group} is optional. By default, all treatments in
 the network are considered.
 }
 \examples{
-# Examples: example(tcc)
+data("antidepressants")
+#
+pw1 <- pairwise(studlab = studyid, treat = drug_name,
+  n = ntotal, event = responders,
+  data = antidepressants, sm = "OR")
+# Use subset to reduce runtime
+pw0 <- subset(pw1, studyid < 60)
+#
+net0 <- netmeta(pw0, reference.group = "tra")
+
+ranks0 <- tcc(net0, mcid = 1.20, small.values = "undesirable")
+
+# Comparison other drugs vs trazodone
+forest(ranks0,
+  label.left = "Favours trazodone",
+  label.right = "Favours other drug")
+
+# Comparison escitalopram vs other drugs
+forest(ranks0, reference.group = "esc", baseline = FALSE,
+  label.left = "Favours other drug",
+  label.right = "Favours escitalopram")
+
+\donttest{
+# Store a PDF file in the current working directory showing all results
+# (this is the default, i.e., if argument 'reference.group' is missing)
+forest(ranks0, baseline = FALSE, reference.group = trts,
+  file = "forest_tcc_antidepressants.pdf")
+}
+
+\dontrun{
+# Run analysis with full data set
+net1 <- netmeta(pw1, reference.group = "tra")
+
+ranks1 <- tcc(net1, mcid = 1.20, small.values = "undesirable")
+
+# Comparison other drugs vs trazodone
+forest(ranks1,
+  label.left = "Favours trazodone",
+  label.right = "Favours other drug")
+
+# Comparison escitalopram vs other drugs
+forest(ranks1, reference.group = "esc", baseline = FALSE,
+  label.left = "Favours other drug",
+  label.right = "Favours escitalopram")
+}
 
 }
 \references{
