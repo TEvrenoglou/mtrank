@@ -75,7 +75,7 @@ forest.tcc <- function(x,
                        #
                        lty.equi = gs("lty.cid"),
                        col.equi = gs("col.cid"),
-                       fill.equi = gs("fill.equi"),
+                       fill.equi = "lightblue",
                        fill.mcid.below.null = "transparent",
                        fill.mcid.above.null = "transparent",
                        #
