@@ -32,9 +32,14 @@
 #' @examples
 #' data(diabetes)
 #' #
-#' ranks <- tcc(treat = t, studlab = study, event = r, n = n, data = diabetes,
-#'   mcid = 1.20, sm = "OR", small.values = "desirable")
+#' pw <- pairwise(studlab = study, treat = t,
+#'   n = n, event = r, data = diabetes, sm = "OR")
 #' #
-#' forest(ranks, treat = "ARB")
+#' net <- netmeta(pw, reference.group = "PLA")
+#' #
+#' ranks <- tcc(net, mcid = 1.20, small.values = "desirable")
+#' #
+#' forest(ranks)
+#' forest(ranks, reference.group = "ARB", baseline.reference = FALSE)
 
 NULL

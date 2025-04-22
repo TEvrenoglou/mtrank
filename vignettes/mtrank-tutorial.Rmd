@@ -51,46 +51,51 @@ We see that loading **mtrank** will automatically load the R packages **meta**,
 **metadat** and **netmeta**.
 
 Next, we load the 'antidepressants' dataset which is part of R package
-**mtrank**. You can get information about this dataset using the command *help(antidepressants)*.
+**mtrank** and conduct a network meta-analysis. You can get information about
+this dataset using the command *help(antidepressants)*.
 
 ```{r}
 data("antidepressants")
+#
+pw <- pairwise(studlab = studyid, treat = drug_name,
+  n = ntotal, event = responders,
+  data = antidepressants, sm = "OR")
+#
+net <- netmeta(pw, reference.group = "tra")
 ```
 
 
 ### Define treatment-choice criterion
 
-In the next step, we set the treatment-choice criterion and transform the data using the function tcc(). More details about this function can be obtained using the command *help(tcc)*.
+In the next step, we set the treatment-choice criterion and transform the data
+using the function tcc(). More details about this function can be obtained using
+the command *help(tcc)*.
 
-The treatment-choice criterion is determined by the minimal clinically important difference (MCID), which represents the smallest relative effect between two treatments that can influence the selection of the preferable treatment. Users can set this value using argument 'mcid' in tcc(), which then defines the range of equivalence (ROE) based on the MCID and its reciprocal. For binary outcomes, the MCID must be specified on its natural scale. The ROE constructed using the MCID is always symmetrical, but for users who require a non-symmetrical ROE, the arguments 'lower.equi' and 'upper.equi' allow for explicit specification of preferred bounds. However, if argument 'mcid' is specified, arguments 'lower.equi' and 'upper.equi' are ignored.
+The treatment-choice criterion is determined by the minimal clinically important difference (MCID), which represents the smallest relative effect between two treatments that can influence the selection of the preferable treatment. Users can set this value using argument 'mcid' in tcc(), which then defines the range of equivalence (ROE) based on the MCID and its reciprocal. For binary outcomes, the MCID must be specified on its natural scale. The ROE constructed using the MCID is always symmetrical, but for users who require a non-symmetrical ROE, the arguments 'mcid.below.null' and 'mcid.above.null' allow for explicit specification of preferred bounds. However, if argument 'mcid' is specified, arguments 'mcid.below.null' and 'mcid.above.null' are ignored.
 
 ```{r}
-ranks <- tcc(treat = drug_name, event = responders, n = ntotal,
-  studlab = studyid, data = antidepressants,
-  mcid = 1.25,
-  sm = "OR", small.values = "undesirable")
+ranks <- tcc(net, mcid = 1.25, small.values = "undesirable")
 ```
 
 We could print the preferences with the following command (result not shown).
 
 ```{r, eval = FALSE}
-ranks$grouped.preferences
+ranks$preferences
 ```
 
-As argument 'mcid = 1.25' the ROE is defined as [1 / mcid, mcid] = [0.8, 1.25]. The ROE is stored as the lower and upper bound.
+As argument 'mcid = 1.25' the ROE is defined as [1 / mcid, mcid] = [0.8, 1.25].
+The ROE is stored as the lower and upper bound.
 
 ```{r}
-c(ranks$lower.equi, ranks$upper.equi)
+c(ranks$mcid.below.null, ranks$mcid.above.null)
 ```
 
 
 Alternatively, we could define a ROE by specifying its lower and upper bound.
 
 ```{r, eval = FALSE}
-ranks <- tcc(treat = drug_name, event = responders, n = ntotal,
-  studlab = studyid, data = antidepressants,
-  lower.equi = 0.80, upper.equi = 1.25,
-  sm = "OR", small.values = "undesirable")
+ranks <- tcc(net, mcid.below = 0.80, mcid.above = 1.25,
+  small.values = "undesirable")
 ```
 
 Note, an asymmetric ROE could be defined in this way.
@@ -98,19 +103,21 @@ Note, an asymmetric ROE could be defined in this way.
 
 ### Forest plot showing impact of treatment choice criterion
 
-R function forest.tcc() can be used to create a forest plot. This function gets as first argument the object created from tcc() and as second the argument 'treat' which specifies the treatment for which the treatment choice criterion needs to be inspected. If users do not specify the argument 'treat' then forest plots are generated for every direct comparison in the network.
+R function forest.tcc() can be used to create a forest plot. This function gets as first argument the object created from tcc() and as second the argument 'reference.group' which specifies the treatment for which the treatment choice criterion needs to be inspected. If users do not specify the argument 'treat' then forest plots are generated for every direct comparison in the network.
 
 ```{r, eval = FALSE}
-forest(ranks, treat = "bupropion", xlim = c(-1, 2),
-  label.left = "Favors second treatment",
-  label.right = "Favors first treatment",
+forest(ranks, xlim = c(-1, 2),
+  reference.group = "bupropion", baseline.reference = FALSE,
+  label.left = "Favors bupropion",
+  label.right = "Favors other drug",
   fill.equi = "lightblue", spacing = 1.5)
 ```
 
 ```{r, echo = FALSE, out.width = "70%"}
-forest(ranks, treat = "bupropion", xlim = c(-1, 2),
-  label.left = "Favors second treatment",
-  label.right = "Favors first treatment",
+forest(ranks, xlim = c(-1, 2),
+  reference.group = "bupropion", baseline.reference = FALSE,
+  label.left = "Favors bupropion",
+  label.right = "Favors other drug",
   fill.equi = "lightblue", spacing = 1.5,
   file = "forest1.pdf")
 knitr::include_graphics("forest1.pdf")

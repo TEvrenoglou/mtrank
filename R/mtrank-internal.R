@@ -164,3 +164,56 @@ setsv <- function(x) {
   #
   setchar(res, c("desirable", "undesirable"))
 }
+
+tri2dat <- function(x, upper = TRUE) {
+  varname <- deparse(substitute(x))
+  #
+  if (upper) {
+    idx <- as.data.frame(which(upper.tri(x), arr.ind = TRUE))
+    rn <- rownames(x)[idx$row]
+    cn <- colnames(x)[idx$col]
+    #
+    x <- x[upper.tri(x)]
+  }
+  else {
+    idx <- as.data.frame(which(lower.tri(x), arr.ind = TRUE))
+    rn <- rownames(x)[idx$row]
+    cn <- colnames(x)[idx$col]
+    #
+    x <- x[lower.tri(x)]
+  }
+  #
+  res <- data.frame(treat1 = cn, treat2 = rn, x = x)
+  names(res)[names(res) == "x"] <- varname
+  #
+  res
+}
+
+net2dat <- function(x, pooled) {
+  TE <- x[[paste0("TE.", pooled)]]
+  seTE <- x[[paste0("seTE.", pooled)]]
+  #
+  res <- merge(tri2dat(TE), tri2dat(seTE), by = c("treat1", "treat2"))
+  res$id <- seq_len(nrow(res))
+  #
+  res
+}
+
+drop_from_dots <- function(x, old, new) {
+  for (i in seq_along(old)) {
+    if (!is.null(x[[old[i]]])) {
+      if (new[i] != "")
+        warning("Argument '", old[i],
+                "' ignored; please use argument '",
+                new[i], "' instead.",
+                call. = FALSE)
+      else
+        warning("Argument '", old[i],
+                "' ignored as it is used internally.",
+                call. = FALSE)
+      #
+      x[[old[i]]] <- NULL
+    }
+  }
+  x
+}

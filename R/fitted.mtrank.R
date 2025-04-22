@@ -6,18 +6,19 @@
 #' about the preference or the tie between two treatments based on equations (7)
 #' and (8) in Evrenoglou et al. (2024).
 #  
-#' @param x An object of class \code{\link{mtrank}}.
+#' @param object An object of class \code{\link{mtrank}}.
 #' @param treat1 The first treatment considered in the treatment comparison.
 #' @param treat2 The second treatment considered in the treatment comparison.
 #' @param type A character vector specifying the probability of interest.
 #'   Either "better", "tie", "worse", or "all" (can be abbreviated).
 #' @param digits Minimal number of significant digits for proportions,
 #'   see \code{print.default}.
+#' @param x An object of class \code{\link{fitted.mtrank}}.
 #' @param \dots Additional arguments (passed on to \code{\link{prmatrix}}).
 #'
 #' @details  
-#' Pairwise fitted probabilities between any two treatments in the network can be
-#' calculated using the ability estimates obtained from \code{\link{mtrank}}
+#' Pairwise fitted probabilities between any two treatments in the network can
+#' be calculated using the ability estimates obtained from \code{\link{mtrank}}
 #' and equations (7) and (8) in Evrenoglou et al. (2024). The probabilities
 #' are calculated in the direction \code{treat1} vs \code{treat2}. The available
 #' probability types are
@@ -43,9 +44,15 @@
 #' @examples
 #' data(antidepressants)
 #' #
-#' ranks <- tcc(treat = drug_name, studlab = studyid,
-#'   event = responders, n = ntotal, data = antidepressants,
-#'   mcid = 1.25, sm = "OR", small.values = "undesirable")
+#' pw <- pairwise(studlab = studyid, treat = drug_name,
+#'   n = ntotal, event = responders,
+#'   data = antidepressants, sm = "OR")
+#' # Use subset to reduce runtime
+#' pw <- subset(pw, studyid < 60)
+#' #
+#' net <- netmeta(pw, reference.group = "tra")
+#' #
+#' ranks <- tcc(net, mcid = 1.25, small.values = "undesirable")
 #' #
 #' fit <- mtrank(ranks)
 #' #
@@ -62,12 +69,12 @@
 #' @method fitted mtrank
 #' @export 
 
-fitted.mtrank <- function(x, treat1, treat2, type) {
+fitted.mtrank <- function(object, treat1, treat2, type, ...) {
   
-  chkclass(x, "mtrank")
+  chkclass(object, "mtrank")
   
-  treat1 <- setchar(treat1, x$x$trts)
-  treat2 <- setchar(treat2, x$x$trts)
+  treat1 <- setchar(treat1, object$x$trts)
+  treat2 <- setchar(treat2, object$x$trts)
   #
   type <- setchar(type, c("better", "tie", "worse", "all"))
   type <- unique(type)
@@ -87,10 +94,10 @@ fitted.mtrank <- function(x, treat1, treat2, type) {
   # without a reference group (argument reference.group = NULL) so that we have
   # the ability estimates for each treatment
   #
-  if (!is.null(x$reference.group))
-    fit <- mtrank(x$x, reference.group = NULL)
+  if (!is.null(object$reference.group))
+    fit <- mtrank(object$x, reference.group = NULL)
   else
-    fit <- x
+    fit <- object
   
   # Extract the ability estimate for 'treat1' and 'treat2' on the natural scale  
   #
@@ -120,6 +127,8 @@ fitted.mtrank <- function(x, treat1, treat2, type) {
   # based on Pr(treat1 > treat2) + Pr(treat1 = treat2) + Pr(treat1 < treat2) = 1
   #
   p_worse <- 1 - p_better - p_tie
+  #
+  p_worse[is_zero(p_worse)] <- 0
   #
   res <- data.frame(treat1, treat2, p_better, p_tie, p_worse)
   

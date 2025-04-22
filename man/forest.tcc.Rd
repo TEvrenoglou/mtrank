@@ -7,27 +7,32 @@ treatment choice criterion}
 \usage{
 \method{forest}{tcc}(
   x,
-  treat = NULL,
+  reference.group = x$trts,
+  baseline.reference = x$baseline.reference,
   backtransf = FALSE,
   leftcols = "studlab",
-  leftlabs = NULL,
+  leftlabs = "Comparison",
   rightcols = c("effect", "ci"),
-  lty.equi = gs("lty.equi"),
-  col.equi = gs("col.equi"),
+  col.winner = "red",
+  col.tie = "black",
+  lty.equi = gs("lty.cid"),
+  col.equi = gs("col.cid"),
   fill.equi = gs("fill.equi"),
-  fill.lower.equi = fill.equi,
-  fill.upper.equi = rev(fill.equi),
+  fill.mcid.below.null = "transparent",
+  fill.mcid.above.null = "transparent",
   header.line = TRUE,
-  col.subgroup = "black",
   ...
 )
 }
 \arguments{
 \item{x}{An object of class \code{\link{tcc}}.}
 
-\item{treat}{A treatment of interest. If specified it returns a forest plot
-for all study specific effects related to \code{treat}. If NULL (default),
-it generates a forest plot for all study-specific effects in the network.}
+\item{reference.group}{Reference treatment(s); by default all treatments are
+considered.}
+
+\item{baseline.reference}{A logical indicating whether results
+should be expressed as comparisons of other treatments versus the
+reference treatment (default) or vice versa.}
 
 \item{backtransf}{A logical indicating whether results should be
 back transformed. If \code{backtransf = TRUE} (default), results for
@@ -45,28 +50,22 @@ columns on left side of the forest plot.}
 to be printed on the right side of the forest plot
 (see \code{\link[meta]{forest.meta}}).}
 
+\item{col.winner}{Colour to highlight results for TCC winner.}
+
+\item{col.tie}{Colour to highlight results for TCC ties.}
+
 \item{lty.equi}{Line type (limits of equivalence).}
 
 \item{col.equi}{Line colour (limits of equivalence).}
 
-\item{fill.equi}{Colour(s) for area between limits of equivalence
-or more general limits.}
+\item{fill.equi}{Colour(s) for area between limits of equivalence.}
 
-\item{fill.lower.equi}{Colour of area between lower limit(s) and
-reference value. Can be equal to the number of lower limits or
-the number of limits plus 1 (in this case the the region between
-minimum and smallest limit is also filled).}
+\item{fill.mcid.below.null}{Colour of area below lower MCID limit.}
 
-\item{fill.upper.equi}{Colour of area between reference value and
-upper limit(s). Can be equal to the number of upper limits or the
-number of limits plus 1 (in this case the region between largest
-limit and maximum is also filled).}
+\item{fill.mcid.above.null}{Colour of area above upper MCID limit.}
 
 \item{header.line}{A logical value indicating whether to print a
 header line or a character string ("both", "below", "").}
-
-\item{col.subgroup}{The colour to print information on subgroups, i.e.,
-pairwise comparisons.}
 
 \item{\dots}{Additional arguments (passed on to
 \code{\link[meta]{forest.meta}}).}
@@ -86,19 +85,11 @@ a preference (red color) or tie (black color). Additionally, the respective
 range of equivalence defined at the function
 \code{\link{tcc}} is visualized for the forest plot.
 
-Argument \code{treat} is optional. By default ( \code{treat = NULL}),
-all study-specific treatment effects in the network are shown. If specified,
-only study-specific treatment effects related to the specified \code{treat}
-are shown which is useful in busy networks with many direct comparisons.
+Argument \code{reference.group} is optional. By default, all treatments in
+the network are considered.
 }
 \examples{
-data(diabetes)
-#
-ranks <- tcc(treat = t, studlab = study, event = r, n = n, data = diabetes,
-  mcid = 1.20, sm = "OR", small.values = "desirable")
-#
-forest(ranks)
-forest(ranks, treat = "ARB")
+# Examples: example(tcc)
 
 }
 \references{

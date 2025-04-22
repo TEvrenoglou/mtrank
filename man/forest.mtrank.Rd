@@ -73,15 +73,7 @@ forest plot (argument \code{sorting}) can be one of the following:
 }
 }
 \examples{
-data(antidepressants)
-#
-ranks <- tcc(treat = drug_name, studlab = studyid,
-  event = responders, n = ntotal, data = antidepressants,
-  mcid = 1.25, sm = "OR", small.values = "undesirable")
-#
-fit <- mtrank(ranks)
-
-forest(fit, treat = "escitalopram")
+# Examples: example(mtrank)
 
 }
 \references{

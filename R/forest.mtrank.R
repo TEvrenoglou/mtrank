@@ -50,15 +50,7 @@
 #' @keywords hplot
 ##'
 #' @examples
-#' data(antidepressants)
-#' #
-#' ranks <- tcc(treat = drug_name, studlab = studyid,
-#'   event = responders, n = ntotal, data = antidepressants,
-#'   mcid = 1.25, sm = "OR", small.values = "undesirable")
-#' #
-#' fit <- mtrank(ranks)
-#' 
-#' forest(fit, treat = "escitalopram")
+#' # Examples: example(mtrank)
 #' 
 #' @method forest mtrank
 #' @export
@@ -121,12 +113,25 @@ forest.mtrank <- function(x, sorting = "ability", backtransf = FALSE,
   
   # Create the forest plot   
   #
-  forest(m,
+  dots_list <- drop_from_dots(list(...),
+                              c("weight.study",
+                                "common", "random", "hetstat",
+                                "overall", "overall.hetstat"),
+                              rep("", 6))
+  #
+  args_list <-
+    list(x = m,
          leftcols = leftcols, leftlabs = leftlabs,
          rightcols = rightcols, rightlabs = rightlabs,
          label.left = label.left, label.right = label.right,
-         weight.study = "same", header.line = header.line,
-         xlab = xlab, ...)
-  
-  invisible(NULL)
+         header.line = header.line,
+         xlab = xlab,
+         #
+         weight.study = "same",
+         common = FALSE, random = FALSE, hetstat = FALSE,
+         overall = FALSE, overall.hetstat = FALSE)
+  #
+  res <- do.call("forest", c(args_list, dots_list))
+  #
+  invisible(res)
 }

@@ -29,7 +29,8 @@ treatments versus the specified reference treatment will be calculated.}
 \item{level}{The level used to calculate confidence intervals for ability
 estimates.}
 
-\item{\dots}{Additional arguments (passed on \code{\link[PlackettLuce]{PlackettLuce}} or to \code{\link{prmatrix}}).}
+\item{\dots}{Additional arguments (passed on to
+\code{\link[PlackettLuce]{PlackettLuce}} or to \code{\link{prmatrix}}).}
 
 \item{sorting}{An argument specifying the criterion to sort the ability
 estimates in the printout (see Details).}
@@ -85,37 +86,28 @@ Note that the estimates of the parameter "v" and the normalized probabilities
 do not depend on the value for argument \code{reference.group}.
 }
 \examples{
-data(antidepressants)
+data("antidepressants")
+#
+pw <- pairwise(studlab = studyid, treat = drug_name,
+  n = ntotal, event = responders,
+  data = antidepressants, sm = "OR")
+# Use subset to reduce runtime
+pw <- subset(pw, studyid < 60)
+#
+net <- netmeta(pw, reference.group = "tra")
 
-ranks <- tcc(treat = drug_name, studlab = studyid,
-  event = responders, n = ntotal, data = antidepressants,
-  mcid = 1.25, sm = "OR", small.values = "undesirable")
+ranks <- tcc(net, mcid = 1.25, small.values = "undesirable")
 #
-fit1 <- mtrank(ranks)
-#
+fit <- mtrank(ranks)
+
 # Print log-ability estimates
-fit1
+fit
 #
 # Print ability estimates
-print(fit1, backtransf = TRUE)
-# Visualize results 
- forest(fit1)
+print(fit, backtransf = TRUE)
 
-# Repeat using a 'pairwise' object
-pw <- pairwise(treat = drug_name, studlab = studyid,
-  event = responders, n = ntotal, data = antidepressants,
-  sm = "OR")
-  
-ranks2 <- tcc(pw, mcid = 1.25, small.values = "undesirable")
-#
-fit2 <- mtrank(ranks2) 
-  
-# Print log-ability estimates
-fit2
-# Print ability estimates
-print(fit2, backtransf = TRUE)
-# Visualize results 
- forest(fit2)
+# Visualize results
+forest(fit)
  
 }
 \references{

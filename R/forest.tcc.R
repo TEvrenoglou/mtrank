@@ -7,9 +7,11 @@
 #' which are defined from the treatment choice criterion in \code{\link{tcc}}.
 #' 
 #' @param x An object of class \code{\link{tcc}}.
-#' @param treat A treatment of interest. If specified it returns a forest plot
-#'   for all study specific effects related to \code{treat}. If NULL (default),
-#'   it generates a forest plot for all study-specific effects in the network. 
+#' @param reference.group Reference treatment(s); by default all treatments are
+#'   considered.
+#' @param baseline.reference A logical indicating whether results
+#'   should be expressed as comparisons of other treatments versus the
+#'   reference treatment (default) or vice versa.
 #' @param backtransf A logical indicating whether results should be
 #'   back transformed. If \code{backtransf = TRUE} (default), results for
 #'   \code{sm = "OR"} are printed as odds ratios rather than log odds ratios,
@@ -22,22 +24,15 @@
 #'   (see \code{\link[meta]{forest.meta}}).
 #' @param leftlabs A character vector specifying labels for
 #'   columns on left side of the forest plot.
+#' @param col.winner Colour to highlight results for TCC winner.
+#' @param col.tie Colour to highlight results for TCC ties.
 #' @param lty.equi Line type (limits of equivalence).
 #' @param col.equi Line colour (limits of equivalence).
-#' @param fill.equi Colour(s) for area between limits of equivalence
-#'   or more general limits.
-#' @param fill.lower.equi Colour of area between lower limit(s) and
-#'   reference value. Can be equal to the number of lower limits or
-#'   the number of limits plus 1 (in this case the the region between
-#'   minimum and smallest limit is also filled).
-#' @param fill.upper.equi Colour of area between reference value and
-#'   upper limit(s). Can be equal to the number of upper limits or the
-#'   number of limits plus 1 (in this case the region between largest
-#'   limit and maximum is also filled).
+#' @param fill.equi Colour(s) for area between limits of equivalence.
+#' @param fill.mcid.below.null Colour of area below lower MCID limit.
+#' @param fill.mcid.above.null Colour of area above upper MCID limit.
 #' @param header.line A logical value indicating whether to print a
 #'   header line or a character string ("both", "below", "").
-#' @param col.subgroup The colour to print information on subgroups, i.e.,
-#'   pairwise comparisons.
 #' @param \dots Additional arguments (passed on to
 #'   \code{\link[meta]{forest.meta}}).
 #' 
@@ -48,10 +43,8 @@
 #' range of equivalence defined at the function
 #' \code{\link{tcc}} is visualized for the forest plot.
 #' 
-#' Argument \code{treat} is optional. By default ( \code{treat = NULL}),
-#' all study-specific treatment effects in the network are shown. If specified,
-#' only study-specific treatment effects related to the specified \code{treat}
-#' are shown which is useful in busy networks with many direct comparisons.
+#' Argument \code{reference.group} is optional. By default, all treatments in
+#' the network are considered.
 #' 
 #' @return
 #' A forest plot is plotted in the active graphics device.
@@ -65,90 +58,148 @@
 #' @keywords hplot
 #' 
 #' @examples
-#' data(diabetes)
-#' #
-#' ranks <- tcc(treat = t, studlab = study, event = r, n = n, data = diabetes,
-#'   mcid = 1.20, sm = "OR", small.values = "desirable")
-#' #
-#' forest(ranks)
-#' forest(ranks, treat = "ARB")
+#' # Examples: example(tcc)
 #' 
 #' @method forest tcc
 #' @export
 
-forest.tcc <- function(x, treat = NULL, backtransf = FALSE,
+forest.tcc <- function(x,
+                       reference.group = x$trts,
+                       baseline.reference = x$baseline.reference,
+                       backtransf = FALSE,
                        #
-                       leftcols = "studlab", leftlabs = NULL,
+                       leftcols = "studlab", leftlabs = "Comparison",
                        rightcols = c("effect", "ci"),
                        #
-                       lty.equi = gs("lty.equi"),
-                       col.equi = gs("col.equi"),
-                       fill.equi = gs("fill.equi"),
-                       fill.lower.equi = fill.equi,
-                       fill.upper.equi = rev(fill.equi),
+                       col.winner = "red", col.tie = "black",
                        #
-                       header.line = TRUE, col.subgroup = "black",
+                       lty.equi = gs("lty.cid"),
+                       col.equi = gs("col.cid"),
+                       fill.equi = gs("fill.equi"),
+                       fill.mcid.below.null = "transparent",
+                       fill.mcid.above.null = "transparent",
+                       #
+                       header.line = TRUE,
                        ...) {
   
-  chkclass(x, "tcc")
+  #
+  #
+  # (1) Check arguments
+  #
+  #
   
-  lower.equi <- x$lower.equi
-  upper.equi <- x$upper.equi
+  chkclass(x, "tcc")
+  #
+  if (!missing(reference.group))
+    reference.group <-
+      catch("reference.group", match.call(), x, sys.frame(sys.parent()))
+  #
+  if (is.null(reference.group) || all(reference.group == ""))
+    reference.group <- x$trts[1]
+  #
+  reference.group <- unique(setchar(reference.group, x$trts))
+  #
+  chklogical(baseline.reference)
+  chklogical(backtransf)
+  #
+  chkcolor(col.winner, length = 1)
+  chkcolor(col.tie, length = 1)
+  #
+  chknumeric(lty.equi, min = 0, length = 1)
+  chkcolor(col.equi, length = 1)
+  #
+  chklogical(header.line)
+  
+  
+  mcid.below.null <- x$mcid.below.null
+  mcid.above.null <- x$mcid.above.null
   #
   if (is_relative_effect(x$sm) & !backtransf) {
-    lower.equi <- log(lower.equi)
-    upper.equi <- log(upper.equi)
+    mcid.below.null <- log(mcid.below.null)
+    mcid.above.null <- log(mcid.above.null)
   }
-    
+  
   # Get rid of warning "no visible binding for global variable"
   #
-  comparison <- treat1 <- treat2 <- NULL
+  comparison <- treat1 <- treat2 <- TE <- seTE <- NULL
   #
-  dat <- x$ppdata
+  ppdata <- x$ppdata
   #
-  dat$comparison <- paste(dat$treat1, dat$treat2, sep = " vs ")
+  dat <- NULL
   #
-  treat <- setchar(treat, x$trts)
-  #
-  if (!is.null(treat))
-    dat <- dat %>% filter(treat1 == treat | treat2 == treat)
-  #
-  dat$outcome <-
-    ifelse(dat$rank1 + dat$rank2 == 2, "tie", "win") 
-  #
-  dat$color <- ifelse(dat$outcome == "win", "red", "black")
-  #
-  dat <- dat %>% arrange(comparison)
-  
-  m <- metagen(dat$TE, dat$seTE, sm = x$sm,
-               backtransf = backtransf,
-               subgroup =
-                 if (length(unique(dat$comparison)) == 1)
-                 NULL else dat$comparison,
-               print.subgroup.name = FALSE,
-               studlab = dat$studlab,
-               common = FALSE, random = FALSE, hetstat = FALSE,
-               method.tau = "DL", method.tau.ci = "")
-  #
-  if (is.null(leftlabs)) {
-    if (is.null(m$subgroup))
-      "Study"
-    else
-      "Comparison / Study"
+  for (i in seq_along(reference.group)) {
+    dat.i <- ppdata %>%
+      filter(treat1 == reference.group[i] | treat2 == reference.group[i])
+    #
+    wo <- baseline.reference & dat.i$treat1 == reference.group[i] |
+      !baseline.reference & dat.i$treat2 == reference.group[i]
+    #
+    if (any(wo)) {
+      dat.i$TE[wo] <- -dat.i$TE[wo]
+      #
+      ttreat1 <- dat.i$treat1[wo]
+      dat.i$treat1[wo] <- dat.i$treat2[wo]
+      dat.i$treat2[wo] <- ttreat1
+    }
+    #
+    dat.i$comparison <- reference.group[i]
+    #
+    if (baseline.reference) {
+      dat.i$comparison <- paste0("Other vs '", dat.i$comparison, "'")
+      dat.i$labels <- dat.i$treat1
+    }
+    else {
+      dat.i$comparison <- paste0("'", dat.i$comparison, "' vs other")
+      dat.i$labels <- dat.i$treat2
+    }
+    #
+    dat <- rbind(dat, dat.i)
   }
   #
-  forest(m,
-         backtransf = backtransf,
+  dat$color <- ifelse(dat$outcome == "winner", col.winner, col.tie)
+  #
+  dat <- dat %>% arrange(comparison, treat1, treat2)
+  
+  
+  m <- suppressWarnings(metagen(TE, seTE, data = dat, sm = x$sm,
+                                studlab = labels, backtransf = backtransf,
+                                subgroup = dat$comparison,
+                                print.subgroup.name = FALSE,
+                                method.tau = "DL", method.tau.ci = "",
+                                warn = FALSE))
+  #
+  dots_list <- drop_from_dots(list(...),
+                              c("lty.cid", "col.cid",
+                                "cid.below.null", "cid.above.null",
+                                "fill.cid.below.null", "fill.cid.above.null",
+                                "weight.study", "col.study", 
+                                "col.square", "col.square.lines",
+                                "calcwidth.subgroup",
+                                "common", "random", "hetstat",
+                                "overall", "overall.hetstat"),
+                              c("lty.equi", "col.equi",
+                                "mcid.below.null", "mcid.above.null",
+                                "fill.mcid.below.null", "fill.mcid.above.null",
+                                "", "",
+                                "", "",
+                                "",
+                                "", "", "",
+                                "", ""))
+  #
+  args_list <-
+    list(x = m,
          header.line = header.line,
-         col.subgroup = col.subgroup,
          leftcols = leftcols, leftlabs = leftlabs,
          rightcols = rightcols,
-         lty.equi = lty.equi, col.equi = col.equi,
-         fill.equi = fill.equi,
-         fill.lower.equi = fill.lower.equi,
-         fill.upper.equi = fill.upper.equi,
          #
-         lower.equi = lower.equi, upper.equi = upper.equi,
+         lty.cid = lty.equi, col.cid = col.equi,
+         fill.cid.below.null = fill.mcid.below.null,
+         fill.cid.above.null = fill.mcid.above.null,
+         #
+         fill.equi = fill.equi,
+         cid.below.null = mcid.below.null,
+         cid.above.null = mcid.above.null,
+         #
          weight.study = "same",
          col.study = dat$color,
          col.square = dat$color,
@@ -156,7 +207,10 @@ forest.tcc <- function(x, treat = NULL, backtransf = FALSE,
          #
          calcwidth.subgroup = TRUE,
          #
-         ...)
- 
- invisible(NULL)
+         common = FALSE, random = FALSE, hetstat = FALSE,
+         overall = FALSE, overall.hetstat = FALSE)
+  #
+  res <- do.call("forest", c(args_list, dots_list))
+  #
+  invisible(res)
 }

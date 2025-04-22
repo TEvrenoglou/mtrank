@@ -5,12 +5,12 @@
 \alias{print.fitted.mtrank}
 \title{Calculate pairwise fitted probabilities for \code{\link{mtrank}} object}
 \usage{
-\method{fitted}{mtrank}(x, treat1, treat2, type)
+\method{fitted}{mtrank}(object, treat1, treat2, type, ...)
 
 \method{print}{fitted.mtrank}(x, type = attr(x, "type"), digits = 4, ...)
 }
 \arguments{
-\item{x}{An object of class \code{\link{mtrank}}.}
+\item{object}{An object of class \code{\link{mtrank}}.}
 
 \item{treat1}{The first treatment considered in the treatment comparison.}
 
@@ -19,10 +19,12 @@
 \item{type}{A character vector specifying the probability of interest.
 Either "better", "tie", "worse", or "all" (can be abbreviated).}
 
+\item{\dots}{Additional arguments (passed on to \code{\link{prmatrix}}).}
+
+\item{x}{An object of class \code{\link{fitted.mtrank}}.}
+
 \item{digits}{Minimal number of significant digits for proportions,
 see \code{print.default}.}
-
-\item{\dots}{Additional arguments (passed on to \code{\link{prmatrix}}).}
 }
 \value{
 The probability (or probabilities) of interest for the comparison
@@ -35,8 +37,8 @@ about the preference or the tie between two treatments based on equations (7)
 and (8) in Evrenoglou et al. (2024).
 }
 \details{
-Pairwise fitted probabilities between any two treatments in the network can be
-calculated using the ability estimates obtained from \code{\link{mtrank}}
+Pairwise fitted probabilities between any two treatments in the network can
+be calculated using the ability estimates obtained from \code{\link{mtrank}}
 and equations (7) and (8) in Evrenoglou et al. (2024). The probabilities
 are calculated in the direction \code{treat1} vs \code{treat2}. The available
 probability types are
@@ -52,9 +54,15 @@ Please note that all the arguments of this function are mandatory.
 \examples{
 data(antidepressants)
 #
-ranks <- tcc(treat = drug_name, studlab = studyid,
-  event = responders, n = ntotal, data = antidepressants,
-  mcid = 1.25, sm = "OR", small.values = "undesirable")
+pw <- pairwise(studlab = studyid, treat = drug_name,
+  n = ntotal, event = responders,
+  data = antidepressants, sm = "OR")
+# Use subset to reduce runtime
+pw <- subset(pw, studyid < 60)
+#
+net <- netmeta(pw, reference.group = "tra")
+#
+ranks <- tcc(net, mcid = 1.25, small.values = "undesirable")
 #
 fit <- mtrank(ranks)
 #

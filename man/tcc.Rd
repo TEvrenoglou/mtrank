@@ -3,171 +3,132 @@
 \name{tcc}
 \alias{tcc}
 \alias{print.tcc}
-\title{Transform meta-analysis data from long or wide arm-based format into
-paired-preference format}
+\title{Transform the network meta-analysis estimates into a preference format
+based on the decision rule defined by the treatment choice criterion.}
 \usage{
 tcc(
-  treat,
-  event,
-  n,
-  mean,
-  sd,
-  data = NULL,
-  studlab,
+  x,
+  pooled = if (x$random) "random" else "common",
   mcid = NULL,
-  lower.equi = NULL,
-  upper.equi = NULL,
-  small.values = gs("small.values"),
-  relax = FALSE,
-  level = 0.95,
-  sm,
-  keepdata = gs("keepdata"),
-  ...
+  mcid.below.null = NULL,
+  mcid.above.null = NULL,
+  small.values = x$small.values,
+  relax = TRUE,
+  level = x$level.ma
 )
 
 \method{print}{tcc}(x, ...)
 }
 \arguments{
-\item{treat}{Either a \code{\link[meta]{pairwise}} object, or a list or
-vector with treatment information for individual treatment arms
-(see Details).}
+\item{x}{A \code{\link[netmeta]{netmeta}} object.}
 
-\item{event}{A list or vector with information on number of events
-for individual treatment arms (see Details).}
+\item{pooled}{A character string indicating whether results for the
+common (\code{"common"}) or random effects model
+(\code{"random"}) should be plotted. Can be abbreviated.}
 
-\item{n}{A list or vector with information on number of
-observations for individual treatment arms (see Details).}
+\item{mcid}{A numeric value specifying the minimal clinically important
+value (MCID); see Details.}
 
-\item{mean}{A list vector with estimated means for individual
-treatment arms (see Details).}
+\item{mcid.below.null}{A numeric value specifying the MCID below the null
+effect (see Details).}
 
-\item{sd}{A list or vector with information on the standard
-deviation for individual treatment arms (see Details).}
-
-\item{data}{A data frame containing the study information.}
-
-\item{studlab}{A vector with study labels.}
-
-\item{mcid}{A numeric vector specifying the minimal clinically important
-value (see Details).}
-
-\item{lower.equi}{A numeric value specifying the lower limit of the range of
-equivalence (see Details).}
-
-\item{upper.equi}{A numeric value specifying the upper limit of the range of
-equivalence (see Details).}
+\item{mcid.above.null}{A numeric value specifying the MCID above the null
+effect (see Details).}
 
 \item{small.values}{A character string specifying whether small 
 treatment effects indicate a beneficial (\code{"desirable"}) or
 harmful (\code{"undesirable"}) effect.}
 
-\item{relax}{A logical optional argument. If TRUE it 'relaxes' the tcc 
-to only consider the bounds of ROE when specifying 'wins' and ties. 
-The default FALSE uses the criterion described by Evrenoglou et al. (2024)
-and considers also the statistical significance on top of the ROE bounds
-(see Details).}
+\item{relax}{A logical optional argument. If TRUE (default), the treatment
+choice criterion is based solely on the MCID bounds, emphasizing only the
+clinical relevance of the results. If set to FALSE, the criterion
+incorporates both statistical significance and clinical relevance.
+We recommend using the default setting (see Details).}
 
 \item{level}{The level used to calculate confidence intervals for
 log-abilities.}
 
-\item{sm}{The effect measure of interest (see Details).}
-
-\item{keepdata}{A logical indicating whether original data should be kept in
-tcc object.}
-
-\item{\dots}{Additional arguments (passed on to
-\code{\link[meta]{pairwise}}).}
-
-\item{x}{An object of class \code{\link{tcc}}.}
+\item{\dots}{Additional arguments (ignored).}
 }
 \value{
-\itemize{
-\item The initial data in a paired-preference format.
-\item The correspondence between the initial study names
-  (passed in the argument studlab) and the index name of the
-  paired-preference format data.
-}
+NMA estimates in a paired-preference format.
 }
 \description{
-This function transforms data that are given in wide or long
-arm-based format (e.g. input format for WinBUGS or JAGS) to a
-paired-preference format needed as input to \code{\link{mtrank}}.
-The function can transform data with binary and continuous arm-based to
-preference-based format.
+This function uses a treatment choice criterion defined by the user and
+transforms the network meta-analysis estimates into a preference format that
+indicates either a treatment preference or a tie. This preference format is
+then used as input to \code{\link{mtrank}}.
 }
 \details{
 R function \code{\link{mtrank}} expects data in a \bold{paired-preference}
-format, where for each study-specific pairwise comparison in the network a
-treatment preference or tie is indicated. For example, for the
-study-specific comparison between treatments \emph{A} and \emph{B} the
-potential outcomes are:
+format, where a treatment preference or tie is indicated for each network
+meta-analysis (NMA) estimate. For example, for the comparison between
+treatments \emph{A} and \emph{B} the potential outcomes are:
 \itemize{
 \item \emph{A} > \emph{B}
 \item \emph{A} < \emph{B}
 \item \emph{A} = \emph{B}
 }
 
-The data transformation takes place based on the study-specific treatment
-effects and the treatment choice criterion. R function
-\code{\link[meta]{pairwise}} is called internally to calculate the
-study-specific treatment effect estimates and standard errors. This ensures
-that data given in either 'long' or 'wide' arm-based format will be suitably
-used to calculate the study-specific treatment effect estimates and standard
-errors while ensuring that a network of multi-arm studies gets an
-equivalent representation as a network of two-arm studies. It is also
-possible to provide a \code{\link[meta]{pairwise}} as the main input.
-In this case, inputs for the arguments \code{event}, \code{n}, \code{mean},
-\code{sd}, \code{data}, \code{studlab}, or \code{keepdata} are ignored.
+The transformation takes place based on the NMA estimates and the treatment
+choice criterion which has the form of a decision rule.
 
-This function implements treatment choice criteria based on the method
-by Evrenoglou et al. (2024). Namely, a range of equivalence (ROE) can be
-specified by
+This function implements treatment choice criteria based on the range of
+equivalence (ROE) which are specified by 
 \itemize{
 \item argument \code{mcid}. Then the limits of the ROE
-  will be defined based on the values (i) \code{mcid}, \code{1/mcid} for
+  will be defined based on the values (i) \code{mcid}, \code{1 / mcid} for
   ratio measures and (ii) \code{mcid} and \code{-mcid} for difference
   measures.
-\item arguments \code{lower.equi} and \code{upper.equi}.
+\item arguments \code{mcid.below.null} and \code{mcid.above.null}.
   These arguments allow the users to define their own limits of the ROE,
   given the restriction that the lower limit will always be smaller than the
   upper limit.
 }
 
 Note that when the argument \code{mcid} is specified, the arguments
-\code{lower.equi} and \code{upper.equi} are ignored.
-Either only the \code{mcid} or both of the \code{lower.equi} and
-\code{upper.equi} must be specified for the proper
+\code{mcid.below.null} and \code{mcid.above.null} are ignored.
+Either only the \code{mcid} or both of the \code{mcid.below.null} and
+\code{mcid.above.null} must be specified for the proper
 definition of the ROE.
 
-After setting the ROE, each study-specific treatment effect will be
-categorised as a treatment preference or a tie. The argument \code{relax}
-controls the amount of conservatism of the treatment choice criterion.
-If set to \code{FALSE} (default), the treatment choice criterion is
-equivalent to the one described by Evrenoglou et al. (2024). In this case,
-study-specific treatment effects need to be both statistically and clinically
-significant to indicate a treatment preference. If set to \code{TRUE}, the
-criterion is relaxed and the study-specific treatment effects need to be only
-clinically significant to indicate a treatment preference. 
-
-This function can transform data with binary and continuous outcomes.
-Depending on the outcome, the following arguments are mandatory:
-\itemize{
-\item treat, event, n (for binary outcomes);
-\item treat, n, mean, sd (for continuous outcomes).
-}
-
-Finally, the argument \code{sm} is used to define the effect measure of
-interest for transforming the data into paired-preference format;
-see \code{\link[meta]{metabin}} and \code{\link[meta]{metacont}} for a
-list of available effect measures.
+After setting the ROE, each NMA treatment effect will be categorised as a
+treatment preference or a tie. The argument \code{relax} controls the amount
+of conservatism of the treatment choice criterion. If set to \code{FALSE},
+a TCC will be built requiring both clinical as statistican significance of
+the results. If set to \code{TRUE} (default), the criterion is relaxed and
+the NMA treatment effects need to be only clinically significant to indicate
+a treatment preference.
 }
 \examples{
-data(diabetes)
+data("antidepressants")
 #
-ranks <- tcc(treat = t, studlab = study, event = r, n = n, data = diabetes,
-  mcid = 1.20, sm = "OR", small.values = "desirable")
+pw <- pairwise(studlab = studyid, treat = drug_name,
+  n = ntotal, event = responders,
+  data = antidepressants, sm = "OR")
+# Use subset to reduce runtime
+pw <- subset(pw, studyid < 60)
 #
-forest(ranks, treat = "ARB")
+net <- netmeta(pw)
+
+ranks <- tcc(net, mcid = 1.25, small.values = "undesirable")
+
+\dontrun{
+# Store a PDF file in the current working directory showing all results
+# (this is the default, i.e., if argument 'reference.group' is missing)
+forest(ranks, baseline = FALSE,
+  file = "forest_tcc_antidepressants.pdf")
+}
+
+# Comparison other drugs vs trazodone
+forest(ranks, reference.group = "tra",
+  label.left = "Favours other drug",
+  label.right = "Favours trazodone")
+
+# Comparison escitalopram vs other drugs
+forest(ranks, reference.group = "esc", baseline = FALSE,
+  label.left = "Favours escitalopram",
+  label.right = "Favours other drug")
 
 }
 \references{
