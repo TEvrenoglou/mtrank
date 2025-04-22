@@ -58,7 +58,36 @@
 #' @keywords hplot
 #' 
 #' @examples
-#' # Examples: example(tcc)
+#' 
+#' data("antidepressants")
+#' #
+#' pw <- pairwise(studlab = studyid, treat = drug_name,
+#'   n = ntotal, event = responders,
+#'   data = antidepressants, sm = "OR")
+#' # Use subset to reduce runtime
+#' pw <- subset(pw, studyid < 60)
+#' #
+#' net <- netmeta(pw,reference.group = "tra")
+#' 
+#' ranks <- tcc(net, mcid = 1.20, small.values = "undesirable")
+#' 
+#' 
+#' # Comparison other drugs vs trazodone
+#' forest(ranks,
+#'   label.left = "Favours other drug",
+#'   label.right = "Favours trazodone")
+#' 
+#' # Comparison escitalopram vs other drugs
+#' forest(ranks, reference.group = "esc", baseline = FALSE,
+#'   label.left = "Favours escitalopram",
+#'   label.right = "Favours other drug")
+#'   
+#' \dontrun{
+#' # Store a PDF file in the current working directory showing all results
+#' # (this is the default, i.e., if argument 'reference.group' is missing)
+#' forest(ranks, baseline = FALSE,reference.group = trts,
+#'   file = "forest_tcc_antidepressants.pdf")
+#' }
 #' 
 #' @method forest tcc
 #' @export
