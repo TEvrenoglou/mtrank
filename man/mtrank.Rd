@@ -48,22 +48,26 @@ see \code{print.default}.}
 \itemize{
 \item A data frame containing the resulting log-ability estimates, their
   standard errors and their confidence intervals.
-\item The estimate of the tie prevalence parameter v.
+\item The estimate of the tie prevalence parameter v, on the log-scale.
 \item The normalized ability estimates for each treatment. 
 }
 }
 \description{
-This function fits the Bradley-Terry ranking model and produces a treatment
+This function fits the Davidson-Bradley-Terry ranking model and produces a treatment
 hierarchy based on the method described by Evrenoglou et al. (2024) for
 network meta-analysis.
 }
 \details{
-This function is used to fit a Bradley-Terry model to the paired-preference
-data generated from the treatment choice criterion constructed by the
-\code{\link{tcc}} function. This function estimates the ability of
-each treatment in the network and the respective standard errors and
-confidence intervals using the maximum likelihood approach. To retain
-identifiability, the maximization of the log-likelihood takes place subject
+This function fits a Davidson-Bradley-Terry model to the treatment preferences
+\code{\link{tcc}} function. It estimates the ability of
+each treatment to outperform the other treatments in the network, along with the respective 
+standard errors, using a maximum likelihood approach. The term 'ability to outperform' refers to 
+a latent characteristic that indicates the propensity of each treatment in the network to yield 
+clinically relevant and beneficial treatment effects, in the context of the defined treatment choice criterion, 
+when compared to the rest of the treatments. Consequently, treatment with larger ability estimates
+are ranked more prominently in the treatment hierarchy.
+
+To retain identifiability, the maximization of the log-likelihood takes place subject
 to the constrain that the ability estimates sum to 1. Then, the maximum
 likelihood estimates (MLEs) are calculated iteratively.
 Note that the final estimates of the ability parameters are not necessarily
@@ -74,7 +78,7 @@ each treatment is having the highest ability".
 
 Finally, a parameter "v" controlling the prevalence of ties in the network
 is also estimated. Although the estimated values of this parameter do
-not have a direct interpretation they are useful for estimating pairwise 
+not have a direct interpretation they are useful for estimating the fitted pairwise 
 probabilities (see \code{\link{fitted.mtrank}}).
 
 If argument \code{reference.group} is not NULL, a reference treatment

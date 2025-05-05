@@ -3,7 +3,7 @@
 \name{fitted.mtrank}
 \alias{fitted.mtrank}
 \alias{print.fitted.mtrank}
-\title{Calculate pairwise fitted probabilities for \code{\link{mtrank}} object}
+\title{Calculate pairwise fitted probabilities for \code{\link{mtrank}} object.}
 \usage{
 \method{fitted}{mtrank}(object, treat1, treat2, type, ...)
 
@@ -32,14 +32,14 @@ The probability (or probabilities) of interest for the comparison
 }
 \description{
 This function uses the estimates of ability and tie prevalence parameters
-from a \code{\link{mtrank}} object and calculates pairwise probabilities
+from a \code{\link{mtrank}} object and calculates fitted pairwise probabilities
 about the preference or the tie between two treatments based on equations (7)
 and (8) in Evrenoglou et al. (2024).
 }
 \details{
 Pairwise fitted probabilities between any two treatments in the network can
 be calculated using the ability estimates obtained from \code{\link{mtrank}}
-and equations (7) and (8) in Evrenoglou et al. (2024). The probabilities
+and equations (7) and (8) in Evrenoglou et al. (2024). The fitted probabilities
 are calculated in the direction \code{treat1} vs \code{treat2}. The available
 probability types are
 \itemize{
