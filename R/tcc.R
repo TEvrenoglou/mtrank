@@ -4,13 +4,17 @@
 #' @description
 #' This function uses a treatment choice criterion defined by the user and
 #' transforms the network meta-analysis estimates into a preference format that
-#' indicates either a treatment preference or a tie. This preference format is
-#' then used as input to \code{\link{mtrank}}.
+#' indicates either a treatment preference or a tie. In this setting, a treatment preference 
+#' implies that the respective NMA estimate represents
+#' a clinically relevant result while a tie indicates that the respective NMA estimate lacks 
+#' of clinical relevance. The resulting preference format is then used as input 
+#' to \code{\link{mtrank}}.
 #' 
 #' @param x A \code{\link[netmeta]{netmeta}} object.
 #' @param pooled A character string indicating whether results for the
 #'   common (\code{"common"}) or random effects model
-#'   (\code{"random"}) should be plotted. Can be abbreviated.
+#'   (\code{"random"}) should be used. Can be abbreviated. If not specified the results from
+#'   the random effects model will be used by default.
 #' @param mcid A numeric value specifying the minimal clinically important
 #'   value (MCID); see Details.
 #' @param mcid.below.null A numeric value specifying the MCID below the null
@@ -30,7 +34,7 @@
 #' @param \dots Additional arguments (ignored).
 #' 
 #' @details
-#' R function \code{\link{mtrank}} expects data in a \bold{paired-preference}
+#' R function \code{\link{mtrank}} expects data in a \bold{preference}
 #' format, where a treatment preference or tie is indicated for each network
 #' meta-analysis (NMA) estimate. For example, for the comparison between
 #' treatments \emph{A} and \emph{B} the potential outcomes are:
@@ -65,13 +69,13 @@
 #' After setting the ROE, each NMA treatment effect will be categorised as a
 #' treatment preference or a tie. The argument \code{relax} controls the amount
 #' of conservatism of the treatment choice criterion. If set to \code{FALSE},
-#' a TCC will be built requiring both clinical as statistican significance of
-#' the results. If set to \code{TRUE} (default), the criterion is relaxed and
-#' the NMA treatment effects need to be only clinically significant to indicate
-#' a treatment preference.
+#' a TCC will be built requiring both clinical as statistical significance of
+#' the results. If set to \code{TRUE} (default), the criterion uses only the ROE bounds 
+#' and thereforethe NMA treatment effects need to be only clinically relevant to indicate a 
+#' treatment preference.
 #' 
 #' @return
-#' NMA estimates in a paired-preference format.
+#' NMA estimates in a preference format.
 #' 
 #' @references
 #' Evrenoglou T, Nikolakopoulou A, Schwarzer G, Rücker G, Chaimani A (2024):

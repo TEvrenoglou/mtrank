@@ -1,10 +1,10 @@
-#' Forest plot showing study-specific preferences or ties according to
-#' treatment choice criterion
+#' Forest plot showing the treatment preference format of the NMA estimates 
+#' according to treatment choice criterion
 #' 
 #' @description
-#' This function produces a forest plot for all (or selected) study
-#' specific comparisons and visualizes the treatment preference or ties
-#' which are defined from the treatment choice criterion in \code{\link{tcc}}.
+#' This function produces a forest plot for all or specific specific comparisons
+#' and visualizes the treatment preference format as defined from the treatment choice 
+#' criterion in \code{\link{tcc}}.
 #' 
 #' @param x An object of class \code{\link{tcc}}.
 #' @param reference.group Reference treatment(s); by default all treatments are
@@ -37,14 +37,14 @@
 #'   \code{\link[meta]{forest.meta}}).
 #' 
 #' @details
-#' This function produces forest plots for the study specific treatment effects
-#' in the network. The color indicates whether treatment effects show
-#' a preference (red color) or tie (black color). Additionally, the respective
-#' range of equivalence defined at the function
+#' This function produces forest plots for the NMA treatment effect estimates. 
+#' The color indicates whether treatment effects show a preference (red color) or tie (black color). 
+#' Additionally, the respective range of equivalence defined at the function
 #' \code{\link{tcc}} is visualized for the forest plot.
 #' 
-#' Argument \code{reference.group} is optional. By default, all treatments in
-#' the network are considered.
+#' The argument \code{reference.group} is optional. By default, the graph plots the NMA 
+#' estimates of all treatments versus the common reference treatment used in the 
+#' \code{\link[netmeta]{netmeta}} object.
 #' 
 #' @return
 #' A forest plot is plotted in the active graphics device.
