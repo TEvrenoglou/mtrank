@@ -2,13 +2,14 @@
 #' according to treatment choice criterion
 #' 
 #' @description
-#' This function produces a forest plot for all or specific specific comparisons
-#' and visualizes the treatment preference format as defined from the treatment choice 
-#' criterion in \code{\link{tcc}}.
+#' This function produces a forest plot and visualizes the treatment preference 
+#' format of the NMA estimates as defined from the treatment choice criterion in 
+#' \code{\link{tcc}}.
 #' 
 #' @param x An object of class \code{\link{tcc}}.
-#' @param reference.group Reference treatment(s); by default all treatments are
-#'   considered.
+#' @param reference.group Reference treatment(s). By default, the graph plots the NMA estimates of 
+#' all treatments versus the common reference treatment used in the 
+#' \code{\link[netmeta]{netmeta}} object.
 #' @param baseline.reference A logical indicating whether results
 #'   should be expressed as comparisons of other treatments versus the
 #'   reference treatment (default) or vice versa.
