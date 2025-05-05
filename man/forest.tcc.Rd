@@ -3,7 +3,7 @@
 \name{forest.tcc}
 \alias{forest.tcc}
 \title{Forest plot showing the treatment preference format of the NMA estimates 
-according to treatment choice criterion}
+according to treatment choice criterion.}
 \usage{
 \method{forest}{tcc}(
   x,
@@ -27,8 +27,9 @@ according to treatment choice criterion}
 \arguments{
 \item{x}{An object of class \code{\link{tcc}}.}
 
-\item{reference.group}{Reference treatment(s); by default all treatments are
-considered.}
+\item{reference.group}{Reference treatment(s). By default, the graph plots the NMA estimates of 
+all treatments versus the common reference treatment used in the 
+\code{\link[netmeta]{netmeta}} object.}
 
 \item{baseline.reference}{A logical indicating whether results
 should be expressed as comparisons of other treatments versus the
@@ -74,9 +75,9 @@ header line or a character string ("both", "below", "").}
 A forest plot is plotted in the active graphics device.
 }
 \description{
-This function produces a forest plot for all or specific specific comparisons
-and visualizes the treatment preference format as defined from the treatment choice 
-criterion in \code{\link{tcc}}.
+This function produces a forest plot and visualizes the treatment preference 
+format of the NMA estimates as defined from the treatment choice criterion in 
+\code{\link{tcc}}.
 }
 \details{
 This function produces forest plots for the NMA treatment effect estimates. 

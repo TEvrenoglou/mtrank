@@ -64,7 +64,7 @@ each treatment to outperform the other treatments in the network, along with the
 standard errors, using a maximum likelihood approach. The term 'ability to outperform' refers to 
 a latent characteristic that indicates the propensity of each treatment in the network to yield 
 clinically relevant and beneficial treatment effects, in the context of the defined treatment choice criterion, 
-when compared to the rest of the treatments. Consequently, treatment with larger ability estimates
+when compared to the rest of the treatments. Consequently, treatments with larger ability estimates
 are ranked more prominently in the treatment hierarchy.
 
 To retain identifiability, the maximization of the log-likelihood takes place subject
