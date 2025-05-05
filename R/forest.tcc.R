@@ -1,5 +1,5 @@
 #' Forest plot showing the treatment preference format of the NMA estimates 
-#' according to treatment choice criterion
+#' according to treatment choice criterion.
 #' 
 #' @description
 #' This function produces a forest plot and visualizes the treatment preference 
