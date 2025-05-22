@@ -61,7 +61,6 @@
 #' linegraph(net,
 #'         mcid.vec = mcid.vec,
 #'         mcid.ref = mcid.ref,
-#'         k = 3,
 #'         small.values = "undesirable",
 #'         type = "ability"
 #' )
