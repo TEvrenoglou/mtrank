@@ -81,7 +81,6 @@ linegraph(net,
 linegraph(net,
         mcid.vec = mcid.vec,
         mcid.ref = mcid.ref,
-        k = 3,
         small.values = "undesirable",
         type = "ability"
 )
@@ -92,7 +91,6 @@ linegraph(net,
          k = 3,
          small.values = "undesirable"   
 )
-
 }
 \references{
 Evrenoglou T, Nikolakopoulou A, Schwarzer G, Ruecker G, Chaimani A (2024):
