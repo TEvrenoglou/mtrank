@@ -115,7 +115,7 @@ mtrank <- function(x, reference.group = NULL, level = x$level,...) {
   #
   # Fit the model 
   #
-  fit <- PlackettLuce(x$preferences,...)
+  fit <- PlackettLuce(x$preferences,method = "BFGS",...)
   #
   # All estimates and standard errors
   #
