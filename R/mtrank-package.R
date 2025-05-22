@@ -6,13 +6,13 @@
 #' approach based on treatment choice criteria (TCC) and probabilistic
 #' ranking models, as described by Evrenoglou et al. (2024). The TCC are defined
 #' using a rule based on the minimal clinically important difference. Using the
-#' defined TCC, the study-level data (i.e., treatment effects and standard
-#' errors) are first transformed into a preference format, indicating either a
+#' defined TCC, the NMA estimates (i.e., treatment effects and standard
+#' errors) are first transformed into treatment preferences, indicating either a
 #' treatment preference (e.g., treatment A > treatment B) or a tie (treatment A
-#' = treatment B). The preference data are then synthesized using a
+#' = treatment B). These treatment preferences are then synthesized using a
 #' probabilistic ranking model, which estimates the latent ability parameter
 #' of each treatment and produces the final treatment hierarchy. This parameter
-#' represents each treatment’s ability to outperform all the other competing
+#' represents each treatments ability to outperform all the other competing
 #' treatments in the network. Consequently, larger ability estimates indicate
 #' higher positions in the ranking list.
 #'
@@ -66,6 +66,7 @@
 #' @importFrom utils packageVersion
 #' @importFrom graphics legend segments text par
 #' @importFrom stats complete.cases qnorm quantile
+#' @importFrom ggplot2 ggplot geom_line geom_point theme_minimal xlab ylab scale_x_continuous guides   
 
 "_PACKAGE"
 

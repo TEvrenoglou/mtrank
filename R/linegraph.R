@@ -71,7 +71,6 @@
 #'          k = 3,
 #'          small.values = "undesirable"   
 #' )
-#' @import ggplot2
 #' @export
 
 
