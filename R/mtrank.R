@@ -180,10 +180,17 @@ mtrank <- function(x, reference.group = NULL, level = x$level,...) {
               #
               x = x,
               #
+              trts = x$trts,
+              #
+              small.values = x$small.values,
+              #
               call = match.call(),
+              
               version = packageVersion("mtrank"))
   #
   class(res) <- "mtrank"
+  #
+  attr(res,"net.obj") <- attributes(x)$net.obj
   #
   res
 }

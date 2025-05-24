@@ -352,6 +352,8 @@ tcc <- function(x,
   #
   class(res) <- c("tcc", class(res))
   #
+  attr(res,"net.obj") <- x
+  #
   res
 }
 

@@ -66,7 +66,7 @@
 #' @importFrom utils packageVersion
 #' @importFrom graphics legend segments text par
 #' @importFrom stats complete.cases qnorm quantile
-#' @importFrom ggplot2 ggplot geom_line geom_point theme_minimal xlab ylab scale_x_continuous guides   
+#' @importFrom ggplot2 ggplot aes geom_line geom_point theme_minimal xlab ylab ylim scale_x_continuous guides guide_legend   
 
 "_PACKAGE"
 
