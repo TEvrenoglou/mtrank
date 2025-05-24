@@ -4,7 +4,7 @@
 #' This function produces a line graph that visualizes the results of \code{\link{mtrank}} 
 #' in terms of either abilities or probabilities across different MCID values.
 #' 
-#' @param x An object of class \code{\link{netmeta}}.
+#' @param x An object of class \code{\link{mtrank}}.
 #' @param mcid.vec A numeric vector of MCID values to be used for the sensitivity analysis.
 #' @param mcid.ref A numeric MCID value to be used as the reference for sorting treatments in the final graph. 
 #'   This value should be included in \code{mcid.vec}.

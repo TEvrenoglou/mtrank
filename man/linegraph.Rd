@@ -18,7 +18,7 @@ linegraph(
 )
 }
 \arguments{
-\item{x}{An object of class \code{\link{netmeta}}.}
+\item{x}{An object of class \code{\link{mtrank}}.}
 
 \item{mcid.vec}{A numeric vector of MCID values to be used for the sensitivity analysis.}
 
@@ -67,30 +67,21 @@ pw <- pairwise(studlab = studyid, treat = drug_name,
 pw <- subset(pw, studyid < 60)
 #
 net <- netmeta(pw, reference.group = "tra")
-
+#
+ranks <- tcc(net, mcid = 1.20, small.values = "undesirable")
+#
+fit <- mtrank(ranks)
+#
 # Perform a sensitivity analysis across different MCID values assuming that 1.20 is the reference value
 mcid.vec <- seq(1.10,1.50,by=0.10)
 mcid.ref <- 1.20
 # plot all the treatments in the network
-linegraph(net,
-         mcid.vec = mcid.vec,
-         mcid.ref = mcid.ref,
-         small.values = "undesirable"   
-)
-# plot in terms of ability estimates 
-linegraph(net,
-        mcid.vec = mcid.vec,
-        mcid.ref = mcid.ref,
-        small.values = "undesirable",
-        type = "ability"
-)
+linegraph(fit, mcid.vec = mcid.vec, mcid.ref = mcid.ref)
 # plot only the first three treatments in the order appearing at the 'mcid.ref' value
-linegraph(net,
-         mcid.vec = mcid.vec,
-         mcid.ref = mcid.ref,
-         k = 3,
-         small.values = "undesirable"   
-)
+linegraph(fit, mcid.vec = mcid.vec, mcid.ref = mcid.ref, k = 3)
+# plot in terms of ability estimates 
+linegraph(fit, mcid.vec = mcid.vec, mcid.ref = mcid.ref, type = "ability")
+   
 }
 \references{
 Evrenoglou T, Nikolakopoulou A, Schwarzer G, Ruecker G, Chaimani A (2024):
