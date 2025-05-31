@@ -32,7 +32,7 @@
 ### Bug fixes
 
 * mtrank():
- - use 'method="BFGS"' internally to avoid errors due to convergence failure
+  - use 'method="BFGS"' internally to avoid errors due to convergence failure
 
 
 ## mtrank, version 0.1-1 (2025-02-26)
