@@ -12,9 +12,15 @@
 
 * R function paired_pref() renamed to fitted.mtrank()
 
+* R function linegraph() added
+
+* Argument 'reference.group' was removed from function mtrank()
+
 * tcc():
   - single new argument 'x' replaces arguments 'treat', 'event', 'n',
     'mean', 'sd', 'data', and 'studlab'
+  - arguments 'mcid', 'mcid.below.nukk' ,'mcid.above.null' renamed to 
+  'swd', 'swd.below.null', 'swd.above.null'
 
 * forest.tcc():
   - argument 'treat' replaced by 'reference.group'
@@ -23,6 +29,10 @@
   - argument 'fill.lower.equi' replaced by 'fill.mcid.below.null'
   - argument 'fill.upper.equi' replaced by 'fill.mcid.above.null'
 
+### Bug fixes
+
+* mtrank():
+ - use 'method="BFGS"' internally to avoid errors due to convergence failure
 
 ## mtrank, version 0.1-1 (2025-02-26)
 
