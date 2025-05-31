@@ -18,8 +18,8 @@ according to treatment choice criterion.}
   lty.equi = gs("lty.cid"),
   col.equi = gs("col.cid"),
   fill.equi = "lightblue",
-  fill.mcid.below.null = "transparent",
-  fill.mcid.above.null = "transparent",
+  fill.swd.below.null = "transparent",
+  fill.swd.above.null = "transparent",
   header.line = TRUE,
   ...
 )
@@ -61,9 +61,9 @@ to be printed on the right side of the forest plot
 
 \item{fill.equi}{Colour(s) for area between limits of equivalence.}
 
-\item{fill.mcid.below.null}{Colour of area below lower MCID limit.}
+\item{fill.swd.below.null}{Colour of area below lower swd limit.}
 
-\item{fill.mcid.above.null}{Colour of area above upper MCID limit.}
+\item{fill.swd.above.null}{Colour of area above upper swd limit.}
 
 \item{header.line}{A logical value indicating whether to print a
 header line or a character string ("both", "below", "").}
@@ -100,7 +100,7 @@ pw0 <- subset(pw1, studyid < 60)
 #
 net0 <- netmeta(pw0, reference.group = "tra")
 
-ranks0 <- tcc(net0, mcid = 1.20, small.values = "undesirable")
+ranks0 <- tcc(net0, swd = 1.20, small.values = "undesirable")
 
 # Comparison other drugs vs trazodone
 forest(ranks0,
@@ -123,7 +123,7 @@ forest(ranks0, baseline = FALSE, reference.group = trts,
 # Run analysis with full data set
 net1 <- netmeta(pw1, reference.group = "tra")
 
-ranks1 <- tcc(net1, mcid = 1.20, small.values = "undesirable")
+ranks1 <- tcc(net1, swd = 1.20, small.values = "undesirable")
 
 # Comparison other drugs vs trazodone
 forest(ranks1,

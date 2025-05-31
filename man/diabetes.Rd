@@ -34,7 +34,7 @@ pw <- pairwise(studlab = study, treat = t,
 #
 net <- netmeta(pw, reference.group = "PLA")
 #
-ranks <- tcc(net, mcid = 1.20, small.values = "desirable")
+ranks <- tcc(net, swd = 1.20, small.values = "desirable")
 #
 forest(ranks)
 forest(ranks, reference.group = "ARB", baseline.reference = FALSE)

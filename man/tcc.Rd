@@ -3,15 +3,15 @@
 \name{tcc}
 \alias{tcc}
 \alias{print.tcc}
-\title{Transform the network meta-analysis estimates into a preference format
-based on the decision rule defined by the treatment choice criterion.}
+\title{Apply a treatment-choice criterion (TCC) to get treatment preferences 
+based on network meta-analysis estimates.}
 \usage{
 tcc(
   x,
   pooled = if (x$random) "random" else "common",
-  mcid = NULL,
-  mcid.below.null = NULL,
-  mcid.above.null = NULL,
+  swd = NULL,
+  swd.below.null = NULL,
+  swd.above.null = NULL,
   small.values = x$small.values,
   relax = TRUE,
   level = x$level.ma
@@ -27,13 +27,13 @@ common (\code{"common"}) or random effects model
 (\code{"random"}) should be used. Can be abbreviated. If not specified the results from
 the random effects model will be used by default.}
 
-\item{mcid}{A numeric value specifying the minimal clinically important
-value (MCID); see Details.}
+\item{swd}{A numeric value specifying the smallest worthwhile difference
+value (swd); see Details.}
 
-\item{mcid.below.null}{A numeric value specifying the MCID below the null
+\item{swd.below.null}{A numeric value specifying the swd below the null
 effect (see Details).}
 
-\item{mcid.above.null}{A numeric value specifying the MCID above the null
+\item{swd.above.null}{A numeric value specifying the swd above the null
 effect (see Details).}
 
 \item{small.values}{A character string specifying whether small 
@@ -41,9 +41,9 @@ treatment effects indicate a beneficial (\code{"desirable"}) or
 harmful (\code{"undesirable"}) effect.}
 
 \item{relax}{A logical optional argument. If TRUE (default), the treatment
-choice criterion is based solely on the MCID bounds, emphasizing only the
-clinical relevance of the results. If set to FALSE, the criterion
-incorporates both statistical significance and clinical relevance.
+choice criterion is based solely on the swd bounds, emphasizing only the
+clinical importance of the results. If set to FALSE, the criterion
+incorporates both statistical significance and clinical importance.
 We recommend using the default setting (see Details).}
 
 \item{level}{The level used to calculate confidence intervals for
@@ -59,8 +59,8 @@ This function uses a treatment choice criterion defined by the user and
 transforms the network meta-analysis estimates into a preference format that
 indicates either a treatment preference or a tie. In this setting, a treatment preference 
 implies that the respective NMA estimate represents
-a clinically relevant result while a tie indicates that the respective NMA estimate lacks 
-of clinical relevance. The resulting preference format is then used as input 
+a clinically important result (i.e. that fulfills the TCC) while a tie indicates that the respective NMA estimate lacks 
+enough evidence to represent a treatment preference. The resulting preference format is then used as input 
 to \code{\link{mtrank}}.
 }
 \details{
@@ -80,28 +80,28 @@ choice criterion which has the form of a decision rule.
 This function implements treatment choice criteria based on the range of
 equivalence (ROE) which are specified by 
 \itemize{
-\item argument \code{mcid}. Then the limits of the ROE
-  will be defined based on the values (i) \code{mcid}, \code{1 / mcid} for
-  ratio measures and (ii) \code{mcid} and \code{-mcid} for difference
+\item argument \code{swd}. Then the limits of the ROE
+  will be defined based on the values (i) \code{swd}, \code{1 / swd} for
+  ratio measures and (ii) \code{swd} and \code{-swd} for difference
   measures.
-\item arguments \code{mcid.below.null} and \code{mcid.above.null}.
+\item arguments \code{swd.below.null} and \code{swd.above.null}.
   These arguments allow the users to define their own limits of the ROE,
   given the restriction that the lower limit will always be smaller than the
   upper limit.
 }
 
-Note that when the argument \code{mcid} is specified, the arguments
-\code{mcid.below.null} and \code{mcid.above.null} are ignored.
-Either only the \code{mcid} or both of the \code{mcid.below.null} and
-\code{mcid.above.null} must be specified for the proper
+Note that when the argument \code{swd} is specified, the arguments
+\code{swd.below.null} and \code{swd.above.null} are ignored.
+Either only the \code{swd} or both of the \code{swd.below.null} and
+\code{swd.above.null} must be specified for the proper
 definition of the ROE.
 
 After setting the ROE, each NMA treatment effect will be categorised as a
 treatment preference or a tie. The argument \code{relax} controls the amount
 of conservatism of the treatment choice criterion. If set to \code{FALSE},
-a TCC will be built requiring both clinical as statistical significance of
+a TCC will be built requiring both clinical importance as statistical significance of
 the results. If set to \code{TRUE} (default), the criterion uses only the ROE bounds 
-and thereforethe NMA treatment effects need to be only clinically relevant to indicate a 
+and therefore the NMA treatment effects need to be only clinically important to indicate a 
 treatment preference.
 }
 \examples{
@@ -115,7 +115,7 @@ pw0 <- subset(pw1, studyid < 60)
 #
 net0 <- netmeta(pw0, reference.group = "tra")
 
-ranks0 <- tcc(net0, mcid = 1.20, small.values = "undesirable")
+ranks0 <- tcc(net0, swd = 1.20, small.values = "undesirable")
 
 # Comparison other drugs vs trazodone
 forest(ranks0,
@@ -138,7 +138,7 @@ forest(ranks0, baseline = FALSE, reference.group = trts,
 # Run analysis with full data set
 net1 <- netmeta(pw1, reference.group = "tra")
 
-ranks1 <- tcc(net1, mcid = 1.20, small.values = "undesirable")
+ranks1 <- tcc(net1, swd = 1.20, small.values = "undesirable")
 
 # Comparison other drugs vs trazodone
 forest(ranks1,

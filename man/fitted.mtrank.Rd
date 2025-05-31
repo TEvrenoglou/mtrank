@@ -62,7 +62,7 @@ pw0 <- subset(pw1, studyid < 60)
 #
 net0 <- netmeta(pw0, reference.group = "tra")
 #
-ranks0 <- tcc(net0, mcid = 1.20, small.values = "undesirable")
+ranks0 <- tcc(net0, swd = 1.20, small.values = "undesirable")
 #
 fit0 <- mtrank(ranks0)
 #
@@ -80,7 +80,7 @@ fitted(fit0, type = "all",
 # Run analysis with full data set
 net1 <- netmeta(pw1, reference.group = "tra")
 #
-ranks1 <- tcc(net1, mcid = 1.20, small.values = "undesirable")
+ranks1 <- tcc(net1, swd = 1.20, small.values = "undesirable")
 #
 fit1 <- mtrank(ranks1)
 #

@@ -2,12 +2,12 @@
 % Please edit documentation in R/linegraph.R
 \name{linegraph}
 \alias{linegraph}
-\title{Line graph plotting the results of \code{\link{mtrank}} across different MCID values.}
+\title{Line graph plotting the results of \code{\link{mtrank}} across different swd values.}
 \usage{
 linegraph(
   x,
-  mcid.vec,
-  mcid.ref,
+  swd.vec,
+  swd.ref,
   small.values = x$small.values,
   type = "probability",
   k = length(x$trts),
@@ -20,10 +20,10 @@ linegraph(
 \arguments{
 \item{x}{An object of class \code{\link{mtrank}}.}
 
-\item{mcid.vec}{A numeric vector of MCID values to be used for the sensitivity analysis.}
+\item{swd.vec}{A numeric vector of SWD values to be used for the sensitivity analysis.}
 
-\item{mcid.ref}{A numeric MCID value to be used as the reference for sorting treatments in the final graph. 
-This value should be included in \code{mcid.vec}.}
+\item{swd.ref}{A numeric SWD value to be used as the reference for sorting treatments in the final graph. 
+This value should be included in \code{swd.vec}.}
 
 \item{small.values}{A character string specifying whether small treatment effects indicate a 
 beneficial (\code{"desirable"}) or harmful (\code{"undesirable"}) effect.}
@@ -34,7 +34,7 @@ the alternative is \code{"ability"}, which plots results in terms of ability est
 
 \item{k}{A numeric value indicating the number of treatments to be plotted. By default, all available treatments are shown. 
 For large networks, it is advisable to limit the number of treatments to improve readability. If specified, the first \code{k} 
-treatments based on the hierarchy at \code{mcid.ref} will be plotted.}
+treatments based on the hierarchy at \code{swd.ref} will be plotted.}
 
 \item{backtransf}{A logical value indicating whether to display log-ability estimates (\code{FALSE}, default) 
 or back-transformed ability estimates on the natural scale (\code{TRUE}). This argument is ignored if \code{type = "probability"}.}
@@ -50,12 +50,12 @@ A \code{ggplot} object.
 }
 \description{
 This function produces a line graph that visualizes the results of \code{\link{mtrank}} 
-in terms of either abilities or probabilities across different MCID values.
+in terms of either abilities or probabilities across different smallest worthwhile difference (SWD) values.
 }
 \details{
 This function creates a line graph to visualize probability or ability estimates
-obtained from \code{\link{mtrank}} across different MCID values. The order of treatments in the
-graph is based on their hierarchy at the reference MCID value (\code{mcid.ref}).
+obtained from \code{\link{mtrank}} across different SWD values. The order of treatments in the
+graph is based on their hierarchy at the reference SWD value (\code{swd.ref}).
 }
 \examples{
 data("antidepressants")
@@ -68,19 +68,19 @@ pw <- subset(pw, studyid < 60)
 #
 net <- netmeta(pw, reference.group = "tra")
 #
-ranks <- tcc(net, mcid = 1.20, small.values = "undesirable")
+ranks <- tcc(net, swd = 1.20, small.values = "undesirable")
 #
 fit <- mtrank(ranks)
 #
-# Perform a sensitivity analysis across different MCID values assuming that 1.20 is the reference value
-mcid.vec <- seq(1.10,1.50,by=0.10)
-mcid.ref <- 1.20
+# Perform a sensitivity analysis across different swd values assuming that 1.20 is the reference value
+swd.vec <- seq(1.10,1.50,by=0.10)
+swd.ref <- 1.20
 # plot all the treatments in the network
-linegraph(fit, mcid.vec = mcid.vec, mcid.ref = mcid.ref)
-# plot only the first three treatments in the order appearing at the 'mcid.ref' value
-linegraph(fit, mcid.vec = mcid.vec, mcid.ref = mcid.ref, k = 3)
+linegraph(fit, swd.vec = swd.vec, swd.ref = swd.ref)
+# plot only the first three treatments in the order appearing at the 'swd.ref' value
+linegraph(fit, swd.vec = swd.vec, swd.ref = swd.ref, k = 3)
 # plot in terms of ability estimates 
-linegraph(fit, mcid.vec = mcid.vec, mcid.ref = mcid.ref, type = "ability")
+linegraph(fit, swd.vec = swd.vec, swd.ref = swd.ref, type = "ability")
    
 }
 \references{
