@@ -69,7 +69,6 @@ forest.mtrank <- function(x, sorting = "ability", backtransf = FALSE,
   chkclass(x, "mtrank")
   
   dat <- x$estimates
-  reference.group <- x$reference.group
   #
   sorting <- setchar(sorting, c("ability", "se", "none"))
   chklogical(backtransf)
@@ -86,9 +85,6 @@ forest.mtrank <- function(x, sorting = "ability", backtransf = FALSE,
     o <- seq_len(nrow(dat))
   #
   dat <- dat[o, , drop = FALSE]
-  
-  if (!is.null(reference.group))
-    dat <- dat[complete.cases(dat$se), , drop = FALSE]
   #
   if (null.xlab)
     xlab <- "Ability [95% CI]"

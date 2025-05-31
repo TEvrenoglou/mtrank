@@ -8,10 +8,6 @@
 #' 
 #' @param x An object of class \code{\link{tcc}} or \code{\link{mtrank}}
 #'   (print function).
-#' @param reference.group An argument specifying the reference group. If set to
-#'   NULL (default), ability estimates of all treatments will be calculated.
-#'   If some treatment is set as the reference group, relative abilities of all
-#'   treatments versus the specified reference treatment will be calculated.
 #' @param level The level used to calculate confidence intervals for ability
 #'   estimates.
 #' @param backtransf A logical argument specifying whether to show log-ability
@@ -50,13 +46,6 @@
 #' not have a direct interpretation they are useful for estimating the fitted pairwise 
 #' probabilities (see \code{\link{fitted.mtrank}}).
 #' 
-#' If argument \code{reference.group} is not NULL, a reference treatment
-#' group is specified. Mathematically, this means that the maximization problem
-#' is now identifiable, subject to the condition that the ability of this
-#' treatment is 0. Then, the resulting MLEs are the relative abilities of all
-#' treatments in the network versus the specified reference treatment group.
-#' Note that the estimates of the parameter "v" and the normalized probabilities
-#' do not depend on the value for argument \code{reference.group}.
 #' 
 #' @return
 #' \itemize{
@@ -98,7 +87,7 @@
 #'  
 #' @export mtrank
 
-mtrank <- function(x, reference.group = NULL, level = x$level,...) {
+mtrank <- function(x, level = x$level,...) {
   
   chkclass(x, "tcc")
   #
@@ -111,16 +100,14 @@ mtrank <- function(x, reference.group = NULL, level = x$level,...) {
   dat <- x$ppdata
   #dat$comparison <- paste(dat$treat1, dat$treat2, sep = " vs ")
   #
-  reference.group <- setchar(reference.group, x$trts)
-  #
   # Fit the model 
   #
   fit <- PlackettLuce(x$preferences,method = "BFGS",...)
   #
   # All estimates and standard errors
   #
-  estimates <- summary(fit, ref = reference.group)$coef[, 1]
-  se_estimates <- summary(fit, ref = reference.group)$coef[, 2]
+  estimates <- summary(fit, ref = NULL)$coef[, 1]
+  se_estimates <- summary(fit, ref = NULL)$coef[, 2]
   #
   # Isolate the estimate for the parameter 'v'. 
   #
@@ -176,7 +163,6 @@ mtrank <- function(x, reference.group = NULL, level = x$level,...) {
               v = v,
               probabilities = dat_prob,
               fit = fit,
-              reference.group = reference.group,
               #
               x = x,
               #

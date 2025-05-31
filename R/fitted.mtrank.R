@@ -109,13 +109,9 @@ fitted.mtrank <- function(object, treat1, treat2, type, ...) {
     stop("Arguments 'treat1' and 'treat2' must be of same length.",
          call. = FALSE)
   
-  # To calculate the paired preferences we need the results of mtrank()
-  # without a reference group (argument reference.group = NULL) so that we have
-  # the ability estimates for each treatment
+  # To calculate the fitted.probabilities we need the results of mtrank()
+  #  so that we have the ability estimates for each treatment
   #
-  if (!is.null(object$reference.group))
-    fit <- mtrank(object$x, reference.group = NULL)
-  else
     fit <- object
   
   # Extract the ability estimate for 'treat1' and 'treat2' on the natural scale  
