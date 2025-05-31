@@ -149,7 +149,7 @@ linegraph <- function(x,
       geom_line(linewidth = linewidth) +
       geom_point(size = point.size)+
       theme_minimal()+
-      xlab("swd")+
+      xlab("SWD")+
       ylab("Probability")+
       ylim(c(0,1))+
       scale_x_continuous(breaks = swd.vec) +
@@ -166,7 +166,7 @@ linegraph <- function(x,
         geom_line(linewidth = linewidth) +
         geom_point(size = point.size)+
         theme_minimal()+
-        xlab("swd")+
+        xlab("SWD")+
         ylab("log-abilities")+
         scale_x_continuous(breaks = swd.vec) +
         guides(color=guide_legend(title="Treatment"))
