@@ -1,13 +1,13 @@
-#' Line graph plotting the results of \code{\link{mtrank}} across different MCID values. 
+#' Line graph plotting the results of \code{\link{mtrank}} across different swd values. 
 #' 
 #' @description
 #' This function produces a line graph that visualizes the results of \code{\link{mtrank}} 
-#' in terms of either abilities or probabilities across different MCID values.
+#' in terms of either abilities or probabilities across different smallest worthwhile difference (SWD) values.
 #' 
 #' @param x An object of class \code{\link{mtrank}}.
-#' @param mcid.vec A numeric vector of MCID values to be used for the sensitivity analysis.
-#' @param mcid.ref A numeric MCID value to be used as the reference for sorting treatments in the final graph. 
-#'   This value should be included in \code{mcid.vec}.
+#' @param swd.vec A numeric vector of SWD values to be used for the sensitivity analysis.
+#' @param swd.ref A numeric SWD value to be used as the reference for sorting treatments in the final graph. 
+#'   This value should be included in \code{swd.vec}.
 #' @param small.values A character string specifying whether small treatment effects indicate a 
 #'   beneficial (\code{"desirable"}) or harmful (\code{"undesirable"}) effect.
 #' @param type The metric to be used for plotting the results of the sensitivity analysis. 
@@ -15,7 +15,7 @@
 #'   the alternative is \code{"ability"}, which plots results in terms of ability estimates. Both options can be abbreviated. 
 #' @param k A numeric value indicating the number of treatments to be plotted. By default, all available treatments are shown. 
 #'   For large networks, it is advisable to limit the number of treatments to improve readability. If specified, the first \code{k} 
-#'   treatments based on the hierarchy at \code{mcid.ref} will be plotted. 
+#'   treatments based on the hierarchy at \code{swd.ref} will be plotted. 
 #' @param backtransf A logical value indicating whether to display log-ability estimates (\code{FALSE}, default) 
 #'   or back-transformed ability estimates on the natural scale (\code{TRUE}). This argument is ignored if \code{type = "probability"}.
 #' @param linewidth A numeric value specifying the width of the lines (default: 1.1).
@@ -24,8 +24,8 @@
 #' 
 #' @details
 #' This function creates a line graph to visualize probability or ability estimates
-#' obtained from \code{\link{mtrank}} across different MCID values. The order of treatments in the
-#' graph is based on their hierarchy at the reference MCID value (\code{mcid.ref}).
+#' obtained from \code{\link{mtrank}} across different SWD values. The order of treatments in the
+#' graph is based on their hierarchy at the reference SWD value (\code{swd.ref}).
 #' 
 #' @return
 #' A \code{ggplot} object.
@@ -48,26 +48,26 @@
 #' #
 #' net <- netmeta(pw, reference.group = "tra")
 #' #
-#' ranks <- tcc(net, mcid = 1.20, small.values = "undesirable")
+#' ranks <- tcc(net, swd = 1.20, small.values = "undesirable")
 #' #
 #' fit <- mtrank(ranks)
 #' #
-#' # Perform a sensitivity analysis across different MCID values assuming that 1.20 is the reference value
-#' mcid.vec <- seq(1.10,1.50,by=0.10)
-#' mcid.ref <- 1.20
+#' # Perform a sensitivity analysis across different swd values assuming that 1.20 is the reference value
+#' swd.vec <- seq(1.10,1.50,by=0.10)
+#' swd.ref <- 1.20
 #' # plot all the treatments in the network
-#' linegraph(fit, mcid.vec = mcid.vec, mcid.ref = mcid.ref)
-#' # plot only the first three treatments in the order appearing at the 'mcid.ref' value
-#' linegraph(fit, mcid.vec = mcid.vec, mcid.ref = mcid.ref, k = 3)
+#' linegraph(fit, swd.vec = swd.vec, swd.ref = swd.ref)
+#' # plot only the first three treatments in the order appearing at the 'swd.ref' value
+#' linegraph(fit, swd.vec = swd.vec, swd.ref = swd.ref, k = 3)
 #' # plot in terms of ability estimates 
-#' linegraph(fit, mcid.vec = mcid.vec, mcid.ref = mcid.ref, type = "ability")
+#' linegraph(fit, swd.vec = swd.vec, swd.ref = swd.ref, type = "ability")
 #'    
 #' @export
 
 
 linegraph <- function(x, 
-                       mcid.vec,
-                       mcid.ref,
+                       swd.vec,
+                       swd.ref,
                        small.values = x$small.values,
                        type = "probability",
                        k = length(x$trts),
@@ -77,18 +77,18 @@ linegraph <- function(x,
                        ...){
   #
   chkclass(x, "mtrank")
-  chknumeric(mcid.vec)
-  chknumeric(mcid.ref)
+  chknumeric(swd.vec)
+  chknumeric(swd.ref)
   chknumeric(k,min=0)
   #
   type <- setchar(type,val=c("ability","probability"))
 
   #
-  E <- which(abs(mcid.vec - mcid.ref) < 1e-8)
+  E <- which(abs(swd.vec - swd.ref) < 1e-8)
   
   if(length(E)==0){
     
-    stop("The reference MCID value should be part of the MCID values in 'mcid.vec'.")
+    stop("The reference swd value should be part of the swd values in 'swd.vec'.")
   }
   
   mod <- r <- ests <- prob <- vector("list")
@@ -97,10 +97,10 @@ linegraph <- function(x,
   
   net.obj <- attributes(x)$net.obj
   #
-  for(i in 1:length(mcid.vec)){
+  for(i in 1:length(swd.vec)){
     
     r[[i]] <- tcc(net.obj,
-                  small.values = small.values,mcid = mcid.vec[i])
+                  small.values = small.values,swd = swd.vec[i])
     
     
     if(isFALSE(r[[i]]$all.ties)){
@@ -111,11 +111,11 @@ linegraph <- function(x,
       prob[[i]] <- mod[[i]]$probabilities
       
       
-      prob[[i]]$mcid <- mcid.vec[i]
+      prob[[i]]$swd <- swd.vec[i]
       
       ests[[i]] <- mod[[i]]$estimates %>% 
         arrange(desc(log_ability)) %>% 
-        mutate(mcid=mcid.vec[i])
+        mutate(swd=swd.vec[i])
     }
     
     else{
@@ -145,14 +145,14 @@ linegraph <- function(x,
       filter(treatment %in% treats) %>% 
       mutate(treatment = factor(treatment,levels = treats))
     
-    graph <- ggplot(data, aes(x = mcid, y = probability, color = treatment)) +
+    graph <- ggplot(data, aes(x = swd, y = probability, color = treatment)) +
       geom_line(linewidth = linewidth) +
       geom_point(size = point.size)+
       theme_minimal()+
-      xlab("MCID")+
+      xlab("swd")+
       ylab("Probability")+
       ylim(c(0,1))+
-      scale_x_continuous(breaks = mcid.vec) +
+      scale_x_continuous(breaks = swd.vec) +
       guides(color=guide_legend(title="Treatment"))
   }
   else if(type=="ability"){
@@ -162,38 +162,38 @@ linegraph <- function(x,
       mutate(treatment = factor(treatment,levels = treats))
     
     if(isFALSE(backtransf)){
-      graph <- ggplot(data, aes(x = mcid, y = log_ability, color = treatment)) +
+      graph <- ggplot(data, aes(x = swd, y = log_ability, color = treatment)) +
         geom_line(linewidth = linewidth) +
         geom_point(size = point.size)+
         theme_minimal()+
-        xlab("MCID")+
+        xlab("swd")+
         ylab("log-abilities")+
-        scale_x_continuous(breaks = mcid.vec) +
+        scale_x_continuous(breaks = swd.vec) +
         guides(color=guide_legend(title="Treatment"))
     }
     else{
-      graph <- ggplot(data, aes(x = mcid, y = exp(log_ability), color = treatment)) +
+      graph <- ggplot(data, aes(x = swd, y = exp(log_ability), color = treatment)) +
         geom_line(linewidth = linewidth) +
         geom_point(size = point.size)+
         theme_minimal()+
-        xlab("MCID")+
+        xlab("SWD")+
         ylab("Abilities")+
-        scale_x_continuous(breaks = mcid.vec) +
+        scale_x_continuous(breaks = swd.vec) +
         guides(color=guide_legend(title="Treatment"))
       
     }
     
   }
   
-  E_mcid <- which(!mcid.vec %in% unique(data$mcid))
+  E_swd <- which(!swd.vec %in% unique(data$swd))
   
-  mcid_all_ties <- unique(mcid.vec)[E_mcid] 
+  swd_all_ties <- unique(swd.vec)[E_swd] 
   
-  if(length(E_mcid)!=0){
+  if(length(E_swd)!=0){
     
-    txt_mcid <- paste(mcid_all_ties,collapse = ", ")  
+    txt_swd <- paste(swd_all_ties,collapse = ", ")  
     
-    warning(paste("Values ",txt_mcid," are not shown as for these the treatment choice criterion identified only ties."))  
+    warning(paste("Values ",txt_swd," are not shown as for these the treatment choice criterion identified only ties."))  
     
   }
   

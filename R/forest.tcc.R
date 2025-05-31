@@ -30,8 +30,8 @@
 #' @param lty.equi Line type (limits of equivalence).
 #' @param col.equi Line colour (limits of equivalence).
 #' @param fill.equi Colour(s) for area between limits of equivalence.
-#' @param fill.mcid.below.null Colour of area below lower MCID limit.
-#' @param fill.mcid.above.null Colour of area above upper MCID limit.
+#' @param fill.swd.below.null Colour of area below lower swd limit.
+#' @param fill.swd.above.null Colour of area above upper swd limit.
 #' @param header.line A logical value indicating whether to print a
 #'   header line or a character string ("both", "below", "").
 #' @param \dots Additional arguments (passed on to
@@ -69,7 +69,7 @@
 #' #
 #' net0 <- netmeta(pw0, reference.group = "tra")
 #' 
-#' ranks0 <- tcc(net0, mcid = 1.20, small.values = "undesirable")
+#' ranks0 <- tcc(net0, swd = 1.20, small.values = "undesirable")
 #' 
 #' # Comparison other drugs vs trazodone
 #' forest(ranks0,
@@ -92,7 +92,7 @@
 #' # Run analysis with full data set
 #' net1 <- netmeta(pw1, reference.group = "tra")
 #' 
-#' ranks1 <- tcc(net1, mcid = 1.20, small.values = "undesirable")
+#' ranks1 <- tcc(net1, swd = 1.20, small.values = "undesirable")
 #' 
 #' # Comparison other drugs vs trazodone
 #' forest(ranks1,
@@ -121,8 +121,8 @@ forest.tcc <- function(x,
                        lty.equi = gs("lty.cid"),
                        col.equi = gs("col.cid"),
                        fill.equi = "lightblue",
-                       fill.mcid.below.null = "transparent",
-                       fill.mcid.above.null = "transparent",
+                       fill.swd.below.null = "transparent",
+                       fill.swd.above.null = "transparent",
                        #
                        header.line = TRUE,
                        ...) {
@@ -156,12 +156,12 @@ forest.tcc <- function(x,
   chklogical(header.line)
   
   
-  mcid.below.null <- x$mcid.below.null
-  mcid.above.null <- x$mcid.above.null
+  swd.below.null <- x$swd.below.null
+  swd.above.null <- x$swd.above.null
   #
   if (is_relative_effect(x$sm) & !backtransf) {
-    mcid.below.null <- log(mcid.below.null)
-    mcid.above.null <- log(mcid.above.null)
+    swd.below.null <- log(swd.below.null)
+    swd.above.null <- log(swd.above.null)
   }
   
   # Get rid of warning "no visible binding for global variable"
@@ -223,8 +223,8 @@ forest.tcc <- function(x,
                                 "common", "random", "hetstat",
                                 "overall", "overall.hetstat"),
                               c("lty.equi", "col.equi",
-                                "mcid.below.null", "mcid.above.null",
-                                "fill.mcid.below.null", "fill.mcid.above.null",
+                                "swd.below.null", "swd.above.null",
+                                "fill.swd.below.null", "fill.swd.above.null",
                                 "", "",
                                 "", "",
                                 "",
@@ -238,12 +238,12 @@ forest.tcc <- function(x,
          rightcols = rightcols,
          #
          lty.cid = lty.equi, col.cid = col.equi,
-         fill.cid.below.null = fill.mcid.below.null,
-         fill.cid.above.null = fill.mcid.above.null,
+         fill.cid.below.null = fill.swd.below.null,
+         fill.cid.above.null = fill.swd.above.null,
          #
          fill.equi = fill.equi,
-         cid.below.null = mcid.below.null,
-         cid.above.null = mcid.above.null,
+         cid.below.null = swd.below.null,
+         cid.above.null = swd.above.null,
          #
          weight.study = "same",
          col.study = dat$color,

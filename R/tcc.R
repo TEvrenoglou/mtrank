@@ -1,13 +1,13 @@
-#' Transform the network meta-analysis estimates into a preference format
-#' based on the decision rule defined by the treatment choice criterion.
+#' Apply a treatment-choice criterion (TCC) to get treatment preferences 
+#' based on network meta-analysis estimates.
 #' 
 #' @description
 #' This function uses a treatment choice criterion defined by the user and
 #' transforms the network meta-analysis estimates into a preference format that
 #' indicates either a treatment preference or a tie. In this setting, a treatment preference 
 #' implies that the respective NMA estimate represents
-#' a clinically relevant result while a tie indicates that the respective NMA estimate lacks 
-#' of clinical relevance. The resulting preference format is then used as input 
+#' a clinically important result (i.e. that fulfills the TCC) while a tie indicates that the respective NMA estimate lacks 
+#' enough evidence to represent a treatment preference. The resulting preference format is then used as input 
 #' to \code{\link{mtrank}}.
 #' 
 #' @param x A \code{\link[netmeta]{netmeta}} object.
@@ -15,19 +15,19 @@
 #'   common (\code{"common"}) or random effects model
 #'   (\code{"random"}) should be used. Can be abbreviated. If not specified the results from
 #'   the random effects model will be used by default.
-#' @param mcid A numeric value specifying the minimal clinically important
-#'   value (MCID); see Details.
-#' @param mcid.below.null A numeric value specifying the MCID below the null
+#' @param swd A numeric value specifying the smallest worthwhile difference
+#'   value (swd); see Details.
+#' @param swd.below.null A numeric value specifying the swd below the null
 #'   effect (see Details).
-#' @param mcid.above.null A numeric value specifying the MCID above the null
+#' @param swd.above.null A numeric value specifying the swd above the null
 #'   effect (see Details).
 #' @param small.values A character string specifying whether small 
 #'   treatment effects indicate a beneficial (\code{"desirable"}) or
 #'   harmful (\code{"undesirable"}) effect.
 #' @param relax A logical optional argument. If TRUE (default), the treatment
-#'   choice criterion is based solely on the MCID bounds, emphasizing only the
-#'   clinical relevance of the results. If set to FALSE, the criterion
-#'   incorporates both statistical significance and clinical relevance.
+#'   choice criterion is based solely on the swd bounds, emphasizing only the
+#'   clinical importance of the results. If set to FALSE, the criterion
+#'   incorporates both statistical significance and clinical importance.
 #'   We recommend using the default setting (see Details).
 #' @param level The level used to calculate confidence intervals for
 #'   log-abilities.
@@ -50,28 +50,28 @@
 #' This function implements treatment choice criteria based on the range of
 #' equivalence (ROE) which are specified by 
 #' \itemize{
-#' \item argument \code{mcid}. Then the limits of the ROE
-#'   will be defined based on the values (i) \code{mcid}, \code{1 / mcid} for
-#'   ratio measures and (ii) \code{mcid} and \code{-mcid} for difference
+#' \item argument \code{swd}. Then the limits of the ROE
+#'   will be defined based on the values (i) \code{swd}, \code{1 / swd} for
+#'   ratio measures and (ii) \code{swd} and \code{-swd} for difference
 #'   measures.
-#' \item arguments \code{mcid.below.null} and \code{mcid.above.null}.
+#' \item arguments \code{swd.below.null} and \code{swd.above.null}.
 #'   These arguments allow the users to define their own limits of the ROE,
 #'   given the restriction that the lower limit will always be smaller than the
 #'   upper limit.
 #' }
 #' 
-#' Note that when the argument \code{mcid} is specified, the arguments
-#' \code{mcid.below.null} and \code{mcid.above.null} are ignored.
-#' Either only the \code{mcid} or both of the \code{mcid.below.null} and
-#' \code{mcid.above.null} must be specified for the proper
+#' Note that when the argument \code{swd} is specified, the arguments
+#' \code{swd.below.null} and \code{swd.above.null} are ignored.
+#' Either only the \code{swd} or both of the \code{swd.below.null} and
+#' \code{swd.above.null} must be specified for the proper
 #' definition of the ROE.
 #' 
 #' After setting the ROE, each NMA treatment effect will be categorised as a
 #' treatment preference or a tie. The argument \code{relax} controls the amount
 #' of conservatism of the treatment choice criterion. If set to \code{FALSE},
-#' a TCC will be built requiring both clinical as statistical significance of
+#' a TCC will be built requiring both clinical importance as statistical significance of
 #' the results. If set to \code{TRUE} (default), the criterion uses only the ROE bounds 
-#' and thereforethe NMA treatment effects need to be only clinically relevant to indicate a 
+#' and therefore the NMA treatment effects need to be only clinically important to indicate a 
 #' treatment preference.
 #' 
 #' @return
@@ -94,7 +94,7 @@
 #' #
 #' net0 <- netmeta(pw0, reference.group = "tra")
 #' 
-#' ranks0 <- tcc(net0, mcid = 1.20, small.values = "undesirable")
+#' ranks0 <- tcc(net0, swd = 1.20, small.values = "undesirable")
 #' 
 #' # Comparison other drugs vs trazodone
 #' forest(ranks0,
@@ -117,7 +117,7 @@
 #' # Run analysis with full data set
 #' net1 <- netmeta(pw1, reference.group = "tra")
 #' 
-#' ranks1 <- tcc(net1, mcid = 1.20, small.values = "undesirable")
+#' ranks1 <- tcc(net1, swd = 1.20, small.values = "undesirable")
 #' 
 #' # Comparison other drugs vs trazodone
 #' forest(ranks1,
@@ -134,7 +134,7 @@
 
 tcc <- function(x,
                 pooled = if (x$random) "random" else "common",
-                mcid = NULL, mcid.below.null = NULL, mcid.above.null = NULL,
+                swd = NULL, swd.below.null = NULL, swd.above.null = NULL,
                 small.values = x$small.values,
                 relax = TRUE, level = x$level.ma) {
   
@@ -157,46 +157,46 @@ tcc <- function(x,
   chklogical(relax)
   chklevel(level)
   #
-  if (!is.null(mcid)) {
+  if (!is.null(swd)) {
     if (is_relative) {
-      if (mcid == 1) {
-        mcid.below.null <- mcid.above.null <- 1
+      if (swd == 1) {
+        swd.below.null <- swd.above.null <- 1
         warning("A minimal clinically important difference equal to 1 results ", 
                 "in a range of equivalence (ROE) with both bounds equal to 1.")
       }
-      else if (mcid == 0) {
-        mcid.below.null <- mcid.above.null <- 0
+      else if (swd == 0) {
+        swd.below.null <- swd.above.null <- 0
         warning("A minimal clinically important difference equal to 0 results ", 
                 "in a range of equivalence (ROE) with both bounds equal to 0.")
       }
       else {
-        mcid.below.null <- min(mcid, 1/mcid)
-        mcid.above.null <- max(mcid, 1/mcid)
+        swd.below.null <- min(swd, 1/swd)
+        swd.above.null <- max(swd, 1/swd)
       }
     }
     else {
-      mcid.below.null <- min(mcid, -mcid)
-      mcid.above.null <- max(mcid, -mcid)
+      swd.below.null <- min(swd, -swd)
+      swd.above.null <- max(swd, -swd)
     }
   }
-  else if (is.null(mcid.below.null) & is.null(mcid.above.null))
-    stop("Either argument 'mcid' or arguments 'mcid.below.null' and ",
-         "'mcid.above.null') must be specified.",
+  else if (is.null(swd.below.null) & is.null(swd.above.null))
+    stop("Either argument 'swd' or arguments 'swd.below.null' and ",
+         "'swd.above.null') must be specified.",
          call. = FALSE)
   #
-  if (mcid.below.null > mcid.above.null)
-    stop("Input for argument 'mcid.below.null' must be smaller than ",
-         "'mcid.above.null'.",
+  if (swd.below.null > swd.above.null)
+    stop("Input for argument 'swd.below.null' must be smaller than ",
+         "'swd.above.null'.",
          call. = FALSE)
   #
   if (is_relative) {
-    mcid.below.null <- log(mcid.below.null)
-    mcid.above.null <- log(mcid.above.null)
+    swd.below.null <- log(swd.below.null)
+    swd.above.null <- log(swd.above.null)
   }
   #
   if (relax) {
-    no_effect1 <- mcid.below.null
-    no_effect2 <- mcid.above.null
+    no_effect1 <- swd.below.null
+    no_effect2 <- swd.above.null
   }
   else {
     no_effect1 <- 0
@@ -224,8 +224,8 @@ tcc <- function(x,
   pdat$rank2 <- NA
   #
   if (small.values == "undesirable") {
-    sel1 <- pdat$upper < mcid.below.null
-    sel2 <- pdat$lower < mcid.below.null & pdat$TE < mcid.below.null & 
+    sel1 <- pdat$upper < swd.below.null
+    sel2 <- pdat$lower < swd.below.null & pdat$TE < swd.below.null & 
       pdat$upper < no_effect2
     #
     pdat$rank_text[sel1 | sel2] <-
@@ -234,8 +234,8 @@ tcc <- function(x,
     pdat$rank1[sel1 | sel2] <- 2
     pdat$rank2[sel1 | sel2] <- 1
     #
-    sel3 <- pdat$lower > mcid.above.null
-    sel4 <- pdat$upper > mcid.above.null & pdat$TE > mcid.above.null & 
+    sel3 <- pdat$lower > swd.above.null
+    sel4 <- pdat$upper > swd.above.null & pdat$TE > swd.above.null & 
       pdat$lower > no_effect1
     #
     pdat$rank_text[sel3 | sel4] <-
@@ -253,8 +253,8 @@ tcc <- function(x,
     pdat$rank2[sel5] <- 1
   }
   else {
-    sel1 <- pdat$upper < mcid.below.null
-    sel2 <- pdat$lower < mcid.below.null & pdat$TE < mcid.below.null & 
+    sel1 <- pdat$upper < swd.below.null
+    sel2 <- pdat$lower < swd.below.null & pdat$TE < swd.below.null & 
       pdat$upper < no_effect2
     #
     pdat$rank_text[sel1 | sel2] <-
@@ -263,8 +263,8 @@ tcc <- function(x,
     pdat$rank1[sel1 | sel2] <- 1
     pdat$rank2[sel1 | sel2] <- 2
     #
-    sel3 <- pdat$lower > mcid.above.null
-    sel4 <- pdat$upper > mcid.above.null & pdat$TE > mcid.above.null & 
+    sel3 <- pdat$lower > swd.above.null
+    sel4 <- pdat$upper > swd.above.null & pdat$TE > swd.above.null & 
       pdat$lower > no_effect1
     #
     pdat$rank_text[sel3 | sel4] <-
@@ -326,8 +326,8 @@ tcc <- function(x,
             "using mtrank().")
   #
   if (is_relative) {
-    mcid.below.null <- exp(mcid.below.null)
-    mcid.above.null <- exp(mcid.above.null)
+    swd.below.null <- exp(swd.below.null)
+    swd.above.null <- exp(swd.above.null)
   }
   
   
@@ -339,9 +339,9 @@ tcc <- function(x,
   
   res <- list(ppdata = pdat, preferences = preferences, 
               small.values = small.values, 
-              mcid = mcid,
-              mcid.below.null = mcid.below.null,
-              mcid.above.null = mcid.above.null, 
+              swd = swd,
+              swd.below.null = swd.below.null,
+              swd.above.null = swd.above.null, 
               no_effect1 = no_effect1,
               no_effect2 = no_effect2,
               all.ties = all.ties, 
