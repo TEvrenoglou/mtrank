@@ -26,8 +26,8 @@
   - argument 'treat' replaced by 'reference.group'
   - new argument 'baseline.reference'
   - new arguments 'col.winner' and 'col.tie'
-  - argument 'fill.lower.equi' replaced by 'fill.mcid.below.null'
-  - argument 'fill.upper.equi' replaced by 'fill.mcid.above.null'
+  - argument 'fill.lower.equi' replaced by 'fill.swd.below.null'
+  - argument 'fill.upper.equi' replaced by 'fill.swd.above.null'
 
 ### Bug fixes
 
