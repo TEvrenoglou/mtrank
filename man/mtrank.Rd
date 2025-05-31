@@ -6,7 +6,7 @@
 \title{Estimate the treatment hierarchy in network meta-analysis using a
 probabilistic ranking model}
 \usage{
-mtrank(x, reference.group = NULL, level = x$level, ...)
+mtrank(x, level = x$level, ...)
 
 \method{print}{mtrank}(
   x,
@@ -20,11 +20,6 @@ mtrank(x, reference.group = NULL, level = x$level, ...)
 \arguments{
 \item{x}{An object of class \code{\link{tcc}} or \code{\link{mtrank}}
 (print function).}
-
-\item{reference.group}{An argument specifying the reference group. If set to
-NULL (default), ability estimates of all treatments will be calculated.
-If some treatment is set as the reference group, relative abilities of all
-treatments versus the specified reference treatment will be calculated.}
 
 \item{level}{The level used to calculate confidence intervals for ability
 estimates.}
@@ -80,14 +75,6 @@ Finally, a parameter "v" controlling the prevalence of ties in the network
 is also estimated. Although the estimated values of this parameter do
 not have a direct interpretation they are useful for estimating the fitted pairwise 
 probabilities (see \code{\link{fitted.mtrank}}).
-
-If argument \code{reference.group} is not NULL, a reference treatment
-group is specified. Mathematically, this means that the maximization problem
-is now identifiable, subject to the condition that the ability of this
-treatment is 0. Then, the resulting MLEs are the relative abilities of all
-treatments in the network versus the specified reference treatment group.
-Note that the estimates of the parameter "v" and the normalized probabilities
-do not depend on the value for argument \code{reference.group}.
 }
 \examples{
 data("antidepressants")
