@@ -61,9 +61,9 @@ to be printed on the right side of the forest plot
 
 \item{fill.equi}{Colour(s) for area between limits of equivalence.}
 
-\item{fill.swd.below.null}{Colour of area below lower swd limit.}
+\item{fill.swd.below.null}{Colour of area below lower SWD limit.}
 
-\item{fill.swd.above.null}{Colour of area above upper swd limit.}
+\item{fill.swd.above.null}{Colour of area above upper SWD limit.}
 
 \item{header.line}{A logical value indicating whether to print a
 header line or a character string ("both", "below", "").}
