@@ -20,7 +20,7 @@ Official Git repository of R package **mtrank**
 **mtrank** is an R package that enables the estimation of treatment hierarchies
 in network meta-analysis using a novel frequentist approach based on treatment
 choice criteria (TCC) and probabilistic ranking models, as described by
-[Evrenoglou et al. (2024)](https://arxiv.org/abs/2406.10612)). The TCC are
+[Evrenoglou et al. (2024)](https://arxiv.org/abs/2406.10612). The TCC are
 defined using a rule based on the smallest worthwhile difference (SWD).
 Using the defined TCC, the NMA estimates (i.e., treatment effects and standard
 errors) are first transformed into treatment preferences, indicating either a
