@@ -30,8 +30,8 @@
 #' @param lty.equi Line type (limits of equivalence).
 #' @param col.equi Line colour (limits of equivalence).
 #' @param fill.equi Colour(s) for area between limits of equivalence.
-#' @param fill.swd.below.null Colour of area below lower swd limit.
-#' @param fill.swd.above.null Colour of area above upper swd limit.
+#' @param fill.swd.below.null Colour of area below lower SWD limit.
+#' @param fill.swd.above.null Colour of area above upper SWD limit.
 #' @param header.line A logical value indicating whether to print a
 #'   header line or a character string ("both", "below", "").
 #' @param \dots Additional arguments (passed on to

@@ -16,16 +16,16 @@
 #'   (\code{"random"}) should be used. Can be abbreviated. If not specified the results from
 #'   the random effects model will be used by default.
 #' @param swd A numeric value specifying the smallest worthwhile difference
-#'   value (swd); see Details.
-#' @param swd.below.null A numeric value specifying the swd below the null
+#'   value (SWD); see Details.
+#' @param swd.below.null A numeric value specifying the SWD below the null
 #'   effect (see Details).
-#' @param swd.above.null A numeric value specifying the swd above the null
+#' @param swd.above.null A numeric value specifying the SWD above the null
 #'   effect (see Details).
 #' @param small.values A character string specifying whether small 
 #'   treatment effects indicate a beneficial (\code{"desirable"}) or
 #'   harmful (\code{"undesirable"}) effect.
 #' @param relax A logical optional argument. If TRUE (default), the treatment
-#'   choice criterion is based solely on the swd bounds, emphasizing only the
+#'   choice criterion is based solely on the SWD bounds, emphasizing only the
 #'   clinical importance of the results. If set to FALSE, the criterion
 #'   incorporates both statistical significance and clinical importance.
 #'   We recommend using the default setting (see Details).
