@@ -4,7 +4,7 @@ Official Git repository of R package **mtrank**
 
 [![License: GPL (>=2)](https://img.shields.io/badge/license-GPL-blue)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
 [![CRAN Version](https://www.r-pkg.org/badges/version/mtrank)](https://cran.r-project.org/package=mtrank)
-[![GitHub develop](https://img.shields.io/badge/develop-0.1--2-purple)](https://img.shields.io/badge/develop-0.1--2-purple)
+[![GitHub develop](https://img.shields.io/badge/develop-0.3--0-purple)](https://img.shields.io/badge/develop-0.3--0-purple)
 [![Monthly Downloads](https://cranlogs.r-pkg.org/badges/mtrank)](https://cranlogs.r-pkg.org/badges/mtrank)
 [![Total Downloads](https://cranlogs.r-pkg.org/badges/grand-total/mtrank)](https://cranlogs.r-pkg.org/badges/grand-total/mtrank)
 
@@ -17,19 +17,32 @@ Official Git repository of R package **mtrank**
 
 ## Description
 
-**mtrank** is an R package to produce clinically relevant treatment hierarchies in network meta-analysis using a novel frequentist approach based on treatment choice criteria (TCC) and probabilistic ranking models ([Evrenoglou et al., 2024](https://arxiv.org/abs/2406.10612)). The TCC are defined using a rule based on the minimal clinically important difference. Using the defined TCC, the study-level data (i.e., treatment effects and standard errors) are first transformed into a preference format, indicating either a treatment preference (e.g., *treatment A* > *treatment B*) or a tie (*treatment A* = *treatment B*). The preference data are then synthesized using a probabilistic ranking model, which estimates the latent ability parameter of each treatment and produces the final treatment hierarchy. This parameter represents each treatment’s ability to outperform all the other competing treatments in the network. Consequently, larger ability estimates indicate higher positions in the ranking list.
-
+**mtrank** is an R package that enables the estimation of treatment hierarchies
+in network meta-analysis using a novel frequentist approach based on treatment
+choice criteria (TCC) and probabilistic ranking models, as described by
+[Evrenoglou et al. (2024)](https://arxiv.org/abs/2406.10612)). The TCC are
+defined using a rule based on the smallest worthwhile difference (SWD).
+Using the defined TCC, the NMA estimates (i.e., treatment effects and standard
+errors) are first transformed into treatment preferences, indicating either a
+treatment preference (e.g., *treatment A* > *treatment B*) or a tie
+(*treatment A* = *treatment B*). These treatment preferences are then
+synthesized using a probabilistic ranking model, which estimates the latent
+ability parameter of each treatment and produces the final treatment hierarchy.
+This parameter represents each treatments ability to outperform all the other
+competing treatments in the network. Here the terms ability to outperform
+indicates the propensity of each treatment to yield clinically important and
+beneficial effects when compared to all the other treatments in the network.
+Consequently, larger ability estimates indicate higher positions in the
+ranking list. 
 
 ## Installation
 
-<!--
 ### Current stable [![CRAN Version](https://www.r-pkg.org/badges/version/mtrank)](https://cran.r-project.org/package=mtrank) release:
 ```r
 install.packages("mtrank")
 ```
--->
 
-### Current [![GitHub develop](https://img.shields.io/badge/develop-0.1--2-purple)](https://img.shields.io/badge/develop-0.1--2-purple) release on GitHub:
+### Current [![GitHub develop](https://img.shields.io/badge/develop-0.3--0-purple)](https://img.shields.io/badge/develop-0.3--0-purple) release on GitHub:
 
 Installation using R package
 [**remotes**](https://cran.r-project.org/package=remotes):
