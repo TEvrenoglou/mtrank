@@ -44,7 +44,7 @@
 #' @references
 #' Evrenoglou T, Nikolakopoulou A, Schwarzer G, Rücker G, Chaimani A (2024):
 #' Producing treatment hierarchies in network meta-analysis using probabilistic
-#' models and treatment-choice criteria.
+#' models and treatment-choice criteria,
 #' \url{https://arxiv.org/abs/2406.10612}
 #'
 #' @keywords hplot

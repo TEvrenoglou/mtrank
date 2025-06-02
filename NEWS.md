@@ -1,4 +1,4 @@
-## mtrank, version 0.2-0 (2025-04-dd)
+## mtrank, version 0.2-0 (2025-06-02)
 
 ### Major changes
 
@@ -8,11 +8,13 @@
 * Main argument in R function tcc() must be a network meta-analysis object
   created with netmeta() from R package **netmeta**
 
+* New R function linegraph() added to plot line graphs
+
+* R package **ggplot2* added to Imports
+
 ### User-visible changes
 
 * R function paired_pref() renamed to fitted.mtrank()
-
-* R function linegraph() added
 
 * Argument 'reference.group' was removed from function mtrank()
 
@@ -20,7 +22,7 @@
   - single new argument 'x' replaces arguments 'treat', 'event', 'n',
     'mean', 'sd', 'data', and 'studlab'
   - arguments 'mcid', 'mcid.below.nukk' ,'mcid.above.null' renamed to 
-  'swd', 'swd.below.null', 'swd.above.null'
+    'swd', 'swd.below.null', 'swd.above.null'
 
 * forest.tcc():
   - argument 'treat' replaced by 'reference.group'
@@ -32,7 +34,7 @@
 ### Bug fixes
 
 * mtrank():
-  - use 'method="BFGS"' internally to avoid errors due to convergence failure
+  - use 'method = "BFGS"' internally to avoid errors due to convergence failure
 
 
 ## mtrank, version 0.1-1 (2025-02-26)

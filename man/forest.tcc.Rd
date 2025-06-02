@@ -11,7 +11,7 @@ according to treatment choice criterion.}
   baseline.reference = x$baseline.reference,
   backtransf = FALSE,
   leftcols = "studlab",
-  leftlabs = "Comparison",
+  leftlabs,
   rightcols = c("effect", "ci"),
   col.winner = "red",
   col.tie = "black",
@@ -20,6 +20,7 @@ according to treatment choice criterion.}
   fill.equi = "lightblue",
   fill.swd.below.null = "transparent",
   fill.swd.above.null = "transparent",
+  smlab,
   header.line = TRUE,
   ...
 )
@@ -27,9 +28,9 @@ according to treatment choice criterion.}
 \arguments{
 \item{x}{An object of class \code{\link{tcc}}.}
 
-\item{reference.group}{Reference treatment(s). By default, the graph plots the NMA estimates of 
-all treatments versus the common reference treatment used in the 
-\code{\link[netmeta]{netmeta}} object.}
+\item{reference.group}{Reference treatment(s). By default, the graph plots
+the NMA estimates of all treatments versus the common reference treatment
+used in the \code{\link[netmeta]{netmeta}} object.}
 
 \item{baseline.reference}{A logical indicating whether results
 should be expressed as comparisons of other treatments versus the
@@ -65,6 +66,9 @@ to be printed on the right side of the forest plot
 
 \item{fill.swd.above.null}{Colour of area above upper swd limit.}
 
+\item{smlab}{A label for the summary measure (printed at top of
+figure).}
+
 \item{header.line}{A logical value indicating whether to print a
 header line or a character string ("both", "below", "").}
 
@@ -81,13 +85,13 @@ format of the NMA estimates as defined from the treatment choice criterion in
 }
 \details{
 This function produces forest plots for the NMA treatment effect estimates. 
-The color indicates whether treatment effects show a preference (red color) or tie (black color). 
-Additionally, the respective range of equivalence defined at the function
-\code{\link{tcc}} is visualized for the forest plot.
+The color indicates whether treatment effects show a preference (red color)
+or tie (black color). Additionally, the respective range of equivalence
+defined at the function \code{\link{tcc}} is visualized for the forest plot.
 
-The argument \code{reference.group} is optional. By default, the graph plots the NMA 
-estimates of all treatments versus the common reference treatment used in the 
-\code{\link[netmeta]{netmeta}} object.
+The argument \code{reference.group} is optional. By default, the graph plots
+the NMA  estimates of all treatments versus the common reference treatment
+used in the \code{\link[netmeta]{netmeta}} object.
 }
 \examples{
 data("antidepressants")
@@ -112,14 +116,12 @@ forest(ranks0, reference.group = "esc", baseline = FALSE,
   label.left = "Favours other drug",
   label.right = "Favours escitalopram")
 
-\donttest{
+\dontrun{
 # Store a PDF file in the current working directory showing all results
 # (this is the default, i.e., if argument 'reference.group' is missing)
 forest(ranks0, baseline = FALSE, reference.group = trts,
   file = "forest_tcc_antidepressants.pdf")
-}
 
-\dontrun{
 # Run analysis with full data set
 net1 <- netmeta(pw1, reference.group = "tra")
 
@@ -140,7 +142,7 @@ forest(ranks1, reference.group = "esc", baseline = FALSE,
 \references{
 Evrenoglou T, Nikolakopoulou A, Schwarzer G, Rücker G, Chaimani A (2024):
 Producing treatment hierarchies in network meta-analysis using probabilistic
-models and treatment-choice criteria.
+models and treatment-choice criteria,
 \url{https://arxiv.org/abs/2406.10612}
 }
 \keyword{hplot}

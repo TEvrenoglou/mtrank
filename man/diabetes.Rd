@@ -16,11 +16,12 @@ A data frame with the following columns:
 }
 }
 \source{
-Elliott W, Meyer P (2007):
+Elliott WJ, Meyer PM (2007):
 Incident diabetes in clinical trials of antihypertensive drugs:
-a network meta-analysis
+A network meta-analysis
 \emph{Lancet},
-\bold{369}
+\bold{369}, 201--7,
+\doi{10.1016/S0140-6736(07)60108-1}
 }
 \description{
 Network meta-analysis comparing six antihypertensive drugs against the

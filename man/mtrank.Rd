@@ -48,33 +48,35 @@ see \code{print.default}.}
 }
 }
 \description{
-This function fits the Davidson-Bradley-Terry ranking model and produces a treatment
-hierarchy based on the method described by Evrenoglou et al. (2024) for
-network meta-analysis.
+This function fits the Davidson-Bradley-Terry ranking model and produces a
+treatment hierarchy based on the method described by
+Evrenoglou et al. (2024) for network meta-analysis.
 }
 \details{
 This function fits a Davidson-Bradley-Terry model to the treatment preferences
 \code{\link{tcc}} function. It estimates the ability of
-each treatment to outperform the other treatments in the network, along with the respective 
-standard errors, using a maximum likelihood approach. The term 'ability to outperform' refers to 
-a latent characteristic that indicates the propensity of each treatment in the network to yield 
-clinically relevant and beneficial treatment effects, in the context of the defined treatment choice criterion, 
-when compared to the rest of the treatments. Consequently, treatments with larger ability estimates
-are ranked more prominently in the treatment hierarchy.
+each treatment to outperform the other treatments in the network, along with
+the respective standard errors, using a maximum likelihood approach.
+The term 'ability to outperform' refers to a latent characteristic that
+indicates the propensity of each treatment in the network to yield clinically
+relevant and beneficial treatment effects, in the context of the defined
+treatment choice criterion, when compared to the rest of the treatments.
+Consequently, treatments with larger ability estimates are ranked more
+prominently in the treatment hierarchy.
 
-To retain identifiability, the maximization of the log-likelihood takes place subject
-to the constrain that the ability estimates sum to 1. Then, the maximum
-likelihood estimates (MLEs) are calculated iteratively.
-Note that the final estimates of the ability parameters are not necessarily
-needed to sum to 1 as after the first iteration of the algorithm the ability
-estimates are not normalized. However, by normalizing the final ability
-estimates to sum up to 1 these can be interpreted as "the probability that
-each treatment is having the highest ability".
+To retain identifiability, the maximization of the log-likelihood takes place
+subject to the constrain that the ability estimates sum to 1. Then, the
+maximum likelihood estimates (MLEs) are calculated iteratively. Note that the
+final estimates of the ability parameters are not necessarily needed to sum
+to 1 as after the first iteration of the algorithm the ability estimates are
+not normalized. However, by normalizing the final ability estimates to sum up
+to 1 these can be interpreted as "the probability that each treatment is
+having the highest ability".
 
 Finally, a parameter "v" controlling the prevalence of ties in the network
-is also estimated. Although the estimated values of this parameter do
-not have a direct interpretation they are useful for estimating the fitted pairwise 
-probabilities (see \code{\link{fitted.mtrank}}).
+is also estimated. Although the estimated values of this parameter do not
+have a direct interpretation they are useful for estimating the fitted
+pairwise probabilities (see \code{\link{fitted.mtrank}}).
 }
 \examples{
 data("antidepressants")
@@ -104,6 +106,6 @@ forest(fit)
 \references{
 Evrenoglou T, Nikolakopoulou A, Schwarzer G, Rücker G, Chaimani A (2024):
 Producing treatment hierarchies in network meta-analysis using probabilistic
-models and treatment-choice criteria.
+models and treatment-choice criteria,
 \url{https://arxiv.org/abs/2406.10612}
 }

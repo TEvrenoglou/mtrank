@@ -32,16 +32,16 @@ The probability (or probabilities) of interest for the comparison
 }
 \description{
 This function uses the estimates of ability and tie prevalence parameters
-from a \code{\link{mtrank}} object and calculates fitted pairwise probabilities
-about the preference or the tie between two treatments based on equations (7)
-and (8) in Evrenoglou et al. (2024).
+from a \code{\link{mtrank}} object and calculates fitted pairwise
+probabilities about the preference or the tie between two treatments based on
+equations (7) and (8) in Evrenoglou et al. (2024).
 }
 \details{
 Pairwise fitted probabilities between any two treatments in the network can
 be calculated using the ability estimates obtained from \code{\link{mtrank}}
-and equations (7) and (8) in Evrenoglou et al. (2024). The fitted probabilities
-are calculated in the direction \code{treat1} vs \code{treat2}. The available
-probability types are
+and equations (7) and (8) in Evrenoglou et al. (2024). The fitted
+probabilities are calculated in the direction \code{treat1} vs \code{treat2}.
+The available probability types are
 \itemize{
 \item "better": probability that \code{treat1} is better than \code{treat2},
 \item "tie": probability that \code{treat1} is equal to \code{treat2},
@@ -99,6 +99,6 @@ fitted(fit1, type = "all",
 \references{
 Evrenoglou T, Nikolakopoulou A, Schwarzer G, Rücker G, Chaimani A (2024):
 Producing treatment hierarchies in network meta-analysis using probabilistic
-models and treatment-choice criteria.
+models and treatment-choice criteria,
 \url{https://arxiv.org/abs/2406.10612}
 }

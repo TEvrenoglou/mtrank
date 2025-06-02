@@ -25,11 +25,9 @@ options(knitr.kable.NA = ".")
 ```
 
 
-This vignette serves as a tutorial for R package **mtrank**. This package
-allows R users to produce treatment hierarchies in network meta-analysis using
-the ranking method proposed by @Evre:Niko:Schw:prod:2024.
+This vignette serves as a tutorial for R package **mtrank**. This package allows R users to produce treatment hierarchies in network meta-analysis using the ranking method proposed by @Evre:Niko:Schw:prod:2024.
 
-You could either install R package **mtrank** from CRAN (not yet available)
+You could either install R package **mtrank** from CRAN
 
 ```{r, eval = FALSE}
 install.packages("mtrank")
@@ -47,12 +45,9 @@ Next, we make the package available.
 library("mtrank")
 ```
 
-We see that loading **mtrank** will automatically load the R packages **meta**,
-**metadat** and **netmeta**.
+We see that loading **mtrank** will automatically load the R packages **meta**, **metadat** and **netmeta**.
 
-Next, we load the 'antidepressants' dataset which is part of R package
-**mtrank** and conduct a network meta-analysis. You can get information about
-this dataset using the command *help(antidepressants)*.
+Next, we load the 'antidepressants' dataset which is part of R package **mtrank** and conduct a network meta-analysis. You can get information about this dataset using the command *help(antidepressants)*.
 
 ```{r}
 data("antidepressants")
@@ -67,9 +62,7 @@ net <- netmeta(pw, reference.group = "tra")
 
 ### Define treatment-choice criterion
 
-In the next step, we set the treatment-choice criterion and get treatment preferences from NMA estimates
-using the function tcc(). More details about this function can be obtained using
-the command *help(tcc)*.
+In the next step, we set the treatment-choice criterion and get treatment preferences from NMA estimates using the function tcc(). More details about this function can be obtained using the command *help(tcc)*.
 
 The treatment-choice criterion is determined by the smallest worthwhile difference (SWD), which represents the smallest relative effect between two treatments that can influence the selection of the preferable treatment. Users can set this value using argument 'swd' in tcc(), which then defines the range of equivalence (ROE) based on the swd and its reciprocal. For binary outcomes, the swd must be specified on its natural scale. The ROE constructed using the swd is always symmetrical, but for users who require a non-symmetrical ROE, the arguments 'swd.below.null' and 'swd.above.null' allow for explicit specification of preferred bounds. However, if argument 'swd' is specified, arguments 'swd.below.null' and 'swd.above.null' are ignored.
 
@@ -83,8 +76,7 @@ We could print the preferences with the following command (result not shown).
 ranks$preferences
 ```
 
-As argument 'swd = 1.25' the ROE is defined as [1 / swd, swd] = [0.8, 1.25].
-The ROE is stored as the lower and upper bound.
+As argument 'swd = 1.25' the ROE is defined as [1 / swd, swd] = [0.8, 1.25]. The ROE is stored as the lower and upper bound.
 
 ```{r}
 c(ranks$swd.below.null, ranks$swd.above.null)
@@ -158,36 +150,38 @@ Alternatively, we could plot the abilities using argument 'backtransf' (figure n
 forest(fit, backtransf = TRUE)
 ```
 
+
 ### Sensitivity analysis
 
 Given the subjectivity of the choice of the SWD value which determines the TCC, it is natural one to investigate the robustness of the treatment hierarchy under different SWD values. The R package **mtrank** allows for such a sensitivity analysis to be performed and presented in a linegraph through the function linegraph(). This function takes the following arguments:
 
 - x: an mtrank object,
-- swd.vec: a numeric vector of SWD values to be used for the sensitivity analysis,
-- swd.ref: a numeric SWD value to be used as the reference for sorting treatments in the final graph. This value should be included in swd.vec,
+- swd: a numeric vector of SWD values to be used for the sensitivity analysis,
+- swd.ref: a numeric SWD value to be used as the reference for sorting treatments in the final graph. This value must be included in swd,
 - small.values: a character string specifying whether small treatment effects indicate a beneficial ("desirable") or harmful ("undesirable") effect,
 - type: the metric to be used for plotting the results of the sensitivity analysis. Two options are available: the default is "probability", which plots results in terms of normalized abilities; the alternative is "ability", which plots results in terms of ability estimates. Both options can be abbreviated,
 - k: a numeric value indicating the number of treatments to be plotted. By default, all available treatments are shown. For large networks, it is advisable to limit the number of treatments to improve readability. If specified, the first k treatments based on the hierarchy at swd.ref will be plotted.
 - backtransf: a logical value indicating whether to display log-ability estimates (FALSE, default) or back-transformed ability estimates on the natural scale (TRUE). This argument is ignored if type = "probability".
 - linewidth: a numeric value specifying the width of the lines (default: 1.1).
 - point.size: a numeric value specifying the size of the points (default: 2).
-- ...: additional arguments passed to mtrank or ggplot.
+- ...: additional arguments passed to mtrank().
 
 For more details about this function please use *help(linegraph)*.
 
 ```{r}
 # Perform a sensitivity analysis across different swd values assuming that 1.20 is the reference value
-swd.vec <- seq(1.10,1.50,by=0.10)
+swd.vec <- seq(1.10, 1.50, by = 0.10)
 swd.ref <- 1.20
 # plot all the treatments in the network
-linegraph(fit, swd.vec = swd.vec, swd.ref = swd.ref)
+linegraph(fit, swd = swd.vec, swd.ref = swd.ref)
 # plot only the first six treatments in the order appearing at the 'swd.ref' value
-linegraph(fit, swd.vec = swd.vec, swd.ref = swd.ref, k = 6)
+linegraph(fit, swd = swd.vec, swd.ref = swd.ref, k = 6)
 # plot in terms of ability estimates 
-linegraph(fit, swd.vec = swd.vec, swd.ref = swd.ref, type = "ability")
+linegraph(fit, swd = swd.vec, swd.ref = swd.ref, type = "ability")
 
 
 ```
+
 
 ### Fitted probabilities
 

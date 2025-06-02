@@ -24,7 +24,7 @@
 #' for the acute treatment of adults with major depressive 
 #' disorder: a systematic review and network meta-analysis
 #' \emph{Lancet},
-#' \bold{391}, 1357--1366 
+#' \bold{391}, 1357--66 
 #' 
 #' @keywords datasets
 #' 

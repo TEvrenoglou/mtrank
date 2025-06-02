@@ -19,7 +19,7 @@ Comparative efficacy and acceptability of 21 antidepressant drugs
 for the acute treatment of adults with major depressive 
 disorder: a systematic review and network meta-analysis
 \emph{Lancet},
-\bold{391}, 1357--1366
+\bold{391}, 1357--66
 }
 \description{
 Network meta-analysis comparing antidepressants in patients with major

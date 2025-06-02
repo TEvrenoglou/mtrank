@@ -2,9 +2,9 @@
 #' probabilistic ranking model
 #' 
 #' @description
-#' This function fits the Davidson-Bradley-Terry ranking model and produces a treatment
-#' hierarchy based on the method described by Evrenoglou et al. (2024) for
-#' network meta-analysis.
+#' This function fits the Davidson-Bradley-Terry ranking model and produces a
+#' treatment hierarchy based on the method described by
+#' Evrenoglou et al. (2024) for network meta-analysis.
 #' 
 #' @param x An object of class \code{\link{tcc}} or \code{\link{mtrank}}
 #'   (print function).
@@ -25,27 +25,28 @@
 #' This function fits a Davidson-Bradley-Terry model to the treatment preferences
 #  generated from the treatment choice criterion constructed by the
 #' \code{\link{tcc}} function. It estimates the ability of
-#' each treatment to outperform the other treatments in the network, along with the respective 
-#' standard errors, using a maximum likelihood approach. The term 'ability to outperform' refers to 
-#' a latent characteristic that indicates the propensity of each treatment in the network to yield 
-#' clinically relevant and beneficial treatment effects, in the context of the defined treatment choice criterion, 
-#' when compared to the rest of the treatments. Consequently, treatments with larger ability estimates
-#' are ranked more prominently in the treatment hierarchy.
+#' each treatment to outperform the other treatments in the network, along with
+#' the respective standard errors, using a maximum likelihood approach.
+#' The term 'ability to outperform' refers to a latent characteristic that
+#' indicates the propensity of each treatment in the network to yield clinically
+#' relevant and beneficial treatment effects, in the context of the defined
+#' treatment choice criterion, when compared to the rest of the treatments.
+#' Consequently, treatments with larger ability estimates are ranked more
+#' prominently in the treatment hierarchy.
 #' 
-#' To retain identifiability, the maximization of the log-likelihood takes place subject
-#' to the constrain that the ability estimates sum to 1. Then, the maximum
-#' likelihood estimates (MLEs) are calculated iteratively.
-#' Note that the final estimates of the ability parameters are not necessarily
-#' needed to sum to 1 as after the first iteration of the algorithm the ability
-#' estimates are not normalized. However, by normalizing the final ability
-#' estimates to sum up to 1 these can be interpreted as "the probability that
-#' each treatment is having the highest ability".
+#' To retain identifiability, the maximization of the log-likelihood takes place
+#' subject to the constrain that the ability estimates sum to 1. Then, the
+#' maximum likelihood estimates (MLEs) are calculated iteratively. Note that the
+#' final estimates of the ability parameters are not necessarily needed to sum
+#' to 1 as after the first iteration of the algorithm the ability estimates are
+#' not normalized. However, by normalizing the final ability estimates to sum up
+#' to 1 these can be interpreted as "the probability that each treatment is
+#' having the highest ability".
 #' 
 #' Finally, a parameter "v" controlling the prevalence of ties in the network
-#' is also estimated. Although the estimated values of this parameter do
-#' not have a direct interpretation they are useful for estimating the fitted pairwise 
-#' probabilities (see \code{\link{fitted.mtrank}}).
-#' 
+#' is also estimated. Although the estimated values of this parameter do not
+#' have a direct interpretation they are useful for estimating the fitted
+#' pairwise probabilities (see \code{\link{fitted.mtrank}}).
 #' 
 #' @return
 #' \itemize{
@@ -58,7 +59,7 @@
 #' @references
 #' Evrenoglou T, Nikolakopoulou A, Schwarzer G, Rücker G, Chaimani A (2024):
 #' Producing treatment hierarchies in network meta-analysis using probabilistic
-#' models and treatment-choice criteria.
+#' models and treatment-choice criteria,
 #' \url{https://arxiv.org/abs/2406.10612}
 #' 
 #' @examples
@@ -87,7 +88,7 @@
 #'  
 #' @export mtrank
 
-mtrank <- function(x, level = x$level,...) {
+mtrank <- function(x, level = x$level, ...) {
   
   chkclass(x, "tcc")
   #
@@ -98,7 +99,6 @@ mtrank <- function(x, level = x$level,...) {
   chklevel(level)
   
   dat <- x$ppdata
-  #dat$comparison <- paste(dat$treat1, dat$treat2, sep = " vs ")
   #
   # Fit the model 
   #
@@ -153,7 +153,8 @@ mtrank <- function(x, level = x$level,...) {
                          probability = as.numeric(probability))
   
   #
-  # order the output to range from the treatment with the highest to the treatment with the lowest probability
+  # order the output to range from the treatment with the highest to the
+  # treatment with the lowest probability
   #
   dat_prob <- dat_prob[order(-probability), ]
   

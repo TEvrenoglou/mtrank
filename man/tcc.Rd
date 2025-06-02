@@ -24,16 +24,16 @@ tcc(
 
 \item{pooled}{A character string indicating whether results for the
 common (\code{"common"}) or random effects model
-(\code{"random"}) should be used. Can be abbreviated. If not specified the results from
-the random effects model will be used by default.}
+(\code{"random"}) should be used. Can be abbreviated. If not specified the
+results from the random effects model will be used by default.}
 
 \item{swd}{A numeric value specifying the smallest worthwhile difference
-value (swd); see Details.}
+value (SWD); see Details.}
 
-\item{swd.below.null}{A numeric value specifying the swd below the null
+\item{swd.below.null}{A numeric value specifying the SWD below the null
 effect (see Details).}
 
-\item{swd.above.null}{A numeric value specifying the swd above the null
+\item{swd.above.null}{A numeric value specifying the SWD above the null
 effect (see Details).}
 
 \item{small.values}{A character string specifying whether small 
@@ -41,7 +41,7 @@ treatment effects indicate a beneficial (\code{"desirable"}) or
 harmful (\code{"undesirable"}) effect.}
 
 \item{relax}{A logical optional argument. If TRUE (default), the treatment
-choice criterion is based solely on the swd bounds, emphasizing only the
+choice criterion is based solely on the SWD bounds, emphasizing only the
 clinical importance of the results. If set to FALSE, the criterion
 incorporates both statistical significance and clinical importance.
 We recommend using the default setting (see Details).}
@@ -57,10 +57,11 @@ NMA estimates in a preference format.
 \description{
 This function uses a treatment choice criterion defined by the user and
 transforms the network meta-analysis estimates into a preference format that
-indicates either a treatment preference or a tie. In this setting, a treatment preference 
-implies that the respective NMA estimate represents
-a clinically important result (i.e. that fulfills the TCC) while a tie indicates that the respective NMA estimate lacks 
-enough evidence to represent a treatment preference. The resulting preference format is then used as input 
+indicates either a treatment preference or a tie. In this setting, a
+treatment preference implies that the respective NMA estimate represents
+a clinically important result (i.e. that fulfills the TCC) while a tie
+indicates that the respective NMA estimate lacks enough evidence to represent
+a treatment preference. The resulting preference format is then used as input 
 to \code{\link{mtrank}}.
 }
 \details{
@@ -99,10 +100,10 @@ definition of the ROE.
 After setting the ROE, each NMA treatment effect will be categorised as a
 treatment preference or a tie. The argument \code{relax} controls the amount
 of conservatism of the treatment choice criterion. If set to \code{FALSE},
-a TCC will be built requiring both clinical importance as statistical significance of
-the results. If set to \code{TRUE} (default), the criterion uses only the ROE bounds 
-and therefore the NMA treatment effects need to be only clinically important to indicate a 
-treatment preference.
+a TCC will be built requiring both clinical importance as statistical
+significance of the results. If set to \code{TRUE} (default), the criterion
+uses only the ROE bounds and therefore the NMA treatment effects need to be
+only clinically important to indicate a treatment preference.
 }
 \examples{
 data("antidepressants")
@@ -127,14 +128,12 @@ forest(ranks0, reference.group = "esc", baseline = FALSE,
   label.left = "Favours other drug",
   label.right = "Favours escitalopram")
 
-\donttest{
+\dontrun{
 # Store a PDF file in the current working directory showing all results
 # (this is the default, i.e., if argument 'reference.group' is missing)
 forest(ranks0, baseline = FALSE, reference.group = trts,
   file = "forest_tcc_antidepressants.pdf")
-}
 
-\dontrun{
 # Run analysis with full data set
 net1 <- netmeta(pw1, reference.group = "tra")
 
@@ -155,6 +154,6 @@ forest(ranks1, reference.group = "esc", baseline = FALSE,
 \references{
 Evrenoglou T, Nikolakopoulou A, Schwarzer G, Rücker G, Chaimani A (2024):
 Producing treatment hierarchies in network meta-analysis using probabilistic
-models and treatment-choice criteria.
+models and treatment-choice criteria,
 \url{https://arxiv.org/abs/2406.10612}
 }
