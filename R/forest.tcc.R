@@ -1,15 +1,18 @@
-#' Forest plot showing study-specific preferences or ties according to
-#' treatment choice criterion
+#' Forest plot showing the treatment preference format of the NMA estimates 
+#' according to treatment choice criterion.
 #' 
 #' @description
-#' This function produces a forest plot for all (or selected) study
-#' specific comparisons and visualizes the treatment preference or ties
-#' which are defined from the treatment choice criterion in \code{\link{tcc}}.
+#' This function produces a forest plot and visualizes the treatment preference 
+#' format of the NMA estimates as defined from the treatment choice criterion in 
+#' \code{\link{tcc}}.
 #' 
 #' @param x An object of class \code{\link{tcc}}.
-#' @param treat A treatment of interest. If specified it returns a forest plot
-#'   for all study specific effects related to \code{treat}. If NULL (default),
-#'   it generates a forest plot for all study-specific effects in the network. 
+#' @param reference.group Reference treatment(s). By default, the graph plots
+#' the NMA estimates of all treatments versus the common reference treatment
+#' used in the \code{\link[netmeta]{netmeta}} object.
+#' @param baseline.reference A logical indicating whether results
+#'   should be expressed as comparisons of other treatments versus the
+#'   reference treatment (default) or vice versa.
 #' @param backtransf A logical indicating whether results should be
 #'   back transformed. If \code{backtransf = TRUE} (default), results for
 #'   \code{sm = "OR"} are printed as odds ratios rather than log odds ratios,
@@ -22,36 +25,29 @@
 #'   (see \code{\link[meta]{forest.meta}}).
 #' @param leftlabs A character vector specifying labels for
 #'   columns on left side of the forest plot.
+#' @param col.winner Colour to highlight results for TCC winner.
+#' @param col.tie Colour to highlight results for TCC ties.
 #' @param lty.equi Line type (limits of equivalence).
 #' @param col.equi Line colour (limits of equivalence).
-#' @param fill.equi Colour(s) for area between limits of equivalence
-#'   or more general limits.
-#' @param fill.lower.equi Colour of area between lower limit(s) and
-#'   reference value. Can be equal to the number of lower limits or
-#'   the number of limits plus 1 (in this case the the region between
-#'   minimum and smallest limit is also filled).
-#' @param fill.upper.equi Colour of area between reference value and
-#'   upper limit(s). Can be equal to the number of upper limits or the
-#'   number of limits plus 1 (in this case the region between largest
-#'   limit and maximum is also filled).
+#' @param fill.equi Colour(s) for area between limits of equivalence.
+#' @param fill.swd.below.null Colour of area below lower SWD limit.
+#' @param fill.swd.above.null Colour of area above upper SWD limit.
+#' @param smlab A label for the summary measure (printed at top of
+#'   figure).
 #' @param header.line A logical value indicating whether to print a
 #'   header line or a character string ("both", "below", "").
-#' @param col.subgroup The colour to print information on subgroups, i.e.,
-#'   pairwise comparisons.
 #' @param \dots Additional arguments (passed on to
 #'   \code{\link[meta]{forest.meta}}).
 #' 
 #' @details
-#' This function produces forest plots for the study specific treatment effects
-#' in the network. The color indicates whether treatment effects show
-#' a preference (red color) or tie (black color). Additionally, the respective
-#' range of equivalence defined at the function
-#' \code{\link{tcc}} is visualized for the forest plot.
+#' This function produces forest plots for the NMA treatment effect estimates. 
+#' The color indicates whether treatment effects show a preference (red color)
+#' or tie (black color). Additionally, the respective range of equivalence
+#' defined at the function \code{\link{tcc}} is visualized for the forest plot.
 #' 
-#' Argument \code{treat} is optional. By default ( \code{treat = NULL}),
-#' all study-specific treatment effects in the network are shown. If specified,
-#' only study-specific treatment effects related to the specified \code{treat}
-#' are shown which is useful in busy networks with many direct comparisons.
+#' The argument \code{reference.group} is optional. By default, the graph plots
+#' the NMA  estimates of all treatments versus the common reference treatment
+#' used in the \code{\link[netmeta]{netmeta}} object.
 #' 
 #' @return
 #' A forest plot is plotted in the active graphics device.
@@ -59,96 +55,219 @@
 #' @references
 #' Evrenoglou T, Nikolakopoulou A, Schwarzer G, Rücker G, Chaimani A (2024):
 #' Producing treatment hierarchies in network meta-analysis using probabilistic
-#' models and treatment-choice criteria.
+#' models and treatment-choice criteria,
 #' \url{https://arxiv.org/abs/2406.10612}
 #'
 #' @keywords hplot
 #' 
 #' @examples
-#' data(diabetes)
+#' data("antidepressants")
 #' #
-#' ranks <- tcc(treat = t, studlab = study, event = r, n = n, data = diabetes,
-#'   mcid = 1.20, sm = "OR", small.values = "desirable")
+#' pw1 <- pairwise(studlab = studyid, treat = drug_name,
+#'   n = ntotal, event = responders,
+#'   data = antidepressants, sm = "OR")
+#' # Use subset to reduce runtime
+#' pw0 <- subset(pw1, studyid < 60)
 #' #
-#' forest(ranks)
-#' forest(ranks, treat = "ARB")
+#' net0 <- netmeta(pw0, reference.group = "tra")
+#' 
+#' ranks0 <- tcc(net0, swd = 1.20, small.values = "undesirable")
+#' 
+#' # Comparison other drugs vs trazodone
+#' forest(ranks0,
+#'   label.left = "Favours trazodone",
+#'   label.right = "Favours other drug")
+#' 
+#' # Comparison escitalopram vs other drugs
+#' forest(ranks0, reference.group = "esc", baseline = FALSE,
+#'   label.left = "Favours other drug",
+#'   label.right = "Favours escitalopram")
+#' 
+#' \dontrun{
+#' # Store a PDF file in the current working directory showing all results
+#' # (this is the default, i.e., if argument 'reference.group' is missing)
+#' forest(ranks0, baseline = FALSE, reference.group = trts,
+#'   file = "forest_tcc_antidepressants.pdf")
+#' 
+#' # Run analysis with full data set
+#' net1 <- netmeta(pw1, reference.group = "tra")
+#' 
+#' ranks1 <- tcc(net1, swd = 1.20, small.values = "undesirable")
+#' 
+#' # Comparison other drugs vs trazodone
+#' forest(ranks1,
+#'   label.left = "Favours trazodone",
+#'   label.right = "Favours other drug")
+#' 
+#' # Comparison escitalopram vs other drugs
+#' forest(ranks1, reference.group = "esc", baseline = FALSE,
+#'   label.left = "Favours other drug",
+#'   label.right = "Favours escitalopram")
+#' }
 #' 
 #' @method forest tcc
 #' @export
 
-forest.tcc <- function(x, treat = NULL, backtransf = FALSE,
+forest.tcc <- function(x,
+                       reference.group = x$reference.group,
+                       baseline.reference = x$baseline.reference,
+                       backtransf = FALSE,
                        #
-                       leftcols = "studlab", leftlabs = NULL,
+                       leftcols = "studlab", leftlabs,
                        rightcols = c("effect", "ci"),
                        #
-                       lty.equi = gs("lty.equi"),
-                       col.equi = gs("col.equi"),
-                       fill.equi = gs("fill.equi"),
-                       fill.lower.equi = fill.equi,
-                       fill.upper.equi = rev(fill.equi),
+                       col.winner = "red", col.tie = "black",
                        #
-                       header.line = TRUE, col.subgroup = "black",
+                       lty.equi = gs("lty.cid"),
+                       col.equi = gs("col.cid"),
+                       fill.equi = "lightblue",
+                       fill.swd.below.null = "transparent",
+                       fill.swd.above.null = "transparent",
+                       #
+                       smlab,
+                       header.line = TRUE,
                        ...) {
   
-  chkclass(x, "tcc")
+  #
+  #
+  # (1) Check arguments
+  #
+  #
   
-  lower.equi <- x$lower.equi
-  upper.equi <- x$upper.equi
+  chkclass(x, "tcc")
+  #
+  if (!missing(reference.group))
+    reference.group <-
+      catch("reference.group", match.call(), x, sys.frame(sys.parent()))
+  #
+  if (is.null(reference.group) || all(reference.group == ""))
+    reference.group <- x$trts[1]
+  #
+  reference.group <- unique(setchar(reference.group, x$trts))
+  #
+  chklogical(baseline.reference)
+  chklogical(backtransf)
+  #
+  chkcolor(col.winner, length = 1)
+  chkcolor(col.tie, length = 1)
+  #
+  chknumeric(lty.equi, min = 0, length = 1)
+  chkcolor(col.equi, length = 1)
+  #
+  chklogical(header.line)
+  
+  
+  swd.below.null <- x$swd.below.null
+  swd.above.null <- x$swd.above.null
   #
   if (is_relative_effect(x$sm) & !backtransf) {
-    lower.equi <- log(lower.equi)
-    upper.equi <- log(upper.equi)
+    swd.below.null <- log(swd.below.null)
+    swd.above.null <- log(swd.above.null)
   }
-    
+  
   # Get rid of warning "no visible binding for global variable"
   #
-  comparison <- treat1 <- treat2 <- NULL
+  comparison <- treat1 <- treat2 <- TE <- seTE <- NULL
   #
-  dat <- x$ppdata
+  ppdata <- x$ppdata
   #
-  dat$comparison <- paste(dat$treat1, dat$treat2, sep = " vs ")
+  dat <- NULL
   #
-  treat <- setchar(treat, x$trts)
-  #
-  if (!is.null(treat))
-    dat <- dat %>% filter(treat1 == treat | treat2 == treat)
-  #
-  dat$outcome <-
-    ifelse(dat$rank1 + dat$rank2 == 2, "tie", "win") 
-  #
-  dat$color <- ifelse(dat$outcome == "win", "red", "black")
-  #
-  dat <- dat %>% arrange(comparison)
-  
-  m <- metagen(dat$TE, dat$seTE, sm = x$sm,
-               backtransf = backtransf,
-               subgroup =
-                 if (length(unique(dat$comparison)) == 1)
-                 NULL else dat$comparison,
-               print.subgroup.name = FALSE,
-               studlab = dat$studlab,
-               common = FALSE, random = FALSE, hetstat = FALSE,
-               method.tau = "DL", method.tau.ci = "")
-  #
-  if (is.null(leftlabs)) {
-    if (is.null(m$subgroup))
-      "Study"
-    else
-      "Comparison / Study"
+  for (i in seq_along(reference.group)) {
+    dat.i <- ppdata %>%
+      filter(treat1 == reference.group[i] | treat2 == reference.group[i])
+    #
+    wo <- baseline.reference & dat.i$treat1 == reference.group[i] |
+      !baseline.reference & dat.i$treat2 == reference.group[i]
+    #
+    if (any(wo)) {
+      dat.i$TE[wo] <- -dat.i$TE[wo]
+      #
+      ttreat1 <- dat.i$treat1[wo]
+      dat.i$treat1[wo] <- dat.i$treat2[wo]
+      dat.i$treat2[wo] <- ttreat1
+    }
+    #
+    dat.i$comparison <- reference.group[i]
+    #
+    if (baseline.reference) {
+      dat.i$comparison <- paste0("Other vs '", dat.i$comparison, "'")
+      dat.i$labels <- dat.i$treat1
+    }
+    else {
+      dat.i$comparison <- paste0("'", dat.i$comparison, "' vs other")
+      dat.i$labels <- dat.i$treat2
+    }
+    #
+    dat <- rbind(dat, dat.i)
   }
   #
-  forest(m,
-         backtransf = backtransf,
+  dat$color <- ifelse(dat$outcome == "winner", col.winner, col.tie)
+  #
+  dat <- dat %>% arrange(comparison, treat1, treat2)
+  
+  if (length(reference.group) == 1) {
+    m <- suppressWarnings(metagen(TE, seTE, data = dat, sm = x$sm,
+                                  studlab = labels, backtransf = backtransf,
+                                  method.tau = "DL", method.tau.ci = "",
+                                  warn = FALSE))
+    #
+    if (missing(leftlabs))
+      leftlabs <- "Treatment"
+    #
+    if (missing(smlab))
+      smlab <- paste0("Comparison: ", unique(dat$comparison), "\n(",
+                      if (x$pooled == "random") "Random" else "Common",
+                      " Effects Model)")
+  }
+  else {
+    m <- suppressWarnings(metagen(TE, seTE, data = dat, sm = x$sm,
+                                  studlab = labels, backtransf = backtransf,
+                                  subgroup = dat$comparison,
+                                  print.subgroup.name = FALSE,
+                                  method.tau = "DL", method.tau.ci = "",
+                                  warn = FALSE))
+    #
+    if (missing(leftlabs))
+      leftlabs <- "Comparison / \nTreatment"
+    #
+    if (missing(smlab))
+      smlab <- paste0(if (x$pooled == "random") "Random" else "Common",
+                      " Effects Model")
+  }
+  #
+  dots_list <- drop_from_dots(list(...),
+                              c("lty.cid", "col.cid",
+                                "cid.below.null", "cid.above.null",
+                                "fill.cid.below.null", "fill.cid.above.null",
+                                "weight.study", "col.study", 
+                                "col.square", "col.square.lines",
+                                "calcwidth.subgroup",
+                                "common", "random", "hetstat",
+                                "overall", "overall.hetstat"),
+                              c("lty.equi", "col.equi",
+                                "swd.below.null", "swd.above.null",
+                                "fill.swd.below.null", "fill.swd.above.null",
+                                "", "",
+                                "", "",
+                                "",
+                                "", "", "",
+                                "", ""))
+  #
+  args_list <-
+    list(x = m,
          header.line = header.line,
-         col.subgroup = col.subgroup,
          leftcols = leftcols, leftlabs = leftlabs,
          rightcols = rightcols,
-         lty.equi = lty.equi, col.equi = col.equi,
-         fill.equi = fill.equi,
-         fill.lower.equi = fill.lower.equi,
-         fill.upper.equi = fill.upper.equi,
          #
-         lower.equi = lower.equi, upper.equi = upper.equi,
+         lty.cid = lty.equi, col.cid = col.equi,
+         fill.cid.below.null = fill.swd.below.null,
+         fill.cid.above.null = fill.swd.above.null,
+         #
+         fill.equi = fill.equi,
+         cid.below.null = swd.below.null,
+         cid.above.null = swd.above.null,
+         #
          weight.study = "same",
          col.study = dat$color,
          col.square = dat$color,
@@ -156,7 +275,11 @@ forest.tcc <- function(x, treat = NULL, backtransf = FALSE,
          #
          calcwidth.subgroup = TRUE,
          #
-         ...)
- 
- invisible(NULL)
+         common = FALSE, random = FALSE, hetstat = FALSE,
+         overall = FALSE, overall.hetstat = FALSE,
+         smlab = smlab)
+  #
+  res <- do.call("forest", c(args_list, dots_list))
+  #
+  invisible(res)
 }

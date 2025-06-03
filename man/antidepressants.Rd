@@ -19,7 +19,7 @@ Comparative efficacy and acceptability of 21 antidepressant drugs
 for the acute treatment of adults with major depressive 
 disorder: a systematic review and network meta-analysis
 \emph{Lancet},
-\bold{391}, 1357--1366
+\bold{391}, 1357--66
 }
 \description{
 Network meta-analysis comparing antidepressants in patients with major
@@ -27,38 +27,12 @@ depressive disorder.
 }
 \examples{
 data(antidepressants)
+head(antidepressants)
 #
-ranks <- tcc(treat = drug_name, studlab = studyid,
-  event = responders, n = ntotal, data = antidepressants,
-  mcid = 1.25, sm = "OR", small.values = "undesirable")
-# Visualize treatment choice criteron for treatment "escitalopram"  
-forest(ranks, treat = "escitalopram")
-# Fit the model
-fit <- mtrank(ranks)
-# Visualize the results
-forest(fit)
-# Calculate pairwise probabilities
-paired_pref(fit, type = "better",
-  treat1 = "bupropion", treat2 = "escitalopram")
-
-
-\donttest{
-# Same results using pairwise object as input to tcc()
-# (and running a network meta-analysis)
-#
-pw <- pairwise(treat = drug_name, studlab = studyid,
-  event = responders, n = ntotal, data = antidepressants,
-  sm = "OR")
-#
-netmeta(pw)
-#
-ranks2 <- tcc(pw, mcid = 1.25, small.values = "undesirable")
-#
-fit2 <- mtrank(ranks2)
-#
-paired_pref(fit2, type = "better",
-  treat1 = "bupropion", treat2 = "escitalopram")
-}
+# Examples:
+# example(tcc)
+# example(mtrank)
+# example(fitted.mtrank)
 }
 \seealso{
 \code{\link{mtrank}}, \code{\link{tcc}}
