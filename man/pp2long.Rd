@@ -39,6 +39,9 @@ net <- netmeta(pw, reference.group = "PLA")
 #
 ranks <- tcc(net, swd = 1.20, small.values = "desirable")
 #
+forest(ranks)
+forest(ranks, reference.group = "ARB", baseline.reference = FALSE)
+#
 pdat <- ranks$ppdata
 #
 ldat <- pp2long(pdat)

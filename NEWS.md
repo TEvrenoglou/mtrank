@@ -1,4 +1,4 @@
-## mtrank, version 0.2-0 (2025-06-02)
+## mtrank, version 0.2-0 (2025-06-03)
 
 ### Major changes
 

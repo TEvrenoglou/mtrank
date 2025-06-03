@@ -31,17 +31,8 @@ incidence of diabetes.
 data(diabetes)
 head(diabetes)
 #
-\donttest{
-pw <- pairwise(studlab = study, treat = t,
-  n = n, event = r, data = diabetes, sm = "OR")
-#
-net <- netmeta(pw, reference.group = "PLA")
-#
-ranks <- tcc(net, swd = 1.20, small.values = "desirable")
-#
-forest(ranks)
-forest(ranks, reference.group = "ARB", baseline.reference = FALSE)
-}
+# Examples:
+# example(pp2long)
 }
 \seealso{
 \code{\link{mtrank}}, \code{\link{tcc}}
