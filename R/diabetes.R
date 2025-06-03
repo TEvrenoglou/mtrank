@@ -32,7 +32,9 @@
 #' 
 #' @examples
 #' data(diabetes)
+#' head(diabetes)
 #' #
+#' \donttest{
 #' pw <- pairwise(studlab = study, treat = t,
 #'   n = n, event = r, data = diabetes, sm = "OR")
 #' #
@@ -42,5 +44,6 @@
 #' #
 #' forest(ranks)
 #' forest(ranks, reference.group = "ARB", baseline.reference = FALSE)
+#' }
 
 NULL

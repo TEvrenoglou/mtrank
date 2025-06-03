@@ -23,7 +23,18 @@ data(diabetes)
 #
 pw <- pairwise(studlab = study, treat = t,
   n = n, event = r, data = diabetes, sm = "OR")
+# Use subset to reduce runtime
+pw1 <- subset(pw, id >= 6 & id <= 10)
+net1 <- netmeta(pw1, reference.group = "PLA")
 #
+ranks1 <- tcc(net1, swd = 1.20, small.values = "desirable")
+#
+pdat1 <- ranks1$ppdata
+#
+ldat1 <- pp2long(pdat1)
+head(ldat1)
+
+\donttest{
 net <- netmeta(pw, reference.group = "PLA")
 #
 ranks <- tcc(net, swd = 1.20, small.values = "desirable")
@@ -41,6 +52,7 @@ fit <- PlackettLuce(preferences)
 coef(summary(fit, ref = ranks$reference.group))[, 1]
 # Results stored in mtrank()
 mtrank(ranks)$estimates$log_ability
+}
 
 }
 \seealso{

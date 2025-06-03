@@ -29,7 +29,9 @@ incidence of diabetes.
 }
 \examples{
 data(diabetes)
+head(diabetes)
 #
+\donttest{
 pw <- pairwise(studlab = study, treat = t,
   n = n, event = r, data = diabetes, sm = "OR")
 #
@@ -39,6 +41,7 @@ ranks <- tcc(net, swd = 1.20, small.values = "desirable")
 #
 forest(ranks)
 forest(ranks, reference.group = "ARB", baseline.reference = FALSE)
+}
 }
 \seealso{
 \code{\link{mtrank}}, \code{\link{tcc}}
