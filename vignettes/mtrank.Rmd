@@ -100,16 +100,16 @@ R function forest.tcc() can be used to create a forest plot. This function gets 
 ```{r, eval = FALSE}
 forest(ranks, xlim = c(-1, 2),
   reference.group = "bupropion", baseline.reference = FALSE,
-  label.left = "Favors bupropion",
-  label.right = "Favors other drug",
+  label.left = "Favors other drug",
+  label.right = "Favors bupropion",
   fill.equi = "lightblue", spacing = 1.5)
 ```
 
 ```{r, echo = FALSE, out.width = "70%"}
 forest(ranks, xlim = c(-1, 2),
   reference.group = "bupropion", baseline.reference = FALSE,
-  label.left = "Favors bupropion",
-  label.right = "Favors other drug",
+  label.left = "Favors other drug",
+  label.right = "Favors bupropion",
   fill.equi = "lightblue", spacing = 1.5,
   file = "forest1.pdf")
 knitr::include_graphics("forest1.pdf")
