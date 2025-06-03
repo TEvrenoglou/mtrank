@@ -92,12 +92,14 @@ swd.vec <- seq(1.10, 1.50, by = 0.10)
 swd.ref <- 1.20
 # plot all the treatments in the network
 linegraph(fit, swd = swd.vec, swd.ref = swd.ref)
+\donttest{
 # plot only the first three treatments in the order appearing at the
 # 'swd.ref' value
 linegraph(fit, swd = swd.vec, swd.ref = swd.ref, k = 3)
 # plot in terms of ability estimates 
 linegraph(fit, swd = swd.vec, swd.ref = swd.ref, type = "ability")
-   
+}
+  
 }
 \references{
 Evrenoglou T, Nikolakopoulou A, Schwarzer G, Ruecker G, Chaimani A (2024):
