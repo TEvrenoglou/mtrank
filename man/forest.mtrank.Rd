@@ -73,21 +73,13 @@ forest plot (argument \code{sorting}) can be one of the following:
 }
 }
 \examples{
-data(antidepressants)
-#
-ranks <- tcc(treat = drug_name, studlab = studyid,
-  event = responders, n = ntotal, data = antidepressants,
-  mcid = 1.25, sm = "OR", small.values = "undesirable")
-#
-fit <- mtrank(ranks)
-
-forest(fit, treat = "escitalopram")
+# Examples: example(mtrank)
 
 }
 \references{
 Evrenoglou T, Nikolakopoulou A, Schwarzer G, Rücker G, Chaimani A (2024):
 Producing treatment hierarchies in network meta-analysis using probabilistic
-models and treatment-choice criteria.
+models and treatment-choice criteria,
 \url{https://arxiv.org/abs/2406.10612}
 }
 \keyword{hplot}

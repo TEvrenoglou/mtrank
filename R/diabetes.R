@@ -21,20 +21,20 @@
 #' @seealso \code{\link{mtrank}}, \code{\link{tcc}}
 #' 
 #' @source
-#' Elliott W, Meyer P (2007):
+#' Elliott WJ, Meyer PM (2007):
 #' Incident diabetes in clinical trials of antihypertensive drugs:
-#' a network meta-analysis
+#' A network meta-analysis
 #' \emph{Lancet},
-#' \bold{369} 
+#' \bold{369}, 201--7,
+#' \doi{10.1016/S0140-6736(07)60108-1}
 #' 
 #' @keywords datasets
 #' 
 #' @examples
 #' data(diabetes)
+#' head(diabetes)
 #' #
-#' ranks <- tcc(treat = t, studlab = study, event = r, n = n, data = diabetes,
-#'   mcid = 1.20, sm = "OR", small.values = "desirable")
-#' #
-#' forest(ranks, treat = "ARB")
+#' # Examples:
+#' # example(pp2long)
 
 NULL

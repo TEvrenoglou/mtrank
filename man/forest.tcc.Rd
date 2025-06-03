@@ -2,32 +2,39 @@
 % Please edit documentation in R/forest.tcc.R
 \name{forest.tcc}
 \alias{forest.tcc}
-\title{Forest plot showing study-specific preferences or ties according to
-treatment choice criterion}
+\title{Forest plot showing the treatment preference format of the NMA estimates 
+according to treatment choice criterion.}
 \usage{
 \method{forest}{tcc}(
   x,
-  treat = NULL,
+  reference.group = x$reference.group,
+  baseline.reference = x$baseline.reference,
   backtransf = FALSE,
   leftcols = "studlab",
-  leftlabs = NULL,
+  leftlabs,
   rightcols = c("effect", "ci"),
-  lty.equi = gs("lty.equi"),
-  col.equi = gs("col.equi"),
-  fill.equi = gs("fill.equi"),
-  fill.lower.equi = fill.equi,
-  fill.upper.equi = rev(fill.equi),
+  col.winner = "red",
+  col.tie = "black",
+  lty.equi = gs("lty.cid"),
+  col.equi = gs("col.cid"),
+  fill.equi = "lightblue",
+  fill.swd.below.null = "transparent",
+  fill.swd.above.null = "transparent",
+  smlab,
   header.line = TRUE,
-  col.subgroup = "black",
   ...
 )
 }
 \arguments{
 \item{x}{An object of class \code{\link{tcc}}.}
 
-\item{treat}{A treatment of interest. If specified it returns a forest plot
-for all study specific effects related to \code{treat}. If NULL (default),
-it generates a forest plot for all study-specific effects in the network.}
+\item{reference.group}{Reference treatment(s). By default, the graph plots
+the NMA estimates of all treatments versus the common reference treatment
+used in the \code{\link[netmeta]{netmeta}} object.}
+
+\item{baseline.reference}{A logical indicating whether results
+should be expressed as comparisons of other treatments versus the
+reference treatment (default) or vice versa.}
 
 \item{backtransf}{A logical indicating whether results should be
 back transformed. If \code{backtransf = TRUE} (default), results for
@@ -45,28 +52,25 @@ columns on left side of the forest plot.}
 to be printed on the right side of the forest plot
 (see \code{\link[meta]{forest.meta}}).}
 
+\item{col.winner}{Colour to highlight results for TCC winner.}
+
+\item{col.tie}{Colour to highlight results for TCC ties.}
+
 \item{lty.equi}{Line type (limits of equivalence).}
 
 \item{col.equi}{Line colour (limits of equivalence).}
 
-\item{fill.equi}{Colour(s) for area between limits of equivalence
-or more general limits.}
+\item{fill.equi}{Colour(s) for area between limits of equivalence.}
 
-\item{fill.lower.equi}{Colour of area between lower limit(s) and
-reference value. Can be equal to the number of lower limits or
-the number of limits plus 1 (in this case the the region between
-minimum and smallest limit is also filled).}
+\item{fill.swd.below.null}{Colour of area below lower SWD limit.}
 
-\item{fill.upper.equi}{Colour of area between reference value and
-upper limit(s). Can be equal to the number of upper limits or the
-number of limits plus 1 (in this case the region between largest
-limit and maximum is also filled).}
+\item{fill.swd.above.null}{Colour of area above upper SWD limit.}
+
+\item{smlab}{A label for the summary measure (printed at top of
+figure).}
 
 \item{header.line}{A logical value indicating whether to print a
 header line or a character string ("both", "below", "").}
-
-\item{col.subgroup}{The colour to print information on subgroups, i.e.,
-pairwise comparisons.}
 
 \item{\dots}{Additional arguments (passed on to
 \code{\link[meta]{forest.meta}}).}
@@ -75,36 +79,70 @@ pairwise comparisons.}
 A forest plot is plotted in the active graphics device.
 }
 \description{
-This function produces a forest plot for all (or selected) study
-specific comparisons and visualizes the treatment preference or ties
-which are defined from the treatment choice criterion in \code{\link{tcc}}.
+This function produces a forest plot and visualizes the treatment preference 
+format of the NMA estimates as defined from the treatment choice criterion in 
+\code{\link{tcc}}.
 }
 \details{
-This function produces forest plots for the study specific treatment effects
-in the network. The color indicates whether treatment effects show
-a preference (red color) or tie (black color). Additionally, the respective
-range of equivalence defined at the function
-\code{\link{tcc}} is visualized for the forest plot.
+This function produces forest plots for the NMA treatment effect estimates. 
+The color indicates whether treatment effects show a preference (red color)
+or tie (black color). Additionally, the respective range of equivalence
+defined at the function \code{\link{tcc}} is visualized for the forest plot.
 
-Argument \code{treat} is optional. By default ( \code{treat = NULL}),
-all study-specific treatment effects in the network are shown. If specified,
-only study-specific treatment effects related to the specified \code{treat}
-are shown which is useful in busy networks with many direct comparisons.
+The argument \code{reference.group} is optional. By default, the graph plots
+the NMA  estimates of all treatments versus the common reference treatment
+used in the \code{\link[netmeta]{netmeta}} object.
 }
 \examples{
-data(diabetes)
+data("antidepressants")
 #
-ranks <- tcc(treat = t, studlab = study, event = r, n = n, data = diabetes,
-  mcid = 1.20, sm = "OR", small.values = "desirable")
+pw1 <- pairwise(studlab = studyid, treat = drug_name,
+  n = ntotal, event = responders,
+  data = antidepressants, sm = "OR")
+# Use subset to reduce runtime
+pw0 <- subset(pw1, studyid < 60)
 #
-forest(ranks)
-forest(ranks, treat = "ARB")
+net0 <- netmeta(pw0, reference.group = "tra")
+
+ranks0 <- tcc(net0, swd = 1.20, small.values = "undesirable")
+
+# Comparison other drugs vs trazodone
+forest(ranks0,
+  label.left = "Favours trazodone",
+  label.right = "Favours other drug")
+
+# Comparison escitalopram vs other drugs
+forest(ranks0, reference.group = "esc", baseline = FALSE,
+  label.left = "Favours other drug",
+  label.right = "Favours escitalopram")
+
+\dontrun{
+# Store a PDF file in the current working directory showing all results
+# (this is the default, i.e., if argument 'reference.group' is missing)
+forest(ranks0, baseline = FALSE, reference.group = trts,
+  file = "forest_tcc_antidepressants.pdf")
+
+# Run analysis with full data set
+net1 <- netmeta(pw1, reference.group = "tra")
+
+ranks1 <- tcc(net1, swd = 1.20, small.values = "undesirable")
+
+# Comparison other drugs vs trazodone
+forest(ranks1,
+  label.left = "Favours trazodone",
+  label.right = "Favours other drug")
+
+# Comparison escitalopram vs other drugs
+forest(ranks1, reference.group = "esc", baseline = FALSE,
+  label.left = "Favours other drug",
+  label.right = "Favours escitalopram")
+}
 
 }
 \references{
 Evrenoglou T, Nikolakopoulou A, Schwarzer G, Rücker G, Chaimani A (2024):
 Producing treatment hierarchies in network meta-analysis using probabilistic
-models and treatment-choice criteria.
+models and treatment-choice criteria,
 \url{https://arxiv.org/abs/2406.10612}
 }
 \keyword{hplot}
