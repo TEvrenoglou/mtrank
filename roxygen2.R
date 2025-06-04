@@ -34,5 +34,9 @@ install(build_vignettes = TRUE)
 
 pkg_dir <- getwd()
 setwd(tempdir())
+pkg_dir
+getwd()
+#
 check(pkg_dir, args = "--as-cran", build_args = "--compact-vignettes=both")
+#
 setwd(pkg_dir)
